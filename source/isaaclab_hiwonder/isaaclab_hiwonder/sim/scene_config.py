@@ -20,7 +20,7 @@ import numpy as np
 
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdLux, UsdPhysics, UsdShade
 
-from ..assets.registration import ASSET_DIR, JOINT_NAMES, LINKS, NOMINAL_JOINT_POSITIONS_RAD
+from ..assets.robot_models import get_robot_model
 from ..config import HiWonderEnvConfig
 from ..tasks.backend import author_rigid_usd, native_deformable_config
 from ..tasks.native_backend import articulation_groups
@@ -69,13 +69,14 @@ def _physics_material(stage, path, friction, restitution):
     return material
 
 
-def _camera(stage, profile, scale):
-    mount = UsdGeom.Xform(stage.GetPrimAtPath("/Room/Robot/gripper_body/camera_mount"))
+def _camera(stage, profile, scale, model):
+    camera_path = "/Room/Robot/" + model.camera_path
+    mount = UsdGeom.Xform(stage.GetPrimAtPath(camera_path.rsplit("/", 1)[0]))
     optical = Gf.Quatd(profile.optical_quaternion_xyzw[3], Gf.Vec3d(*profile.optical_quaternion_xyzw[:3]))
     renderer = optical * Gf.Quatd(0, Gf.Vec3d(1, 0, 0))
     q = (*renderer.GetImaginary(), renderer.GetReal())
     _pose(mount, np.asarray(profile.optical_translation_m) * scale, q)
-    camera = UsdGeom.Camera(stage.GetPrimAtPath("/Room/Robot/gripper_body/camera_mount/Camera"))
+    camera = UsdGeom.Camera(stage.GetPrimAtPath(camera_path))
     f = profile.focal_length_mm * 0.01
     camera.CreateFocalLengthAttr(f)
     # Match calibrated fx/fy; physical filmback remains independently recorded.
@@ -266,6 +267,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
     if len(definitions) != profile.num_envs:
         raise ValueError("One task definition per environment is required")
     definition = definitions[0]
+    model = get_robot_model(profile.robot_model)
 
     def topology(d):
         return (
@@ -284,6 +286,8 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
     groups = articulation_groups(definition)
     connected = {name for group in groups for name in group["body_names"]}
     metadata = dict(
+        robot_model=model.name,
+        robot_joint_names=model.joint_names,
         task_body_assets={},
         task_articulations={},
         task_deformables={},
@@ -313,7 +317,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
     from .robot_collisions import apply_robot_collision_profile, load_collision_profile
 
     collision_profile = (
-        load_collision_profile()
+        load_collision_profile(model.collision_profile_path, model=model)
         if profile.robot_collision_profile == "manipulation" and any(task.deformables for task in definitions)
         else None
     )
@@ -403,8 +407,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
             float(room["white_fill_intensity"]),
         )
         variant = profile.randomization.robot.geometry_variants[int(robot["geometry_variant_id"])]
-        suffix = "" if variant == "nominal" else "_" + variant
-        robot_file = ASSET_DIR / "generated" / f"hiwonder_soarm101{suffix}.usdc"
+        robot_file = model.asset_path(variant)
         if not robot_file.is_file():
             raise ValueError(f"No coherent robot asset for variant {variant}")
         robot_prim = stage.DefinePrim("/Room/Robot", "Xform")
@@ -420,8 +423,8 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
         _pose(UsdGeom.Xformable(robot_prim), position, quaternion)
         metadata["robot_initial_pose"].append([*position.tolist(), *quaternion])
         scale = float(robot["geometry_scale"])
-        _camera(stage, profile.camera, scale)
-        for link_id, link_name in enumerate(LINKS):
+        _camera(stage, profile.camera, scale, model)
+        for link_id, link_name in enumerate(model.links):
             material_path = f"/Room/Looks/Robot_{link_name}"
             update_material(
                 stage,
@@ -454,7 +457,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
             mass.CreateMassAttr(mass.GetMassAttr().Get() * float(robot["mass_scale"][link_id]) / scale**3)
             inertia = mass.GetDiagonalInertiaAttr().Get()
             mass.CreateDiagonalInertiaAttr(inertia * (float(robot["inertia_scale"][link_id]) / scale**5))
-        for i, joint_name in enumerate(JOINT_NAMES):
+        for i, joint_name in enumerate(model.joint_names):
             joint = stage.GetPrimAtPath("/Room/Robot/joints/" + joint_name)
             actuator = sampled["actuator"]
             drive = UsdPhysics.DriveAPI(joint, "angular")
@@ -477,6 +480,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
                 self_collisions=profile.robot_self_collisions,
                 native=bool(task.deformables),
                 profile=collision_profile,
+                model=model,
             )
         )
         if task.deformables and profile.robot_collision_profile == "cad":
@@ -550,7 +554,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
 
         concrete_paths = concrete(concrete_paths)
         concrete_paths["distractors"] = [absolute_root + p for p in distractors]
-        concrete_paths["robot_materials"] = {name: absolute_root + f"/Room/Looks/Robot_{name}" for name in LINKS}
+        concrete_paths["robot_materials"] = {name: absolute_root + f"/Room/Looks/Robot_{name}" for name in model.links}
         metadata["room_paths"].append(concrete_paths)
         metadata["fill_light_paths"].append(absolute_root + fill_path)
         metadata["room_files"].append(str(path))
@@ -578,8 +582,10 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
     scene.robot = ArticulationCfg(
         prim_path="{ENV_REGEX_NS}/Room/Robot",
         spawn=None,
-        joint_ordering=JOINT_NAMES,
-        init_state=ArticulationCfg.InitialStateCfg(joint_pos=dict(zip(JOINT_NAMES, NOMINAL_JOINT_POSITIONS_RAD))),
+        joint_ordering=model.joint_names,
+        init_state=ArticulationCfg.InitialStateCfg(
+            joint_pos=dict(zip(model.joint_names, model.nominal_joint_positions_rad))
+        ),
         actuators={"all": ImplicitActuatorCfg(joint_names_expr=[".*"], stiffness=None, damping=None)},
     )
     scene.table = RigidObjectCfg(prim_path="{ENV_REGEX_NS}/Room/Tabletop", spawn=None)
@@ -620,11 +626,11 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
         cfg.spawn = None
         metadata["task_deformables"][spec.name] = key
     actors = {body.name: f"{{ENV_REGEX_NS}}/Room/Task/{body.name}" for body in definition.bodies}
-    actors.update(
-        left_finger="{ENV_REGEX_NS}/Room/Robot/gripper_body",
-        right_finger="{ENV_REGEX_NS}/Room/Robot/moving_jaw",
-        table="{ENV_REGEX_NS}/Room/Tabletop",
-    )
+    from .contact_filtering import robot_contact_actors
+
+    hand_actors, contact_aliases = robot_contact_actors(model, "{ENV_REGEX_NS}/Room/Robot")
+    actors.update(hand_actors)
+    actors["table"] = "{ENV_REGEX_NS}/Room/Tabletop"
     filter_layout = {name: [path] for name, path in actors.items()}
     if definition.physics_family in ("rigid", "articulated"):
         from .contact_filtering import contact_filter_layout
@@ -651,6 +657,8 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
         filters = [target for label in actors if label != actor for target in filter_layout[label]]
         setattr(scene, key, ContactSensorCfg(prim_path=path, update_period=0, filter_prim_paths_expr=filters))
         metadata["task_contacts"][actor] = dict(
+            actor_aliases=contact_aliases.get(actor, (actor,)),
+            filter_aliases=contact_aliases,
             sensor_key=key,
             filter_labels=labels,
             filter_paths=filters,
@@ -661,7 +669,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
     for name, path in {
         "table": "Table",
         **{f"wall_{i}": f"Wall{i}" for i in range(4)},
-        **{f"robot_{name}": f"Robot_{name}" for name in LINKS},
+        **{f"robot_{name}": f"Robot_{name}" for name in model.links},
     }.items():
         key = "material_" + name
         setattr(
@@ -676,7 +684,7 @@ def build_scene(profile: HiWonderEnvConfig, definitions: list, snapshot: dict, o
         if name.startswith("robot_"):
             metadata["robot_material_names"][name.removeprefix("robot_")] = key
     scene.wrist_camera = CameraCfg(
-        prim_path="{ENV_REGEX_NS}/Room/Robot/gripper_body/camera_mount/Camera",
+        prim_path="{ENV_REGEX_NS}/Room/Robot/" + model.camera_path,
         spawn=None,
         width=profile.camera.width,
         height=profile.camera.height,

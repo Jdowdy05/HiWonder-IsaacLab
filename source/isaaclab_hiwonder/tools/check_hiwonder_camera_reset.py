@@ -11,15 +11,16 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-directory", type=Path, required=True)
+parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
 parser.add_argument("--actor-mode", choices=("state_debug", "rgb"), default="state_debug")
 args = parser.parse_args()
 args.output_directory.mkdir(parents=True, exist_ok=True)
 
-from isaaclab_hiwonder.tasks import build_task
-from isaaclab_hiwonder.tasks.native_backend import physics_config
-
 from isaaclab.app import launch_simulation
 from isaaclab.sim import SimulationCfg
+
+from isaaclab_hiwonder.tasks import build_task
+from isaaclab_hiwonder.tasks.native_backend import physics_config
 
 bootstrap = SimulationCfg(
     dt=1 / 240, render_interval=8, device="cuda:0", physics=physics_config(build_task("peg_insert"))
@@ -28,15 +29,23 @@ with launch_simulation(bootstrap, {"device": "cuda:0", "enable_cameras": True, "
     import cv2
     import numpy as np
     import torch
-    from isaaclab_hiwonder.assets.kinematics import forward_kinematics
-    from isaaclab_hiwonder.sim.env import make_cfg, make_env
-    from isaaclab_hiwonder.tasks.api import rotation_matrix
     from PIL import Image
 
     from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade
 
+    from isaaclab_hiwonder.assets.kinematics import forward_kinematics
+    from isaaclab_hiwonder.config import HiWonderEnvConfig
+    from isaaclab_hiwonder.sim.env import make_cfg, make_env
+    from isaaclab_hiwonder.tasks.api import rotation_matrix
+
+    profile = HiWonderEnvConfig(robot_model=args.robot_model, num_envs=2, seed=31, actor_mode=args.actor_mode)
     cfg = make_cfg(
-        "peg_insert", 2, seed=31, actor_mode=args.actor_mode, output_directory=args.output_directory / "scene"
+        "peg_insert",
+        2,
+        profile=profile,
+        seed=31,
+        actor_mode=args.actor_mode,
+        output_directory=args.output_directory / "scene",
     )
     cfg.sim.device = "cuda:0"
     depth = max(0.025, cfg.hiwonder_profile.camera.clipping_range_m[0] * 2)
@@ -68,7 +77,7 @@ with launch_simulation(bootstrap, {"device": "cuda:0", "enable_cameras": True, "
         base = np.eye(4)
         base[:3, :3] = rotation_matrix(root[3:])
         base[:3, 3] = root[:3]
-        return base @ forward_kinematics(joints, float(scale))["camera_opencv"]
+        return base @ forward_kinematics(joints, float(scale), robot_model=env.robot_model)["camera_opencv"]
 
     def reset_with_markers(ids):
         original_reset(ids)
@@ -103,7 +112,9 @@ with launch_simulation(bootstrap, {"device": "cuda:0", "enable_cameras": True, "
         scale = env.randomization.snapshot()["robot"]["geometry_scale"].numpy()
         expected = np.array(
             [
-                r[:3] + rotation_matrix(r[3:]) @ forward_kinematics(p, float(s))["camera_opencv"][:3, 3]
+                r[:3]
+                + rotation_matrix(r[3:])
+                @ forward_kinematics(p, float(s), robot_model=env.robot_model)["camera_opencv"][:3, 3]
                 for r, p, s in zip(root, q, scale)
             ]
         )
@@ -114,7 +125,8 @@ with launch_simulation(bootstrap, {"device": "cuda:0", "enable_cameras": True, "
                     pose[:3]
                     - (
                         root[i, :3]
-                        + rotation_matrix(root[i, 3:]) @ forward_kinematics(q[i], float(scale[i]))[name][:3, 3]
+                        + rotation_matrix(root[i, 3:])
+                        @ forward_kinematics(q[i], float(scale[i]), robot_model=env.robot_model)[name][:3, 3]
                     )
                 )
             )

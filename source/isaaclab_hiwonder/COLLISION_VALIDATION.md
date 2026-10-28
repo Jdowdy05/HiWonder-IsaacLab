@@ -1,6 +1,18 @@
 # HiWonder collision profile validation
 
-> Historical validation record. Dates, source digests and results below refer to the original recorded experiments. `external-evidence/` denotes owner-retained evidence outside this repository; those large bundles are not included. This publication did not rerun simulator or hardware qualification.
+> Historical **stock robot only** collision record. Hull counts, six-joint/765-pose contact queries, GPU timings, cloth execution and training-related receipts below use the original stock geometry. Dates/source digests identify those experiments. `external-evidence/` denotes owner-retained evidence outside this repository; large bundles are not included. They do not qualify Eka contacts or exact replay under a changed implementation fingerprint.
+
+## Eka geometry and contact boundary, 2026-10-28
+
+The selected `eka_v6` model has a separate asset/collision identity with four independent finger joints in two chains: nine actions and ten rigid bodies, actor proprioception 27 and critic capacity 320. Stock remains the default. The Eka hand contact triangles are retained, and printable mesh watertightness, consistent winding and positive volume were checked at actual USD float precision for nominal/0.99/1.01 scale. The stock protected-jaw hull counts and contact/performance tables below must not be reused as Eka measurements.
+
+Thirteen printed parts use exact NURBS reparameterization from the new unchanged supplied STEP; two caps use boundary patches and remain faceted CAD without recovered parametric construction. Earlier native V6 data provides reference hardware/case meshes only. Matching four-hole patterns on a 14 mm pitch circle establish the CAD mount after `wrist_roll`; physical fastener fit, joint limits and dynamics remain unmeasured. Retained wrist camera pose/optics and configured 640x480/30 Hz capture have a provisional new physical attachment.
+
+The focused 106-test CPU runtime lane includes all 30 catalog/critic constructions. These checks and closed meshes do not establish contact stability, collision-free joint travel, new-hand GPU behavior or grasp success. Integrated saved-asset/runtime qualification is reported separately when complete. Six-action stock checkpoints and the stock stable-grasp seed are incompatible with Eka's nine-action hand; changed implementation fingerprints can also invalidate exact stock bank/checkpoint replay.
+
+Training/inspection select Eka with `--profile source/isaaclab_hiwonder/configs/eka_v6.json` or `eka_v6_rgb_spots.json`. The catalog checker has a separate `--robot-model eka_v6` option. The reproduction command below predates Eka and remains a stock-only historical recipe.
+
+## Historical stock collision results
 
 Date: 2026-10-19. SDK: Isaac Sim 6.2.0.0, Newton 1.6.1, Warp 1.17.0; GPU: RTX 5090. This change optimizes robot collision representation, with an intentional bounded body-contact approximation. It does not claim exact whole-task trajectory equivalence.
 
@@ -73,3 +85,7 @@ Evidence directory:
 `external-evidence/collision-2026-10-19`
 
 Key receipts: `clearance-sweep-02.json` and its memory receipt; `installed-tests-01.log` and memory receipt; `full-tests-02.log` and memory receipt; `cloth-compute-03/cloth_fold_rag.json` and memory receipt; `physx-reference-extraction.json`; `independent-collision-review-followup.md`. The PhysX extraction itself returned valid cooked geometry and exit code zero, but its guard marked cleanup incomplete because a startup helper survived the parent; that helper was contained and terminated. It was not counted as a full runtime pass.
+
+## Eka V6 integrated acceptance, 2026-10-28
+
+See [EKA_V6_VALIDATION.md](EKA_V6_VALIDATION.md) and the repository `validation/eka_v6-2026-10-28/` receipts for the new hand. The nine-joint articulation, wrist RGB/projection/light isolation, 0.5 s two-tip peg dwell and 23.93 mm lift, native rag stepping/reset, and two-iteration RGB PPO/SGS smoke passed. A 222-pose comparison at each of three scales found no additional penetrating body pairs. These are bounded digital checks; all-30 new-hand solver/task success and physical calibration remain unqualified.

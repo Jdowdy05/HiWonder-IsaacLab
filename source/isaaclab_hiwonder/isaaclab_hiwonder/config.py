@@ -10,10 +10,11 @@ Randomization ranges are engineering starting estimates, not measured HX-30HM or
 
 import json
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from .assets.registration import MANIFEST_PATH
+from .assets.robot_models import get_robot_model
 from .rewards import RewardConfig
 
 
@@ -418,6 +419,7 @@ class RandomizationConfig:
 
 @dataclass(frozen=True)
 class HiWonderEnvConfig:
+    robot_model: str = "stock"
     num_envs: int = 16
     seed: int = 0
     task: str = "peg_insert"
@@ -445,8 +447,27 @@ class HiWonderEnvConfig:
             raise ValueError("robot_collision_profile must be cad or manipulation")
         if self.robot_self_collisions is not None and type(self.robot_self_collisions) is not bool:
             raise ValueError("robot_self_collisions must be bool or None")
-        if self.randomization.actuator.num_joints != 6:
-            raise ValueError("The HiWonder follower requires exactly six actuator joints")
+        model = get_robot_model(self.robot_model)
+        robot, actuator = self.randomization.robot, self.randomization.actuator
+        if model.name != "stock" and (robot.num_links, actuator.num_joints) == (7, 6):
+            robot = replace(robot, num_links=model.num_links)
+            actuator = replace(actuator, num_joints=model.num_joints)
+            object.__setattr__(self, "randomization", replace(self.randomization, robot=robot, actuator=actuator))
+        if actuator.num_joints != model.num_joints:
+            raise ValueError(f"Robot {model.name} requires {model.num_joints} actuator joints (six for stock)")
+        if robot.num_links != model.num_links:
+            raise ValueError(f"Robot {model.name} requires {model.num_links} physical links")
+        if model.manifest_path.is_file():
+            artifacts = json.loads(model.manifest_path.read_text(encoding="utf-8"))["artifacts"]
+            scales = {item["file"]: item["scale"] for item in artifacts}
+            for variant, scale in zip(robot.geometry_variants, robot.variant_scales):
+                filename = model.asset_path(variant).name
+                if filename not in scales or not math.isclose(scale, scales[filename], rel_tol=0, abs_tol=1e-7):
+                    raise ValueError(f"Geometry variant {variant!r} scale differs from {model.name} manifest")
+        if model.name != "stock" and self.camera.optical_transform_status == "CAD_mechanical_estimate":
+            object.__setattr__(
+                self, "camera", replace(self.camera, optical_transform_status=model.camera["optical_transform_status"])
+            )
         if not isinstance(self.task_parameters, dict):
             raise ValueError("task_parameters must be a JSON object")
         try:

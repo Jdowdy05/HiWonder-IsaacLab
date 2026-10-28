@@ -103,13 +103,14 @@ def main():
     args = _arguments()
     import numpy as np
     import torch
+
+    from isaaclab.app import launch_simulation
+    from isaaclab.sim import SimulationCfg
+
     from isaaclab_hiwonder.inspection import InspectionServer
     from isaaclab_hiwonder.sim.profiles import load_profile
     from isaaclab_hiwonder.tasks import build_task
     from isaaclab_hiwonder.tasks.native_backend import physics_config
-
-    from isaaclab.app import launch_simulation
-    from isaaclab.sim import SimulationCfg
 
     profile = replace(
         load_profile(args.profile), task=args.task, num_envs=args.num_envs, seed=args.seed, actor_mode="rgb"
@@ -155,7 +156,7 @@ def _inspect(env, profile, args, server):
     import torch
 
     observations, _ = env.reset()
-    zero = torch.zeros((profile.num_envs, 6), device=env.device)
+    zero = torch.zeros((profile.num_envs, env.cfg.action_space), device=env.device)
     camera = env.scene["wrist_camera"]
     origins = env.scene.env_origins.detach().cpu().numpy()
     # Structural heights are fixed for this launch. No per-frame randomization snapshots.
@@ -167,7 +168,7 @@ def _inspect(env, profile, args, server):
         env.sim.set_camera_view(tuple(origin + (1.05, 1.05, height + 0.80)), tuple(origin + (0.10, 0.0, height + 0.16)))
 
     panel = None
-    if args.visualizer and "kit" in args.visualizer and not args.headless:
+    if args.visualizer and "kit" in args.visualizer:
         panel = _ImagePanel(server.url, profile.camera.width, profile.camera.height, env.device)
     room, paused, stopped, step = 0, False, False, 0
     select_room(room)

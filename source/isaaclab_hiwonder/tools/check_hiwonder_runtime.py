@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-directory", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
     args = parser.parse_args()
     args.output_directory.mkdir(parents=True, exist_ok=True)
 
@@ -25,13 +26,19 @@ def main():
     with launch_simulation(bootstrap, {"device": args.device, "enable_cameras": True, "require_kit": True}):
         import numpy as np
         import torch
-        from isaaclab_hiwonder.config import HiWonderEnvConfig
-        from isaaclab_hiwonder.sim.env import make_cfg, make_env
 
         from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper
 
+        from isaaclab_hiwonder.config import HiWonderEnvConfig
+        from isaaclab_hiwonder.sim.env import make_cfg, make_env
+
         profile = HiWonderEnvConfig(
-            num_envs=3, seed=31, actor_mode="state_debug", physics_substeps=8, episode_seconds=0.1
+            robot_model=args.robot_model,
+            num_envs=3,
+            seed=31,
+            actor_mode="state_debug",
+            physics_substeps=8,
+            episode_seconds=0.1,
         )
         profile = replace(
             profile,
@@ -73,7 +80,7 @@ def main():
                 return original_states()
 
             raw.runtime.states = counted_states
-            env.step(torch.zeros((3, 6), device=raw.device))
+            env.step(torch.zeros((3, raw.cfg.action_space), device=raw.device))
             ordinary_state_reads = state_reads[0]
             assert np.allclose(raw.runtime.time, raw.step_dt)
 
@@ -87,7 +94,7 @@ def main():
             )
             raw.episode_length_buf[:2] = raw.max_episode_length - 1
             raw.episode_length_buf[2] = 0
-            observations, reward, dones, extras = env.step(torch.zeros((3, 6), device=raw.device))
+            observations, reward, dones, extras = env.step(torch.zeros((3, raw.cfg.action_space), device=raw.device))
             terminated = raw.reset_terminated.cpu().tolist()
             truncated = raw.reset_time_outs.cpu().tolist()
             bootstrapped = extras["time_outs"].cpu().tolist()

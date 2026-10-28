@@ -20,20 +20,22 @@ from isaaclab.app import add_launcher_args, launch_simulation
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-directory", type=Path, required=True)
 parser.add_argument("--close-target", type=float, default=0.12)
+parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
 add_launcher_args(parser)
 args = parser.parse_args()
 args.require_kit = True
 
 import numpy as np
 import torch
-from isaaclab_hiwonder.assets.registration import JOINT_NAMES, USD_PATH
+
+from isaaclab.sim import SimulationCfg, SimulationContext
+
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.config import GroupControl, HiWonderEnvConfig
 from isaaclab_hiwonder.randomization import RandomizationManager
 from isaaclab_hiwonder.tasks.api import rotation_matrix
 from isaaclab_hiwonder.tasks.catalog import build_task
 from isaaclab_hiwonder.tasks.native_backend import physics_config
-
-from isaaclab.sim import SimulationCfg, SimulationContext
 
 # Area-weighted distal contact planes, source CAD objects201 and218 at jawq0.
 PAD_MIDPOINT_GRIPPER_M = np.array([0.00002459672, -0.07043074001, -0.07097931923])
@@ -56,20 +58,21 @@ def relative_pose(parent_pose, child_pose):
 
 
 def main():
-    profile = HiWonderEnvConfig(num_envs=1, task="peg_insert", actor_mode="state_debug")
+    model = get_robot_model(args.robot_model)
+    profile = HiWonderEnvConfig(robot_model=model.name, num_envs=1, task="peg_insert", actor_mode="state_debug")
     controls = replace(
         profile.randomization.controls,
         **{field.name: GroupControl(enabled=False) for field in fields(profile.randomization.controls)},
     )
     profile = replace(profile, randomization=replace(profile.randomization, controls=controls))
     definition = build_task("peg_insert", seed=0)
-    manager = RandomizationManager(1, profile.randomization, seed=0)
+    manager = RandomizationManager(1, profile.randomization, seed=0, robot_model=model)
     sim_cfg = SimulationCfg(dt=1 / 240, device=args.device, use_fabric=False, physics=physics_config(definition))
     args.output_directory.mkdir(parents=True, exist_ok=True)
     with launch_simulation(sim_cfg, args):
-        from isaaclab_hiwonder.sim.scene_config import build_scene
-
         from isaaclab.scene import InteractiveScene
+
+        from isaaclab_hiwonder.sim.scene_config import build_scene
 
         scene_cfg, metadata = build_scene(profile, [definition], manager.snapshot(), args.output_directory / "scene")
         scene_cfg.wrist_camera = None
@@ -79,7 +82,11 @@ def main():
         sim.reset()
         robot = scene["robot"]
         peg = scene[metadata["task_body_assets"]["peg"]]
-        target = torch.zeros((1, 6), device=sim.device)
+        order = [robot.joint_names.index(name) for name in model.joint_names]
+        target = torch.zeros((1, model.num_joints), device=sim.device)
+        # The source-assembly zero pose admits the task peg between these pads.
+        # The wider training reset would let it fall before closure. This is an
+        # explicit grasp fixture, not a change to the environment reset pose.
         root_pose = torch.tensor(metadata["robot_initial_pose"], device=sim.device, dtype=torch.float32)
         root_pose[:, :3] += scene.env_origins
         robot.write_root_pose_to_sim_index(root_pose=root_pose)
@@ -100,23 +107,48 @@ def main():
             return bodies, object_pose
 
         def contact_force(actor):
-            entry = metadata["task_contacts"][actor]
-            index = entry["filter_labels"].index("peg")
-            forces = numpy(scene[entry["sensor_key"]].data.normal_force_matrix_w)
-            return float(np.linalg.norm(forces[0, 0, index]))
+            strengths = []
+            for physical_actor, entry in metadata["task_contacts"].items():
+                if actor not in entry.get("actor_aliases", (physical_actor,)):
+                    continue
+                indices = [i for i, label in enumerate(entry["filter_labels"]) if label == "peg"]
+                forces = numpy(scene[entry["sensor_key"]].data.normal_force_matrix_w)
+                strengths.extend(float(np.linalg.norm(forces[0, :, index])) for index in indices)
+            return max(strengths, default=0.0)
 
         for _ in range(160):
             step(target)
         bodies, _ = state()
         gripper_pose = bodies[gripper_id]
         center = gripper_pose[:3] + rotation_matrix(gripper_pose[3:]) @ PAD_MIDPOINT_GRIPPER_M
+        if model.finger_pad_offsets_m:
+            center = np.mean(
+                [
+                    bodies[robot.body_names.index(name), :3]
+                    + rotation_matrix(bodies[robot.body_names.index(name), 3:]) @ np.asarray(offset)
+                    for name, offset in model.finger_pad_offsets_m.items()
+                ],
+                axis=0,
+            )
         object_pose = torch.tensor([[*center, 0, 0, 0, 1]], device=sim.device, dtype=torch.float32)
         peg.write_root_pose_to_sim_index(root_pose=object_pose)
         peg.write_root_velocity_to_sim_index(root_velocity=torch.zeros((1, 6), device=sim.device))
-        target[0, JOINT_NAMES.index("gripper")] = args.close_target
+        finger_ids = [order[i] for i in model.gripper_joint_indices]
+        open_positions = target[0, finger_ids].clone()
+        closed_positions = torch.tensor(
+            (args.close_target,) if model.name == "stock" else model.gripper_closed_positions_rad,
+            device=sim.device,
+        )
+        if model.name == "stock":
+            target[0, finger_ids] = closed_positions
         records, consecutive, stable = [], 0, False
         required_steps = int(np.ceil(0.5 / sim_cfg.dt))
+        close_steps = max(1, round(0.05 / sim_cfg.dt))
         for step_id in range(480):
+            if model.name != "stock":
+                target[0, finger_ids] = open_positions + min(1.0, (step_id + 1) / close_steps) * (
+                    closed_positions - open_positions
+                )
             step(target)
             bodies, object_state = state()
             left, right = contact_force("left_finger"), contact_force("right_finger")
@@ -131,14 +163,23 @@ def main():
             stable_two_jaw_dwell=stable,
             dwell_seconds=consecutive * sim_cfg.dt,
             minimum_contact_threshold_n=0.02,
-            close_target_rad=args.close_target,
+            close_target_rad=args.close_target if model.name == "stock" else None,
+            finger_close_targets_rad=closed_positions.detach().cpu().tolist(),
+            closure_ramp_seconds=close_steps * sim_cfg.dt if model.name != "stock" else 0.0,
+            fixture_initial_finger_targets_rad=open_positions.detach().cpu().tolist(),
             task="peg_insert",
             geometry_variant="nominal",
-            source_robot_sha256=hashlib.sha256(USD_PATH.read_bytes()).hexdigest(),
+            robot_model=model.name,
+            joint_names=model.joint_names,
+            source_robot_sha256=hashlib.sha256(model.asset_path().read_bytes()).hexdigest(),
             source_task_sha256=hashlib.sha256(
                 (args.output_directory / "scene" / "task_0.usda").read_bytes()
             ).hexdigest(),
-            source_cad_sha256="f675f6049f94206c7b74ab73c40485913916babff1a6f4fc145dc9040672a2f8",
+            source_cad_sha256=(
+                "f675f6049f94206c7b74ab73c40485913916babff1a6f4fc145dc9040672a2f8"
+                if model.name == "stock"
+                else hashlib.sha256((model.asset_directory / "source.step").read_bytes()).hexdigest()
+            ),
             physics_dt=sim_cfg.dt,
             initial_spawn_world_m=center.tolist(),
         )
@@ -149,9 +190,9 @@ def main():
         bodies, object_state = state()
         relative_before = relative_pose(bodies[gripper_id], object_state)
         seed = dict(
-            robot_joint_positions=numpy(robot.data.joint_pos)[0],
-            robot_joint_velocities=numpy(robot.data.joint_vel)[0],
-            robot_joint_targets=numpy(target)[0],
+            robot_joint_positions=numpy(robot.data.joint_pos)[0, order],
+            robot_joint_velocities=numpy(robot.data.joint_vel)[0, order],
+            robot_joint_targets=numpy(target)[0, order],
             object_pose_robot_base=relative_pose(bodies[base_id], object_state),
             object_velocity_world=numpy(peg.data.root_link_vel_w)[0],
             robot_base_pose_world=bodies[base_id],
@@ -160,7 +201,7 @@ def main():
         initial_height = object_state[2]
         lift_contacts = []
         for step_id in range(300):
-            target[0, JOINT_NAMES.index("shoulder_lift")] = -0.15 * min(1.0, (step_id + 1) / 150)
+            target[0, order[model.joint_names.index("shoulder_lift")]] = -0.15 * min(1.0, (step_id + 1) / 150)
             step(target)
             lift_contacts.append([contact_force("left_finger"), contact_force("right_finger")])
         bodies, final_object = state()

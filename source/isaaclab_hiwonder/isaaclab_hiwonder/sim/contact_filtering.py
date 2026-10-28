@@ -11,6 +11,25 @@ from collections.abc import Mapping, Sequence
 
 import numpy as np
 
+from ..assets.robot_models import get_robot_model
+
+
+def body_contact_aliases(robot_model, body: str) -> tuple[str, ...]:
+    """Return all semantic contacts: a distal tip can pinch and also block release."""
+    return tuple(alias for alias, bodies in get_robot_model(robot_model).contact_bodies.items() if body in bodies)
+
+
+def robot_contact_actors(robot_model, robot_path: str) -> tuple[dict[str, str], dict[str, tuple[str, ...]]]:
+    """Give each sensing body one owner, retaining every semantic alias separately."""
+    model = get_robot_model(robot_model)
+    if model.name == "stock":
+        paths = {alias: robot_path + "/" + bodies[0] for alias, bodies in model.contact_bodies.items()}
+        return paths, {alias: (alias,) for alias in paths}
+    bodies = dict.fromkeys(body for group in model.contact_bodies.values() for body in group)
+    paths = {"robot_contact_" + body: robot_path + "/" + body for body in bodies}
+    aliases = {"robot_contact_" + body: body_contact_aliases(model, body) for body in bodies}
+    return paths, aliases
+
 
 def contact_filter_layout(
     actor_paths: Mapping[str, str], collider_paths: Mapping[str, Sequence[str]]

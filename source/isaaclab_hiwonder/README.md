@@ -2,6 +2,14 @@
 
 This extension targets the supplied HiWonder follower CAD and HX-30HM servo arm. It trains a direct wrist-RGB/proprioceptive PPO actor with a privileged state critic. The leader arm is not required. No tool in this package connects to or drives real motors.
 
+## Stock and Eka selection
+
+`robot_model="stock"` remains the default and retains the original gripper geometry: six actions, seven rigid bodies, 18 proprioceptive values and critic capacity 256. Select `robot_model="eka_v6"` through `configs/eka_v6.json` or `configs/eka_v6_rgb_spots.json` for five arm joints plus four independent finger joints. Eka has two left/right finger chains with independently actuated root/tip joints, nine actions, ten rigid bodies, 27 proprioceptive values and critic capacity 320.
+
+The Eka hand mounts after `wrist_roll` using measured matching four-hole patterns on a 14 mm pitch circle. Physical fastener fit, joint limits and dynamics remain unmeasured. The model retains 640x480 wrist capture at a configured 30 Hz and the original wrist-relative camera pose/optics; its new physical camera attachment is provisional. See the [asset guide](isaaclab_hiwonder/assets/README.md) for source geometry, cap repairs and calibration limits.
+
+Old six-action stock checkpoints cannot initialize or resume the nine-action Eka model. Keeping stock as the default also does not guarantee exact old stock checkpoint/SGS-bank replay: implementation fingerprints change when runtime code changes. Use `--initialize-from` only for compatible same-model network dimensions and a deliberate fresh optimizer/bank.
+
 Install this extension into a fresh pinned Isaac Lab v3.0.0 checkout using the [repository setup guide](../../README.md). The runtime uses Python 3.12, Isaac Sim 6.2, PyTorch 2.11/CUDA 13.0, Newton 1.6.1 and RSL-RL 5.5.1. Run commands from the newly installed checkout using its `.venv`.
 
 ## Run
@@ -14,6 +22,9 @@ $env:OMNI_KIT_ACCEPT_EULA = 'YES'
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --task peg_insert --num-envs 4 --smoke
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --task cube_stack --profile source/isaaclab_hiwonder/configs/rgb_disco.json --iterations 1000
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --profile source/isaaclab_hiwonder/configs/sgs_peg.json --frame-stack 2 --iterations 1000
+# Explicit Eka selection; the commands above retain stock.
+& .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --profile source/isaaclab_hiwonder/configs/eka_v6.json --task peg_insert --num-envs 2 --smoke
+& .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --profile source/isaaclab_hiwonder/configs/eka_v6_rgb_spots.json --task peg_insert --num-envs 2 --frame-stack 2 --iterations 1000
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --resume '<run>/final.pt'
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py train --initialize-from '<run>/final.pt' --seed 123
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/train_hiwonder.py eval --checkpoint '<run>/final.pt' --episodes 100
@@ -30,7 +41,7 @@ On Linux replace `.venv/Scripts/python.exe` in the examples with `.venv/bin/pyth
 
 Omitting `--viz` runs without a desktop visualizer. Isaac Lab 3.0 does not use the old `--headless` flag. Rendering still runs for the wrist camera. Windows must load Kit before importing USD scene/asset implementation modules; the launch tools do this automatically.
 
-`--smoke` performs two short optimizer iterations and creates a checkpoint; it does not establish task learning. `--actor-mode state_debug` explicitly selects a proprioceptive debugging actor. The default actor consumes full 640×480 images, 18 proprioceptive values and a 40-value public command: 20 task indicators and up to 20 commanded-goal values. Goals that exceed the declared payload fail explicitly. `--frame-stack 2` or `4` enables temporal visual history for dynamic objects, occlusion and delayed capture. Its critic alone receives privileged object/mechanism/deformable state. PPO stores the actual transformed observations; augmentation is not redrawn during optimizer epochs.
+`--smoke` performs two short optimizer iterations and creates a checkpoint; it does not establish task learning. `--actor-mode state_debug` explicitly selects a proprioceptive debugging actor. The RGB actor consumes full 640×480 images, 18 proprioceptive values for stock or 27 for Eka, and a 40-value public command: 20 task indicators and up to 20 commanded-goal values. The privileged critic capacity is 256 for stock and 320 for Eka. Goals that exceed the declared payload fail explicitly. `--frame-stack 2` or `4` enables temporal visual history for dynamic objects, occlusion and delayed capture. Its critic alone receives privileged object/mechanism/deformable state. PPO stores the actual transformed observations; augmentation is not redrawn during optimizer epochs. Eka launch examples are supported CLI recipes, not completed GPU-training or learned-grasping receipts.
 
 Training outputs include `final.pt`, `profile.json`, source/version/asset provenance, the structural randomization snapshot, scene USDs, TensorBoard logs and `result.json`. Checkpoints embed the complete profile, so copying a checkpoint preserves its camera, timing and history configuration without an adjacent `profile.json`. Explicit `--profile` overrides still use the strict profile schema. `--task` wins over a profile's task; otherwise an explicit profile's task wins over the checkpoint. Task-specific parameters stay paired with their profile task and clear when another task is selected. Resume restores optimizer, SGS, nuisance RNGs, active reset IDs, image records and physical state. Different explicit rollout, epoch, minibatch or smoke settings reject exact resume; use `--initialize-from` to apply changed learner settings with a fresh optimizer. Backend warm-start caches are not serialized, so physical replay is subject to solver tolerances. Policy-only evaluation uses a separate seed and uniform reset sampling without loading training sampler histories; an explicit evaluation seed equal to the checkpoint's training seed is rejected.
 
@@ -42,6 +53,8 @@ Run a held-out, uniform-sampled inspection with zero actions and no optimizer:
 
 ```powershell
 & .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/inspect_hiwonder.py --viz kit --num-envs 2 --port 8769
+# Select Eka explicitly while keeping the same wrist-view lighting controls.
+& .\.venv\Scripts\python.exe source/isaaclab_hiwonder/tools/inspect_hiwonder.py --profile source/isaaclab_hiwonder/configs/eka_v6_rgb_spots.json --task peg_insert --viz kit --num-envs 2 --port 8769
 ```
 
 Open the printed [loopback controls](http://127.0.0.1:8769). The default profile is `configs/rgb_spots.json`; use `--profile '<profile.json>'` to inspect another profile. Omit `--viz kit` for browser-only inspection. `--port 0` selects an available port. The tool prints its output directory; `--output '<new-directory>'` selects a new destination explicitly.
@@ -104,7 +117,7 @@ Copy `configs/default.json` or supply a partial JSON using `--profile`. Unknown 
 |---|---|
 | Table | Shape, dimensions, rounded edges, PBR material/color/roughness/metallicity/specularity, texture/UV scale, friction/restitution |
 | Room | Separate 3.6576×3.6576×3.6576m four-wall rooms, no ceiling; own wall materials/background image paths, light count/type/intensity/temperature/cone/shadows and stationary/white/RGB disco profile |
-| Robot | Seven independently shaded links, coherent nominal/0.99/1.01 geometry variants, mass/inertia scaling |
+| Robot | Seven independently shaded links for stock or ten for Eka, coherent nominal/0.99/1.01 geometry variants, mass/inertia scaling |
 | Smudge | Spots/streaks, size, anisotropy, tint, opacity, blur, haze, local contrast and deterministic drift |
 | Task | Explicit catalog selection, garment/knot variants and task-specific topology/mechanics |
 | Actuator | Effort/velocity limits, stiffness, damping, friction, armature, delay, encoder bias/noise and optional backlash |
@@ -159,7 +172,7 @@ Rewards are configurable under `reward` in the JSON profile. Dense mode uses bou
 
 The sampler follows [Success Guided Sampling, sections 3.2/B.2](https://arxiv.org/html/2610.12465v1): a fixed bank, rolling Boolean outcome histories, target 0.5, concentration 1, epsilon 1e-4 and temperature 2. Default bank size is 32768, history length 100, independent of environment count. Empty histories use the target prior. Simultaneous duplicate completions preserve all outcomes. Interrupted/manual resets do not add failures. Uniform training records completed outcomes for truthful coverage diagnostics while retaining a uniform sampling distribution; held-out evaluation leaves training histories untouched.
 
-Each structural cohort has a compatible bank slice (`ID % num_envs`); probability sampling is conditional on that slice. The bank has an explicit deterministic definition/hash and immutable pose perturbations. Reaching and meaningful rigid/mechanism near-goal families are provided. `sgs_peg.json` also enables the bundled nominal simulated stable-grasp seed: measured two-jaw retention for 0.5s and a 20.34mm lift. Its measured jaw position and squeeze target are stored separately. Other geometry/task cohorts cannot silently claim this grasp qualification. Base/reset candidates require bounded five-arm-DOF CAD position IK and initial task clearance from the CAD base envelope, including cable radius and loose-object reset jitter. Only the base is resampled; an invalid fixed base fails explicitly. These checks reject invalid initial placements; they do not certify a collision-free grasp or manipulation path.
+Each structural cohort has a compatible bank slice (`ID % num_envs`); probability sampling is conditional on that slice. The bank has an explicit deterministic definition/hash and immutable pose perturbations. Reaching and meaningful rigid/mechanism near-goal families are provided. `sgs_peg.json` also enables the bundled nominal **stock-only** simulated stable-grasp seed: measured two-jaw retention for 0.5s and a 20.34mm lift. Its measured jaw position and squeeze target are stored separately. Eka requires a new receipt for its exact hand asset before enabling `stable_grasp`; other geometry/task cohorts cannot silently claim the stock grasp qualification. Base/reset candidates require bounded five-arm-DOF CAD position IK and initial task clearance from the CAD base envelope, including cable radius and loose-object reset jitter. Only the base is resampled; an invalid fixed base fails explicitly. These checks reject invalid initial placements; they do not certify a collision-free grasp or manipulation path.
 
 Histories average over the configured stationary actuator/base/sensor nuisances. The bank identity also pins the extension's Python source and physics runtime versions, so a repaired actuator/contact/reset implementation cannot inherit old success histories. Changing the bank/profile/implementation rejects resume rather than reusing incompatible histories; use `--initialize-from` for deliberate policy transfer. `--sampling uniform` supports the matching training ablation and ordinary resume preserves that mode. Evaluation assigns episode quotas to the fixed structural cohorts before collection, so early failures cannot dominate the score by completing more episodes. Its aggregate success and return weight cohort means by their bank-slice sizes; raw `success_count` and `sample_success_rate` remain available separately. `by_cohort` records weights, quotas and completed counts alongside the reset-family breakdown. An exhausted step budget or a budget too small to sample every cohort leaves aggregate success and return `null`, with coverage reported explicitly. Report held-out evaluation separately from SGS-weighted training success.
 
@@ -191,7 +204,7 @@ These changes do not reduce camera resolution/rate, physics frequency, solver it
 
 ## Robot collision profiles
 
-`robot_collision_profile` defaults to `"manipulation"`. On native Newton tasks it keeps both gripper links and all servo housing colliders intact, while removing redundant body hulls and reducing body vertices. New body hulls stay inside their original convex pieces; the maximum inward body-surface loss is 2 mm. This is an intentional body-contact approximation, not an exact dynamics-equivalence optimization. Visuals, inertias, joint frames, travel, camera and physics/solver settings are unchanged.
+`robot_collision_profile` defaults to `"manipulation"`. On native Newton tasks it selects the robot-specific recipe and protects that model's hand geometry. The stock recipe keeps both original gripper links and all servo housing colliders intact while removing redundant body hulls and reducing body vertices, with a maximum inward body-surface loss of 2 mm. Eka retains its hand contact triangles and has a separate asset/profile identity. Historical stock hull counts, sampled contact results and timings do not qualify the new hand. This remains an intentional body-contact approximation, not an exact dynamics-equivalence optimization.
 
 PhysX keeps its existing CAD collision geometry: its own cooker already produces far fewer hulls than Newton. `"cad"` selects the original path on either backend. Profiles are chosen before scene creation; switching requires rebuilding the scene. The profile checksum/settings are included in the SGS bank identity, so use `--initialize-from` when transferring older policies.
 
@@ -209,3 +222,9 @@ PhysX keeps its existing CAD collision geometry: its own cooker already produces
 ```
 
 The scene tool renders wrist views and checks room isolation and measured support contact. The catalog tool uses isolated processes to exercise a zero-action physics fixture, interrupted reset semantics and checkpoint restore. It rejects failures before automatic reset can hide the physical state, saving a diagnostic JSON/NPZ. Use `--num-envs 2` for additional indexed-reset isolation checks. Review `VALIDATION.md` for the measured acceptance boundary; no pretrained task-solving policy is included.
+
+All historical all-30 GPU, contact and RGB training receipts apply to stock. The Eka runtime's focused 106-test CPU qualification includes all 30 task/critic layouts at capacity 320 and a small CPU PPO update/save/restore contract. Integrated full-suite and saved-asset/runtime checks are reported separately when complete. CPU construction does not prove Eka GPU execution, rendered camera behavior, grasp/contact stability or learned task success.
+
+## Eka V6 integrated acceptance, 2026-10-28
+
+See [EKA_V6_VALIDATION.md](EKA_V6_VALIDATION.md) and the repository `validation/eka_v6-2026-10-28/` receipts for the new hand. The nine-joint articulation, wrist RGB/projection/light isolation, 0.5 s two-tip peg dwell and 23.93 mm lift, native rag stepping/reset, and two-iteration RGB PPO/SGS smoke passed. A 222-pose comparison at each of three scales found no additional penetrating body pairs. These are bounded digital checks; all-30 new-hand solver/task success and physical calibration remain unqualified.

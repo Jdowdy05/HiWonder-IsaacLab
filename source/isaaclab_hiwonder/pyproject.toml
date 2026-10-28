@@ -19,4 +19,4 @@ where = ["."]
 include = ["isaaclab_hiwonder*"]
 
 [tool.setuptools.package-data]
-isaaclab_hiwonder = ["assets/**/*.json", "assets/**/*.json.gz", "assets/**/*.yaml", "assets/**/*.usda", "assets/**/*.usd", "assets/**/*.usdc", "assets/**/*.npz", "assets/**/*.obj"]
+isaaclab_hiwonder = ["assets/**/*.json", "assets/**/*.json.gz", "assets/**/*.yaml", "assets/**/*.usda", "assets/**/*.usd", "assets/**/*.usdc", "assets/**/*.npz", "assets/**/*.obj", "assets/**/*.step"]

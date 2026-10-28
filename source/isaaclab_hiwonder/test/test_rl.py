@@ -7,25 +7,26 @@
 
 import pytest
 import torch
+from rsl_rl.env import VecEnv
+from tensordict import TensorDict
+
 from isaaclab_hiwonder.randomization import RandomizationManager
 from isaaclab_hiwonder.rl.config import PPOTrainingConfig
 from isaaclab_hiwonder.rl.runner import HiWonderRunner
 from isaaclab_hiwonder.sgs import SuccessGuidedSampler
-from rsl_rl.env import VecEnv
-from tensordict import TensorDict
 
 
 class _ControlSystem(VecEnv):
     """Small real dynamics fixture; no simulator or camera correctness claims."""
 
-    def __init__(self, frame_stack=1):
+    def __init__(self, frame_stack=1, num_actions=6):
         self.num_envs = 2
-        self.num_actions = 6
+        self.num_actions = num_actions
         self.device = "cpu"
         self.max_episode_length = 4
         self.episode_length_buf = torch.zeros(2, dtype=torch.long)
         self.cfg = {}
-        self.position = torch.zeros(2, 6)
+        self.position = torch.zeros(2, num_actions)
         self.sampler = SuccessGuidedSampler(4, seed=11)
         self.randomization = RandomizationManager(2, seed=11)
         self.config_ids = self.sampler.sample(2)
@@ -161,6 +162,27 @@ def test_real_ppo_update_and_checkpoint_restore_sampler_optimizer_and_rng(tmp_pa
     for source, target in ((runner.alg.actor, initialized.alg.actor), (runner.alg.critic, initialized.alg.critic)):
         for name, value in source.state_dict().items():
             assert torch.equal(value, target.state_dict()[name])
+
+
+def test_nine_action_learner_updates_and_policy_restore_rejects_stock_model(tmp_path):
+    from types import SimpleNamespace
+
+    env = _ControlSystem(num_actions=9)
+    env.profile = SimpleNamespace(robot_model="eka_v6")
+    runner = _runner(env)
+    runner.metadata = {"profile": {"robot_model": "eka_v6"}}
+    before = {key: value.clone() for key, value in runner.alg.actor.state_dict().items()}
+    runner.learn(1)
+    assert any(not torch.equal(value, before[key]) for key, value in runner.alg.actor.state_dict().items())
+    checkpoint = tmp_path / "eka.pt"
+    runner.save(str(checkpoint))
+    restored_env = _ControlSystem(num_actions=9)
+    restored_env.profile = SimpleNamespace(robot_model="eka_v6")
+    restored = _runner(restored_env)
+    restored.load_policy(str(checkpoint))
+    assert restored.get_inference_policy()(restored_env.get_observations()).shape == (2, 9)
+    with pytest.raises(ValueError, match="robot model"):
+        _runner(_ControlSystem()).load_policy(str(checkpoint))
 
 
 def test_uniform_held_out_evaluation_uses_terminal_outcomes_and_captured_reset_ids():

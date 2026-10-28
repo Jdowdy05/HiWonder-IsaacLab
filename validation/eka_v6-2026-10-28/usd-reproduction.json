@@ -1,0 +1,8 @@
+{
+  "exported_usd_semantics_equal": {
+    "hiwonder_eka_v6.usdc": true,
+    "hiwonder_eka_v6_scale099.usdc": true,
+    "hiwonder_eka_v6_scale101.usdc": true
+  },
+  "byte_identity": false
+}

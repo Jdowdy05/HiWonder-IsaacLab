@@ -1,2 +1,6 @@
 # Preserve source and asset bytes across Windows/Linux clones.
 * -text
+
+# Preserve CAD exporter/source bytes and avoid line-diffing generated geometry.
+*.step binary
+*.FCStd binary

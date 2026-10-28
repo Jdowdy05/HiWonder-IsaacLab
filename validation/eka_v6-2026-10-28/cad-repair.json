@@ -1,0 +1,21 @@
+{
+  "source_sha256": "141ab8a721d850ed88da9d97f17257ebce1f85cfca7a0403f4c6e20c1f60e944",
+  "caps": [
+    {
+      "label": "RightCap",
+      "volume_mm3": 6284.68650481585,
+      "valid": true,
+      "closed": true
+    },
+    {
+      "label": "RightCap(Mirror)",
+      "volume_mm3": 6289.9232106744985,
+      "valid": true,
+      "closed": true
+    }
+  ],
+  "reopened_native_valid": true,
+  "reimported_step_solids": 15,
+  "reimported_step_all_valid": true,
+  "qualification": "faceted cap repair; imported STEP geometry; no physical fit or strength validation"
+}

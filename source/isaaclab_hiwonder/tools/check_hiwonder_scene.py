@@ -13,6 +13,7 @@ from isaaclab.app import add_launcher_args, launch_simulation
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-directory", type=Path, required=True)
 parser.add_argument("--task", default="peg_insert")
+parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
 parser.add_argument("--num-envs", type=int, default=2)
 parser.add_argument("--camera-profile", type=Path, help="Environment JSON containing a camera profile override")
 parser.add_argument(
@@ -24,14 +25,15 @@ args.enable_cameras = True
 
 import numpy as np
 import torch
-from isaaclab_hiwonder.assets.registration import NOMINAL_JOINT_POSITIONS_RAD
+from PIL import Image
+
+from isaaclab.sim import SimulationCfg, SimulationContext
+
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.config import HiWonderEnvConfig
 from isaaclab_hiwonder.randomization import RandomizationManager
 from isaaclab_hiwonder.tasks.catalog import build_task
 from isaaclab_hiwonder.tasks.native_backend import physics_config
-from PIL import Image
-
-from isaaclab.sim import SimulationCfg, SimulationContext
 
 
 def as_tensor(value):
@@ -39,7 +41,7 @@ def as_tensor(value):
 
 
 def main():
-    profile = HiWonderEnvConfig(num_envs=args.num_envs, task=args.task)
+    profile = HiWonderEnvConfig(robot_model=args.robot_model, num_envs=args.num_envs, task=args.task)
     if args.physical_clutter:
         from dataclasses import replace
 
@@ -63,22 +65,26 @@ def main():
         camera_fields = json.loads(args.camera_profile.read_text())["camera"]
         profile = replace(profile, camera=CameraProfile(**camera_fields))
     randomization = RandomizationManager(
-        profile.num_envs, profile.randomization, seed=profile.seed, bootstrap_attempts=32
+        profile.num_envs,
+        profile.randomization,
+        seed=profile.seed,
+        bootstrap_attempts=32,
+        robot_model=profile.robot_model,
     )
     definitions = [build_task(args.task, seed=i) for i in range(profile.num_envs)]
     from isaaclab_hiwonder.sim.reachability import reject_unreachable_bases
     from isaaclab_hiwonder.sim.support import bootstrap_task_cohorts
 
     support = bootstrap_task_cohorts(randomization, definitions)
-    witnesses = reject_unreachable_bases(randomization, definitions)
+    witnesses = reject_unreachable_bases(randomization, definitions, robot_model=profile.robot_model)
     sim_cfg = SimulationCfg(dt=1 / 120, render_interval=4, device=args.device, physics=physics_config(definitions[0]))
     with launch_simulation(sim_cfg, args):
         # On Windows USD must first load from Kit; pre-launch USD authoring loads
         # the standalone USD wheel's incompatible DLLs into this process.
+        from isaaclab.scene import InteractiveScene
+
         from isaaclab_hiwonder.sim.rooms import MaterialSample, update_material
         from isaaclab_hiwonder.sim.scene_config import build_scene
-
-        from isaaclab.scene import InteractiveScene
 
         scene_cfg, metadata = build_scene(profile, definitions, randomization.snapshot(), args.output_directory)
         metadata["task_support"] = support
@@ -91,7 +97,9 @@ def main():
         pose = torch.tensor(metadata["robot_initial_pose"], device=sim.device, dtype=torch.float32)
         pose[:, :3] += scene.env_origins
         robot.write_root_pose_to_sim_index(root_pose=pose)
-        q = torch.tensor(NOMINAL_JOINT_POSITIONS_RAD, device=sim.device).repeat(profile.num_envs, 1)
+        q = torch.tensor(get_robot_model(profile.robot_model).nominal_joint_positions_rad, device=sim.device).repeat(
+            profile.num_envs, 1
+        )
         robot.write_joint_position_to_sim_index(position=q)
         robot.write_joint_velocity_to_sim_index(velocity=torch.zeros_like(q))
         robot.actuators.target_command.set_position_index(value=q)

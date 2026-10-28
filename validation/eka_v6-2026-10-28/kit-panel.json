@@ -1,0 +1,8 @@
+{
+  "status": "PASS_KIT_IMAGE_PANEL",
+  "frames": 8,
+  "width": 640,
+  "height": 480,
+  "gpu_upload": true,
+  "qualification": "actual image-widget upload only; full robot/camera render separately qualified"
+}

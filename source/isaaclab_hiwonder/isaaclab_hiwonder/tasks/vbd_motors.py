@@ -14,13 +14,11 @@ The speed envelope limits motor-driven motion; external loads can backdrive it.
 These are explicit servo approximations, not identified HX-30HM dynamics.
 """
 
-import re
-
 import newton
 import numpy as np
 import warp as wp
 
-from ..assets.registration import JOINT_NAMES
+from ..sim.robot_contract import robot_motor_indices
 from .api import rotation_matrix
 
 
@@ -136,19 +134,9 @@ class VBDMotorAdapter:
 
     @classmethod
     def robot(cls, model):
-        """Map all six CAD motors per environment without assuming model DOF order."""
-        selected = {}
-        for joint, label in enumerate(model.joint_label):
-            match = re.search(r"/env_(\d+)/Room/Robot/", label)
-            name = label.rsplit("/", 1)[-1]
-            if match and name in JOINT_NAMES:
-                selected[int(match.group(1)), name] = joint
-        if not selected:
-            return None
-        environments = sorted({key[0] for key in selected})
-        if environments != list(range(len(environments))) or len(selected) != len(environments) * len(JOINT_NAMES):
-            raise ValueError("Native robot joint mapping is incomplete")
-        return cls(model, [selected[i, name] for i in environments for name in JOINT_NAMES])
+        """Map one complete registered robot topology without assuming model DOF order."""
+        indices = robot_motor_indices(model.joint_label)
+        return cls(model, indices) if indices is not None else None
 
     def set_parameters(self, values, rows=None):
         values = np.asarray(values, dtype=np.float32).reshape(-1, 6)

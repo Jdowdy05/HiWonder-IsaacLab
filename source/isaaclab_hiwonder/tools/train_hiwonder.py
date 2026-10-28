@@ -135,13 +135,15 @@ def main():
     args = _arguments()
     import numpy as np
     import torch
-    from isaaclab_hiwonder.config import HiWonderEnvConfig, resolve_backend
-    from isaaclab_hiwonder.sim.profiles import load_profile, profile_from_dict
-    from isaaclab_hiwonder.tasks import build_task
-    from isaaclab_hiwonder.tasks.native_backend import physics_config
 
     from isaaclab.app import launch_simulation
     from isaaclab.sim import SimulationCfg
+
+    from isaaclab_hiwonder.config import HiWonderEnvConfig, resolve_backend
+    from isaaclab_hiwonder.sim.profiles import load_profile, profile_from_dict
+    from isaaclab_hiwonder.sim.robot_contract import validate_checkpoint_robot
+    from isaaclab_hiwonder.tasks import build_task
+    from isaaclab_hiwonder.tasks.native_backend import physics_config
 
     checkpoint_path = args.resume or args.checkpoint
     weights_path = checkpoint_path or args.initialize_from
@@ -215,6 +217,8 @@ def main():
         grasp_library=str(args.grasp_library) if args.grasp_library is not None else profile.grasp_library,
     )
     args.task, args.num_envs, args.seed, args.actor_mode = task, profile.num_envs, seed, mode
+    if saved:
+        validate_checkpoint_robot(saved, profile.robot_model)
     if args.lighting:
         profile = replace(
             profile,
@@ -245,12 +249,12 @@ def main():
     np.random.seed(seed)
     torch.manual_seed(seed)
     with launch_simulation(sim_cfg, args):
+        from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper
+
         from isaaclab_hiwonder.rl.evaluate import evaluate_held_out
         from isaaclab_hiwonder.rl.provenance import write_run_provenance
         from isaaclab_hiwonder.rl.runner import HiWonderRunner
         from isaaclab_hiwonder.sim.env import make_cfg, make_env
-
-        from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper
 
         sampling = args.sampling if args.mode == "train" else "uniform"
         split = "train" if args.mode == "train" else "heldout"

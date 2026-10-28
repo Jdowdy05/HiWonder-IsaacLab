@@ -12,31 +12,36 @@ from isaaclab.app import add_launcher_args, launch_simulation
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-directory", type=Path, required=True)
+parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
 add_launcher_args(parser)
 args = parser.parse_args()
 args.require_kit = True
 
 import torch
+
+from isaaclab.sim import SimulationCfg, SimulationContext
+
 from isaaclab_hiwonder.config import HiWonderEnvConfig
 from isaaclab_hiwonder.randomization import RandomizationManager
 from isaaclab_hiwonder.tasks.catalog import build_task
 from isaaclab_hiwonder.tasks.native_backend import physics_config
 
-from isaaclab.sim import SimulationCfg, SimulationContext
-
 
 def main():
     definitions = [build_task("shape_sort", seed=i) for i in range(2)]
-    profile = HiWonderEnvConfig(num_envs=2, task="shape_sort", actor_mode="state_debug")
+    profile = HiWonderEnvConfig(robot_model=args.robot_model, num_envs=2, task="shape_sort", actor_mode="state_debug")
     sim_cfg = SimulationCfg(dt=1 / 240, device=args.device, physics=physics_config(definitions[0]))
     with launch_simulation(sim_cfg, args):
+        from isaaclab.scene import InteractiveScene
+
         from isaaclab_hiwonder.sim.scene_config import build_scene
         from isaaclab_hiwonder.tasks.runtime import TaskRuntime
 
-        from isaaclab.scene import InteractiveScene
-
         scene_cfg, metadata = build_scene(
-            profile, definitions, RandomizationManager(2).snapshot(), args.output_directory
+            profile,
+            definitions,
+            RandomizationManager(2, profile.randomization, robot_model=profile.robot_model).snapshot(),
+            args.output_directory,
         )
         scene_cfg.wrist_camera = None
         sim = SimulationContext(sim_cfg)

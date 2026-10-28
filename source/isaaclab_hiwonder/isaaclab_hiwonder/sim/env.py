@@ -28,7 +28,7 @@ from isaaclab.envs import DirectRLEnv, DirectRLEnvCfg
 from isaaclab.sim import SimulationCfg
 from isaaclab.utils.math import quat_apply
 
-from isaaclab_hiwonder.assets.registration import ASSET_DIR, JOINT_NAMES, LINKS
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.config import HiWonderEnvConfig, TaskSwitchConfig, resolve_backend
 from isaaclab_hiwonder.images import ImageRandomizer
 from isaaclab_hiwonder.lighting import camera_pose_from_link
@@ -44,7 +44,7 @@ from .checkpoint import structural_snapshot_hash, task_definition_hash
 from .control import MotorChannel
 from .history import FrameHistory
 from .lighting import SceneLightingRig
-from .observations import pack_privileged_rows
+from .observations import pack_privileged_rows, privileged_fields
 from .reachability import reject_unreachable_bases
 from .resets import UnreachableReset, load_grasp_library, make_reset
 from .support import bootstrap_task_cohorts, physical_nuisance_overlaps
@@ -75,8 +75,14 @@ def make_cfg(
     )
     random_config = replace(profile.randomization, task=TaskSwitchConfig(task_names=(name,), weights=(1.0,)))
     profile = replace(profile, randomization=random_config, task=name + (":" + variant if variant else ""))
+    model = get_robot_model(profile.robot_model)
     manager = RandomizationManager(
-        profile.num_envs, profile.randomization, seed=profile.seed, device="cpu", bootstrap_attempts=32
+        profile.num_envs,
+        profile.randomization,
+        seed=profile.seed,
+        device="cpu",
+        bootstrap_attempts=32,
+        robot_model=model,
     )
     definitions = [
         build_task(name, variant or None, seed=profile.seed + i, task_parameters=profile.task_parameters)
@@ -88,7 +94,7 @@ def make_cfg(
     backend = resolve_backend(profile.backend, definitions[0].physics_family)
     profile = replace(profile, backend=backend)
     support = bootstrap_task_cohorts(manager, definitions)
-    witnesses = reject_unreachable_bases(manager, definitions)
+    witnesses = reject_unreachable_bases(manager, definitions, robot_model=model)
     directory = Path(output_directory or tempfile.mkdtemp(prefix="hiwonder_scene_"))
     scene, metadata = build_scene(profile, definitions, manager.snapshot(), directory)
     metadata["task_support"] = support
@@ -97,14 +103,7 @@ def make_cfg(
     variants = [profile.randomization.robot.geometry_variants[index] for index in chosen]
     metadata["task_definition_sha256"] = [task_definition_hash(definition) for definition in definitions]
     metadata["robot_asset_sha256"] = [
-        hashlib.sha256(
-            (
-                ASSET_DIR
-                / "generated"
-                / ("hiwonder_soarm101" + ("" if variant == "nominal" else "_" + variant) + ".usdc")
-            ).read_bytes()
-        ).hexdigest()
-        for variant in variants
+        hashlib.sha256(model.asset_path(variant).read_bytes()).hexdigest() for variant in variants
     ]
     metadata["position_ik_witnesses"] = {i: value.tolist() for i, value in witnesses.items()}
     sim = SimulationCfg(
@@ -118,14 +117,14 @@ def make_cfg(
     cfg = DirectRLEnvCfg(
         decimation=profile.physics_substeps,
         episode_length_s=profile.episode_seconds or definitions[0].horizon_seconds,
-        action_space=6,
+        action_space=model.num_joints,
         observation_space={
             "policy_image": [3 * profile.frame_stack, profile.camera.height, profile.camera.width]
             if profile.actor_mode == "rgb"
-            else 18,
-            "proprio": 18,
+            else 3 * model.num_joints,
+            "proprio": 3 * model.num_joints,
             "command": 40,
-            "critic": 256,
+            "critic": model.critic_width,
         },
         state_space=0,
         sim=sim,
@@ -136,7 +135,9 @@ def make_cfg(
     cfg.hiwonder_profile, cfg.hiwonder_metadata = profile, metadata
     cfg.hiwonder_definitions, cfg.hiwonder_randomization = definitions, manager
     cfg.hiwonder_sampling, cfg.hiwonder_split = sampling, split
-    cfg.hiwonder_grasp_library = load_grasp_library(profile.grasp_library) if profile.grasp_library else None
+    cfg.hiwonder_grasp_library = (
+        load_grasp_library(profile.grasp_library, robot_model=model) if profile.grasp_library else None
+    )
     cfg.hiwonder_grasp_library_sha256 = (
         hashlib.sha256(Path(profile.grasp_library).read_bytes()).hexdigest() if profile.grasp_library else None
     )
@@ -164,15 +165,20 @@ class HiWonderEnv(DirectRLEnv):
         from isaaclab_hiwonder.tasks.runtime import TaskRuntime
 
         self.profile = cfg.hiwonder_profile
+        self.robot_model = get_robot_model(self.profile.robot_model)
         self.definitions = cfg.hiwonder_definitions
         self.randomization = cfg.hiwonder_randomization
         self.robot = self.scene["robot"]
-        self.joint_order = [self.robot.joint_names.index(name) for name in JOINT_NAMES]
+        self.joint_order = [self.robot.joint_names.index(name) for name in self.robot_model.joint_names]
         self.tool_body_id = self.robot.body_names.index("gripper_body")
         self.tool_offset = torch.as_tensor(
-            (np.array([-2.0, -181.0, 207.0]) - np.asarray(LINKS["gripper_body"]["origin_mm"])) * 0.001,
+            self.robot_model.tool_center_m,
             device=self.device,
             dtype=torch.float32,
+        )
+        self.tip_body_ids = [self.robot.body_names.index(name) for name in self.robot_model.finger_pad_offsets_m]
+        self.tip_pad_offsets = torch.tensor(
+            list(self.robot_model.finger_pad_offsets_m.values()), device=self.device, dtype=torch.float32
         )
         self.runtime = TaskRuntime(self.scene, cfg.hiwonder_metadata, self.definitions)
         self.runtime.native_binding = self.native_binding
@@ -208,10 +214,14 @@ class HiWonderEnv(DirectRLEnv):
         self.episodes = [TaskEpisode(d) for d in self.definitions]
         self.reward_shaper = RewardShaper(self.num_envs, self.profile.reward)
         self.episode_reward_components = {}
-        self.actions = torch.zeros((self.num_envs, 6), device=self.device)
+        self.actions = torch.zeros((self.num_envs, self.robot_model.num_joints), device=self.device)
         self.targets = self.robot.data.default_joint_pos.torch.clone()
         self.channel = MotorChannel(
-            self.num_envs, 6, self.step_dt, self.profile.randomization.actuator.delay_seconds[1], self.device
+            self.num_envs,
+            self.robot_model.num_joints,
+            self.step_dt,
+            self.profile.randomization.actuator.delay_seconds[1],
+            self.device,
         )
         self.completed = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self.success = torch.zeros_like(self.completed)
@@ -336,6 +346,10 @@ class HiWonderEnv(DirectRLEnv):
         poses = self.robot.data.body_link_pose_w.torch[:, self.tool_body_id]
         scales = self.randomization.snapshot(groups=("robot",))["robot"]["geometry_scale"].to(self.device)
         tool_world = poses[:, :3] + quat_apply(poses[:, 3:7], self.tool_offset[None] * scales[:, None])
+        if self.tip_body_ids:
+            tips = self.robot.data.body_link_pose_w.torch[:, self.tip_body_ids]
+            pad_offsets = self.tip_pad_offsets[None] * scales[:, None, None]
+            tool_world = (tips[..., :3] + quat_apply(tips[..., 3:7], pad_offsets)).mean(dim=1)
         tool = (
             (tool_world - torch.as_tensor(self.runtime.offsets, device=self.device, dtype=torch.float32))
             .detach()
@@ -349,7 +363,9 @@ class HiWonderEnv(DirectRLEnv):
 
             from ..tasks.vbd_contact import NewtonHiWonderVBDManager
 
-            effort = wp.to_torch(NewtonHiWonderVBDManager.get_robot_motors().applied_effort).reshape(self.num_envs, 6)
+            effort = wp.to_torch(NewtonHiWonderVBDManager.get_robot_motors().applied_effort).reshape(
+                self.num_envs, self.robot_model.num_joints
+            )
         # Preserve each original six-joint reduction while collecting the small
         # scalar results in one transfer instead of synchronizing per environment.
         costs = (
@@ -457,76 +473,11 @@ class HiWonderEnv(DirectRLEnv):
                 raise ValueError(f"Public goal for {definition.name} must fit20 finite command values")
             command_host[i, 20 : 20 + goal.numel()] = goal
 
-            parts = [
-                ("robot/joint_position", robot_host[i, :joint_count]),
-                ("robot/joint_velocity", robot_host[i, joint_count : 2 * joint_count]),
-                ("robot/root_pose", robot_host[i, 2 * joint_count : -1]),
-                ("command", command_host[i]),
-            ]
-            episode = self.episodes[i]
-            parts.extend(
-                [
-                    ("episode/stage", episode.stage),
-                    ("episode/held_seconds", episode.held),
-                    ("episode/elapsed_seconds", episode.elapsed),
-                    ("episode/stage_held_seconds", episode.stage_held),
-                ]
+            privileged_rows.append(
+                privileged_fields(robot_host[i], joint_count, command_host[i], self.episodes[i], nuisance, state, i)
             )
-            for name in (
-                "effort_limit",
-                "stiffness",
-                "damping",
-                "friction",
-                "armature",
-                "velocity_limit",
-                "delay_seconds",
-                "backlash_radians",
-                "encoder_bias_radians",
-                "encoder_noise_std",
-            ):
-                parts.append(("actuator/" + name, nuisance["actuator"][name][i]))
-            for name in ("mass_scale", "inertia_scale", "geometry_scale"):
-                parts.append(("robot/" + name, nuisance["robot"][name][i]))
-            for name in (
-                "width",
-                "depth",
-                "height",
-                "thickness",
-                "edge_radius",
-                "material_friction",
-                "material_restitution",
-            ):
-                parts.append(("table/" + name, nuisance["table"][name][i]))
-            parts.append(("camera/age_seconds", robot_host[i, -1]))
-            for name in sorted(state.actors):
-                actor = state.actors[name]
-                parts.append(
-                    (
-                        "actor/" + name,
-                        np.concatenate(
-                            (actor.position, actor.orientation, actor.linear_velocity, actor.angular_velocity)
-                        ),
-                    )
-                )
-            for name in sorted(state.joint_positions):
-                parts.append(("joint_position/" + name, state.joint_positions[name]))
-            for name in sorted(state.joint_velocities):
-                parts.append(("joint_velocity/" + name, state.joint_velocities[name]))
-            for name in sorted(state.mechanisms):
-                parts.append(("mechanism/" + name, state.mechanisms[name]))
-            for name in sorted(state.deformable_positions):
-                nodes = state.deformable_positions[name]
-                # Fixed-size privileged geometry summary: both ends, centroid, spread and four landmarks.
-                indices = np.linspace(0, len(nodes) - 1, 4).astype(int)
-                parts.append(
-                    ("deformable/" + name, np.concatenate((nodes[indices].ravel(), nodes.mean(0), nodes.std(0))))
-                )
-            parts.append(("contact/count", len(state.contacts)))
-            for name, angles in sorted(state.crease_rest_angles.items()):
-                parts.append(("crease/" + name, [float(np.mean(angles)), float(np.max(np.abs(angles)))]))
-            privileged_rows.append(parts)
         critic, layouts = pack_privileged_rows(
-            privileged_rows, capacity=256, device=self.device, dtype=command_host.dtype
+            privileged_rows, capacity=self.robot_model.critic_width, device=self.device, dtype=command_host.dtype
         )
         command = command_host.to(device=self.device)
         self.cfg.hiwonder_metadata["critic_layout"] = layouts
@@ -579,7 +530,9 @@ class HiWonderEnv(DirectRLEnv):
             selected = torch.multinomial(weights, 1, generator=self.sampler.generator)
             self.config_ids[i] = compatible[selected[0]]
         self.randomization.reset(ids.cpu(), groups=["actuator", "base", "image", "smudge"], max_attempts=32)
-        witnesses = reject_unreachable_bases(self.randomization, self.definitions, ids.cpu().numpy())
+        witnesses = reject_unreachable_bases(
+            self.randomization, self.definitions, ids.cpu().numpy(), robot_model=self.robot_model
+        )
         self.cfg.hiwonder_metadata["position_ik_witnesses"].update(
             {i: value.tolist() for i, value in witnesses.items()}
         )
@@ -678,6 +631,7 @@ class HiWonderEnv(DirectRLEnv):
                     base_position=local_base,
                     base_yaw=2 * np.arctan2(quaternion[2], quaternion[3]) + np.pi / 2,
                     geometry_scale=float(sample["robot"]["geometry_scale"][0]),
+                    robot_model=self.robot_model,
                 )
                 overlaps = physical_nuisance_overlaps(
                     record.definition, sample, self.profile.randomization, include_reset_envelopes=False
@@ -728,7 +682,8 @@ class HiWonderEnv(DirectRLEnv):
                 ],
                 axis=-1,
             ).reshape(-1, 6)
-            rows = (ids.cpu().numpy()[:, None] * 6 + np.arange(6)).reshape(-1)
+            n = self.robot_model.num_joints
+            rows = (ids.cpu().numpy()[:, None] * n + np.arange(n)).reshape(-1)
             motors = NewtonHiWonderVBDManager.get_robot_motors()
             if motors is None:
                 raise RuntimeError("Native HiWonder motor mapping was not initialized")
@@ -736,6 +691,7 @@ class HiWonderEnv(DirectRLEnv):
 
     def state_dict(self):
         state = {
+            "robot_model": self.robot_model.name,
             "bank_definition": copy.deepcopy(self.bank_definition),
             "bank_hash": self.bank_hash,
             "sampling": self.cfg.hiwonder_sampling,
@@ -779,6 +735,9 @@ class HiWonderEnv(DirectRLEnv):
 
     def load_state_dict(self, state):
         from isaaclab_hiwonder.images import ImageParameters
+
+        if state.get("robot_model", "stock") != self.robot_model.name:
+            raise ValueError("Checkpoint robot model differs from constructed environment")
 
         if state.get("sampling", self.cfg.hiwonder_sampling) != self.cfg.hiwonder_sampling:
             raise ValueError("Checkpoint sampling policy differs from constructed environment")

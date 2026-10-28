@@ -5,6 +5,7 @@
 
 """Named privileged-vector packing, with an exported schema and no silent truncation."""
 
+import numpy as np
 import torch
 
 
@@ -64,3 +65,70 @@ def pack_privileged_observations(
     result = torch.zeros((batch, capacity), device=first.device, dtype=torch.float32)
     result[:, :offset] = torch.cat(flattened, -1)
     return result, layout
+
+
+def privileged_fields(robot_row, joint_count, command, episode, nuisance, state, env_id):
+    """Build the complete named critic row shared by runtime and offline layout validation."""
+    parts = [
+        ("robot/joint_position", robot_row[:joint_count]),
+        ("robot/joint_velocity", robot_row[joint_count : 2 * joint_count]),
+        ("robot/root_pose", robot_row[2 * joint_count : -1]),
+        ("command", command),
+    ]
+    parts.extend(
+        [
+            ("episode/stage", episode.stage),
+            ("episode/held_seconds", episode.held),
+            ("episode/elapsed_seconds", episode.elapsed),
+            ("episode/stage_held_seconds", episode.stage_held),
+        ]
+    )
+    for name in (
+        "effort_limit",
+        "stiffness",
+        "damping",
+        "friction",
+        "armature",
+        "velocity_limit",
+        "delay_seconds",
+        "backlash_radians",
+        "encoder_bias_radians",
+        "encoder_noise_std",
+    ):
+        parts.append(("actuator/" + name, nuisance["actuator"][name][env_id]))
+    for name in ("mass_scale", "inertia_scale", "geometry_scale"):
+        parts.append(("robot/" + name, nuisance["robot"][name][env_id]))
+    for name in (
+        "width",
+        "depth",
+        "height",
+        "thickness",
+        "edge_radius",
+        "material_friction",
+        "material_restitution",
+    ):
+        parts.append(("table/" + name, nuisance["table"][name][env_id]))
+    parts.append(("camera/age_seconds", robot_row[-1]))
+    for name in sorted(state.actors):
+        actor = state.actors[name]
+        parts.append(
+            (
+                "actor/" + name,
+                np.concatenate((actor.position, actor.orientation, actor.linear_velocity, actor.angular_velocity)),
+            )
+        )
+    for name in sorted(state.joint_positions):
+        parts.append(("joint_position/" + name, state.joint_positions[name]))
+    for name in sorted(state.joint_velocities):
+        parts.append(("joint_velocity/" + name, state.joint_velocities[name]))
+    for name in sorted(state.mechanisms):
+        parts.append(("mechanism/" + name, state.mechanisms[name]))
+    for name in sorted(state.deformable_positions):
+        nodes = state.deformable_positions[name]
+        # Fixed-size privileged geometry summary: both ends, centroid, spread and four landmarks.
+        indices = np.linspace(0, len(nodes) - 1, 4).astype(int)
+        parts.append(("deformable/" + name, np.concatenate((nodes[indices].ravel(), nodes.mean(0), nodes.std(0)))))
+    parts.append(("contact/count", len(state.contacts)))
+    for name, angles in sorted(state.crease_rest_angles.items()):
+        parts.append(("crease/" + name, [float(np.mean(angles)), float(np.max(np.abs(angles)))]))
+    return parts

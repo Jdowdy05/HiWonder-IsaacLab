@@ -1,0 +1,57 @@
+{
+  "task": "cloth_fold:rag",
+  "status": "PASS_PHYSICS_RESET_EXECUTION",
+  "steps": 16,
+  "post_reset_restore_steps": 8,
+  "checkpoint_from_running_episode": true,
+  "rollout_inference_mode": true,
+  "num_envs": 1,
+  "physics": "cloth",
+  "reward_sum": [
+    0.21781104803085327
+  ],
+  "terminal_count": 0,
+  "pre_autoreset_failure_guard": true,
+  "unexpected_failure_count": 0,
+  "bank_hash": "4f63b1a0eff02aae7d625cc0a20e9609e86da8a927ba60248ee76678d2a80a63",
+  "implementation_sha256": "84a70dc6231d4d8dfdae893fb56eb2bbb20b6cdb07d02efff9d3f89c8d64eef0",
+  "camera_fk_errors_m": {
+    "qualification": "camera_omitted_in_isolated_compute_probe"
+  },
+  "initial_camera_fk_errors_m": {
+    "qualification": "camera_omitted_in_isolated_compute_probe"
+  },
+  "native_metrics": {
+    "0/sheet/imported_rest_error_m": 2.0980834958272965e-08,
+    "0/sheet/max_edge_strain": 5.972014747612775e-06,
+    "0/sheet/max_node_speed_m_s": 0.0014877318171784282
+  },
+  "native_motion": {
+    "0/sheet": {
+      "samples": 16,
+      "sample_hz": 30.0,
+      "threshold_m_s": 0.02,
+      "window_seconds": 0.5,
+      "window_raw_speed_min_m_s": 0.00091552734375,
+      "window_raw_speed_max_m_s": 0.0030899045523256063,
+      "window_fraction_below_threshold": 1.0,
+      "longest_consecutive_qualified_seconds": 0.5333333333333333,
+      "window_control_speed_max_m_s": 4.8295411125212295e-05,
+      "window_control_fraction_below_threshold": 1.0,
+      "longest_consecutive_control_qualified_seconds": 0.5,
+      "final_raw_window_qualified": true,
+      "final_control_window_qualified": true,
+      "required_metric": "raw",
+      "quiet_window_required": false,
+      "final_window_qualified": true
+    }
+  },
+  "qualification": "execution_only_no_task_or_hardware_success_claim",
+  "indexed_reset": null,
+  "native_rod_inertia": {
+    "status": "NO_ROD_BODIES",
+    "body_count": 0,
+    "live_tensors_verified_after_reset_steps": true,
+    "audit_file": "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\hiwonder-rl\\eka-v6-integration-2026-10-28\\cloth-final\\cloth_fold_rag_rod_inertia.json"
+  }
+}

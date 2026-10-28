@@ -1,0 +1,67 @@
+{
+  "robot_model": "eka_v6",
+  "action_count": 9,
+  "body_count": 10,
+  "source_step_sha256": "141ab8a721d850ed88da9d97f17257ebce1f85cfca7a0403f4c6e20c1f60e944",
+  "physical_hardware_tested": false,
+  "all_30_new_model_solver_qualified": false,
+  "all_30_cpu_catalog_and_critic_layouts": true,
+  "checks": {
+    "articulation": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 2.55059814453125,
+      "peak_private_commit_gib": 6.358577728271484,
+      "elapsed_seconds": 21.485000000000582
+    },
+    "render": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 7.042442321777344,
+      "peak_private_commit_gib": 15.72085189819336,
+      "elapsed_seconds": 39.84400000000096
+    },
+    "grasp": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 2.5997581481933594,
+      "peak_private_commit_gib": 7.267955780029297,
+      "elapsed_seconds": 25.28100000000086
+    },
+    "native_cloth": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 2.4461936950683594,
+      "peak_private_commit_gib": 7.97357177734375,
+      "elapsed_seconds": 75.4369999999999
+    },
+    "rgb_ppo": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 8.175037384033203,
+      "peak_private_commit_gib": 16.840240478515625,
+      "elapsed_seconds": 29.67200000000048
+    },
+    "collision_sweep": {
+      "complete": true,
+      "peak_process_tree_resident_gib": 1.2816848754882812,
+      "peak_private_commit_gib": 4.431060791015625,
+      "elapsed_seconds": 161.54700000000048
+    }
+  },
+  "package_suite": {
+    "passed": 383,
+    "skipped": 1,
+    "skip_reason": "CUDA-only stream test in CPU suite"
+  },
+  "final_focused_rerun": {
+    "passed": 19
+  },
+  "independent_review_open_findings": 0,
+  "source_install": {
+    "copied_hashes_verified": 168,
+    "locked_dependency_check": "PASS",
+    "sdk_sync_performed": false
+  },
+  "kit_image_panel": {
+    "status": "PASS_KIT_IMAGE_PANEL",
+    "child_exit_code": 0,
+    "guard_status": "orphaned_children",
+    "cleanup_job_empty": true
+  }
+}

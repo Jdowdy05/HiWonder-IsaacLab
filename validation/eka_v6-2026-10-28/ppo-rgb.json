@@ -1,0 +1,13 @@
+{
+  "mode": "train",
+  "run_kind": "fresh_training",
+  "sampling": "sgs",
+  "frame_stack": 1,
+  "actor_mode": "rgb",
+  "parameters_finite": true,
+  "completed_iterations": 2,
+  "optimizer_steps": 4,
+  "sgs_entropy": 4.149778987743684,
+  "sgs_covered_fraction": 0.015625,
+  "checkpoint": "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\hiwonder-rl\\eka-v6-integration-2026-10-28\\ppo-rgb\\final.pt"
+}

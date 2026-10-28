@@ -15,6 +15,8 @@ import numpy as np
 import torch
 from rsl_rl.runners import OnPolicyRunner
 
+from ..sim.robot_contract import validate_checkpoint_robot
+
 
 class HiWonderRunner(OnPolicyRunner):
     """Keep RSL-RL's actual consumed observation storage and PPO updates unchanged.
@@ -107,6 +109,8 @@ class HiWonderRunner(OnPolicyRunner):
         checkpoint = state.get("hiwonder")
         if checkpoint is None or checkpoint["version"] != 1:
             raise ValueError("Checkpoint lacks compatible HiWonder environment state")
+        profile = getattr(self.env.unwrapped, "profile", None)
+        validate_checkpoint_robot(state, getattr(profile, "robot_model", "stock"))
         previous_sources = checkpoint.get("metadata", {}).get("source_sha256", {})
         current_sources = self.metadata.get("source_sha256", {})
         changed = [

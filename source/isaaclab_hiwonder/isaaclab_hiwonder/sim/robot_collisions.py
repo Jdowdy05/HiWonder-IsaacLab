@@ -14,7 +14,8 @@ import numpy as np
 
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics
 
-from ..assets.registration import ASSET_DIR, LINKS
+from ..assets.registration import ASSET_DIR
+from ..assets.robot_models import get_robot_model
 
 PROTECTED_LINKS = ("gripper_body", "moving_jaw")
 PROFILE_PATH = ASSET_DIR / "generated" / "manipulation_collisions.json"
@@ -25,9 +26,10 @@ def _digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def load_collision_profile(path=None):
+def load_collision_profile(path=None, model=None):
     """Read and checksum one immutable recipe before creating a room cohort."""
-    path = Path(path or PROFILE_PATH)
+    selected = get_robot_model(model or "stock")
+    path = Path(path or selected.collision_profile_path)
     manifest = json.loads(path.with_suffix(path.suffix + ".manifest.json").read_text())
     digest = _digest(path)
     if manifest.get("schema_version") != 1 or manifest.get("file") != path.name or manifest.get("sha256") != digest:
@@ -35,14 +37,16 @@ def load_collision_profile(path=None):
     data = json.loads(path.read_text())
     if data.get("schema_version") != 1 or data.get("name") != "manipulation":
         raise ValueError("Unsupported collision profile schema")
-    if data.get("protected_links") != list(PROTECTED_LINKS):
-        raise ValueError("Collision profile must protect both gripper links")
+    if data.get("robot_model", "stock") != selected.name:
+        raise ValueError("Collision profile belongs to a different robot model")
+    if data.get("protected_links") != list(selected.protected_links):
+        raise ValueError("Collision profile must protect every selected gripper link")
     loss = data.get("maximum_body_surface_loss_m")
     if type(loss) not in (int, float) or not np.isfinite(loss) or not 0 < loss <= 0.002:
         raise ValueError("Collision profile exceeds the 2mm body loss contract")
     for variant in data["variants"].values():
-        source = ASSET_DIR / "generated" / variant["asset_file"]
-        reference = ASSET_DIR / "generated" / variant["reference_file"]
+        source = path.parent / variant["asset_file"]
+        reference = path.parent / variant["reference_file"]
         if (
             Path(variant["asset_file"]).name != variant["asset_file"]
             or Path(variant["reference_file"]).name != variant["reference_file"]
@@ -55,7 +59,7 @@ def load_collision_profile(path=None):
         for shape in variant["shapes"]:
             link, relative = shape["link"], shape["path"]
             if (
-                link not in LINKS
+                link not in selected.links
                 or not relative.startswith(link + "/manipulation_collisions/")
                 or ".." in relative.split("/")
             ):
@@ -84,7 +88,7 @@ def load_collision_profile(path=None):
             if not np.isclose(np.linalg.norm(transform[3:]), 1, atol=1e-6, rtol=0):
                 raise ValueError("Collision orientation must be normalized")
             if shape["kind"] not in ("reference", "inscribed") or (
-                link in PROTECTED_LINKS and shape["kind"] != "reference"
+                link in selected.protected_links and shape["kind"] != "reference"
             ):
                 raise ValueError("Gripper geometry may not be simplified")
     return dict(data, sha256=digest)
@@ -106,9 +110,10 @@ def _self_collisions(stage, robot_path, enabled):
 
 
 def apply_robot_collision_profile(
-    stage, robot_path, *, mode="manipulation", self_collisions=None, native=False, profile=None
+    stage, robot_path, *, mode="manipulation", self_collisions=None, native=False, profile=None, model=None
 ):
     """Author only collision geometry; profile changes require a fresh scene."""
+    selected = get_robot_model(model or "stock")
     root = stage.GetPrimAtPath(robot_path)
     if not root or root.GetCustomDataByKey("hiwonder:collisionProfile"):
         raise ValueError("Choose a collision profile on a fresh robot scene")
@@ -120,17 +125,19 @@ def apply_robot_collision_profile(
         _self_collisions(stage, robot_path, self_collisions)
         return dict(profile="cad", sha256=None, self_collisions=self_collisions)
     if not native:
-        # PhysX already cooks only 16 hulls per CAD source (176 total). A
-        # Newton-derived recipe would multiply its cost and change its cooker.
+        # Preserve the backend's own CAD cooker. Native convex references are
+        # not a qualified replacement for PhysX cooking or its hull budget.
         _self_collisions(stage, robot_path, self_collisions)
         return dict(
             profile="cad",
             requested_profile=mode,
             sha256=None,
             self_collisions=self_collisions,
-            reason="physx_cad_already_lower_complexity",
+            reason="physx_cad_already_lower_complexity" if selected.name == "stock" else "physx_cad_backend_preserved",
         )
-    data = profile or load_collision_profile()
+    data = profile or load_collision_profile(model=selected)
+    if data.get("robot_model", "stock") != selected.name:
+        raise ValueError("Collision profile belongs to a different robot model")
     source_value = root.GetCustomDataByKey("hiwonder:sourceAsset")
     source = Path(source_value) if source_value else None
     if source is None or not source.is_file():
@@ -182,7 +189,7 @@ def apply_robot_collision_profile(
         self_collisions=self_collisions,
         reference_structural_shapes=variant["reference_hulls"],
         new_structural_shapes=len(active),
-        protected_shapes=sum(s["link"] in PROTECTED_LINKS for s in active),
+        protected_shapes=sum(s["link"] in selected.protected_links for s in active),
         body_surface_loss_m=data["maximum_body_surface_loss_m"],
     )
 

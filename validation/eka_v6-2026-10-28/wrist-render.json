@@ -1,0 +1,247 @@
+{
+  "status": "PASS_RENDER_AND_MATERIAL_ISOLATION",
+  "task": "peg_insert",
+  "camera_shape": [
+    2,
+    480,
+    640,
+    3
+  ],
+  "camera_dtype": "uint8",
+  "configured_capture_hz": 30.0,
+  "configured_intrinsics": [
+    554.2666667,
+    0.0,
+    320.0,
+    0.0,
+    554.2666667,
+    240.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "baseline_noise_mean_abs_px": [
+    0.14349283854166667,
+    0.06516384548611111
+  ],
+  "changed_mean_abs_px": [
+    19.585181206597223,
+    0.04878363715277778
+  ],
+  "independent_room_material_render_pass": true,
+  "light_changed_mean_abs_px": [
+    12.75086154513889,
+    0.047431640625
+  ],
+  "independent_room_light_render_pass": true,
+  "white_spot_direction_change_mean_abs_px": [
+    18.735837673611112,
+    0.045461154513888886
+  ],
+  "rgb_spot_color_change_mean_abs_px": [
+    14.453425564236111,
+    0.05538845486111111
+  ],
+  "projection_marker_centroid_errors_px": [
+    0.5009335714087324,
+    0.6337815458782424,
+    0.6670941795724052
+  ],
+  "contact_sensors": {
+    "socket": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    },
+    "peg": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.29431161284446716
+    },
+    "robot_contact_eka_left_tip": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    },
+    "robot_contact_eka_right_tip": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    },
+    "robot_contact_gripper_body": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    },
+    "robot_contact_eka_left_proximal": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    },
+    "robot_contact_eka_right_proximal": {
+      "shape": [
+        2,
+        1,
+        7,
+        3
+      ],
+      "maximum_force_n": 0.0
+    }
+  },
+  "physical_clutter_budget": 4,
+  "clutter_body_positions_env_local_m": {
+    "distractor_0": [
+      [
+        0.37659263610839844,
+        -0.32830536365509033,
+        0.6879063844680786
+      ],
+      [
+        -0.17308855056762695,
+        -0.29610177874565125,
+        0.8217682838439941
+      ]
+    ],
+    "distractor_1": [
+      [
+        -0.37659287452697754,
+        -0.18239206075668335,
+        0.688773512840271
+      ],
+      [
+        0.3115593194961548,
+        0.2961016297340393,
+        0.8133119940757751
+      ]
+    ],
+    "distractor_2": [
+      [
+        -0.37659311294555664,
+        0.18239183723926544,
+        0.6846014261245728
+      ],
+      [
+        0.3147139549255371,
+        -0.29580584168434143,
+        0.8114927411079407
+      ]
+    ],
+    "distractor_3": [
+      [
+        0.37429094314575195,
+        0.25291842222213745,
+        0.6801537275314331
+      ],
+      [
+        -0.28698086738586426,
+        -0.23901014029979706,
+        0.8072004914283752
+      ]
+    ],
+    "distractor_4": [
+      [
+        -0.2929055690765381,
+        -0.2553486227989197,
+        0.690663754940033
+      ],
+      [
+        -0.31155920028686523,
+        0.23030120134353638,
+        0.8096330761909485
+      ]
+    ],
+    "distractor_5": [
+      [
+        -0.37659287452697754,
+        -0.32830536365509033,
+        0.6788329482078552
+      ],
+      [
+        0.3115593194961548,
+        -0.1645008623600006,
+        0.8125094175338745
+      ]
+    ],
+    "confetti_0": [
+      [
+        -0.02472209930419922,
+        -0.3099716007709503,
+        0.667742908000946
+      ],
+      [
+        -0.2330479621887207,
+        0.30753177404403687,
+        0.7997739315032959
+      ]
+    ],
+    "confetti_1": [
+      [
+        -0.2882195711135864,
+        0.07280085235834122,
+        0.6680904030799866
+      ],
+      [
+        0.015456557273864746,
+        -0.13632340729236603,
+        0.7994260191917419
+      ]
+    ],
+    "confetti_2": [
+      [
+        -0.06869316101074219,
+        0.3200514614582062,
+        0.6677360534667969
+      ],
+      [
+        -0.29264044761657715,
+        -0.20289365947246552,
+        0.7994261384010315
+      ]
+    ],
+    "confetti_3": [
+      [
+        -0.29208290576934814,
+        0.3652128279209137,
+        0.6680899858474731
+      ],
+      [
+        0.3121904134750366,
+        0.12111205607652664,
+        0.7994252443313599
+      ]
+    ]
+  },
+  "asset_hashes": {
+    "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\hiwonder-rl\\eka-v6-integration-2026-10-28\\scene\\room_0.usda": "d73c9b2fda786e562bacbcdd78bac2ebbff387eb7571e67dca2f295de75b8498",
+    "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\hiwonder-rl\\eka-v6-integration-2026-10-28\\scene\\room_1.usda": "a3066fd23c8dc81ac964737a398345a0c4682b96e002765b44e30fe724fe63f7"
+  },
+  "support_height_m": [
+    0.6676954627037048,
+    0.7993783354759216
+  ],
+  "limitations": "Material and direct-light isolation tested with scene shadows enabled; independent shadow-only perturbation, task success and physical optical calibration remain unqualified"
+}

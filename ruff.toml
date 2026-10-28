@@ -1,0 +1,4 @@
+extend = "integration/pyproject.toml"
+
+[lint.isort]
+known-first-party = ["isaaclab_hiwonder"]

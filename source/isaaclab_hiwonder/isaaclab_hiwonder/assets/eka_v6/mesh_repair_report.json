@@ -1,0 +1,28 @@
+[
+  {
+    "label": "RightCap",
+    "method": "PyMeshFix0.18.1_boundary_fill_only",
+    "original_faces": 3775,
+    "repaired_faces": 4164,
+    "original_vertices": 1958,
+    "repaired_vertices": 2082,
+    "original_vertices_and_triangles_preserved": true,
+    "watertight": true,
+    "winding_consistent": true,
+    "volume_mm3": 6284.686634327671,
+    "user_authorized_patch": true
+  },
+  {
+    "label": "RightCap(Mirror)",
+    "method": "PyMeshFix0.18.1_boundary_fill_only",
+    "original_faces": 3785,
+    "repaired_faces": 4162,
+    "original_vertices": 1963,
+    "repaired_vertices": 2081,
+    "original_vertices_and_triangles_preserved": true,
+    "watertight": true,
+    "winding_consistent": true,
+    "volume_mm3": 6289.923259186322,
+    "user_authorized_patch": true
+  }
+]

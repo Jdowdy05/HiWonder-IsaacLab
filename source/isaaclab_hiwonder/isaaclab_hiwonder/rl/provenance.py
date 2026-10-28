@@ -15,6 +15,8 @@ from pathlib import Path
 
 import torch
 
+from ..assets.robot_models import get_robot_model
+
 
 def write_run_provenance(env, directory: str | Path, runner_config: dict, arguments: dict) -> dict:
     """Save owned source hashes, full profile, structural cohort and runtime version metadata."""
@@ -34,11 +36,20 @@ def write_run_provenance(env, directory: str | Path, runner_config: dict, argume
     source_hashes = {
         str(path.relative_to(package)): hashlib.sha256(path.read_bytes()).hexdigest() for path in package.rglob("*.py")
     }
-    manifest = package / "assets" / "generated" / "manifest.json"
+    model = get_robot_model(env.profile.robot_model)
+    manifest = model.manifest_path
     metadata = dict(
         arguments=arguments,
         runner_config=runner_config,
         profile=asdict(env.profile),
+        robot_model=model.name,
+        robot_joint_names=model.joint_names,
+        robot_contact_bodies=model.contact_bodies,
+        robot_finger_pad_offsets_m=model.finger_pad_offsets_m,
+        robot_camera_path=model.camera_path,
+        robot_asset_sha256=env.cfg.hiwonder_metadata.get("robot_asset_sha256"),
+        robot_collision_profiles=env.cfg.hiwonder_metadata.get("robot_collision_profiles"),
+        actuator_model_qualification="Estimated simulation priors; not measured servo identification",
         versions=versions,
         python=platform.python_version(),
         platform=platform.platform(),
@@ -48,6 +59,7 @@ def write_run_provenance(env, directory: str | Path, runner_config: dict, argume
         asset_manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest() if manifest.exists() else None,
         physics_backend=type(env.cfg.sim.physics).__name__,
         camera_calibration_status=env.profile.camera.calibration_status,
+        camera_transform_status=env.profile.camera.optical_transform_status,
         observation_shapes={key: list(value.shape) for key, value in env.obs_buf.items()},
         critic_layout=env.cfg.hiwonder_metadata.get("critic_layout"),
         task_support=env.cfg.hiwonder_metadata.get("task_support"),

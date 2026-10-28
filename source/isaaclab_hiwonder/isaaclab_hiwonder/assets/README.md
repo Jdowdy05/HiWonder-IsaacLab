@@ -1,4 +1,58 @@
-# HiWonder follower asset
+# HiWonder stock and Eka V6 assets
+
+## Select a model
+
+The default `robot_model="stock"` retains the original follower. `configs/eka_v6.json`
+and `configs/eka_v6_rgb_spots.json` explicitly select `robot_model="eka_v6"` for
+training/inspection through `--profile`. The robot descriptor owns the selected
+joint order, camera path, contact aliases, geometry variants and asset identity.
+
+| Model | Actions / rigid bodies | Proprioception / critic capacity | Asset directory |
+|---|---|---|---|
+| Stock | 6 / 7 | 18 / 256 | `generated/` |
+| Eka V6 | 9 / 10 | 27 / 320 | `eka_v6/` |
+
+Eka keeps the five arm joints and adds four independent finger joints:
+`left_finger_root`, `left_finger_tip`, `right_finger_root`, `right_finger_tip`.
+These form two left/right finger chains; they are not four separate physical
+digits. The measured matching four-hole, 14 mm pitch-circle mounting pattern
+places the hand after `wrist_roll`. Physical fastener/thread fit, clearances,
+joint travel, masses/inertias and motor dynamics remain unmeasured or estimated.
+
+## Eka source and derived geometry
+
+`eka_v6/source.step` preserves the supplied
+`Eka_XL330_SO100_V6_Distal_Assembly_Printable_Parts.step` unchanged, SHA-256
+`141ab8a721d850ed88da9d97f17257ebce1f85cfca7a0403f4c6e20c1f60e944`.
+The original STEP is separate from the repaired derivative. Exact NURBS
+reparameterization was used for 13 printed parts; two caps required boundary
+patches and remain faceted CAD, without recovered parametric feature history.
+The earlier native V6 assembly supplies reference hardware/case meshes only;
+the changed printed parts come from the new supplied STEP.
+
+The nominal, `scale099` and `scale101` USDs use the derived geometry. Printable
+meshes were checked for watertightness, consistent winding and positive volume
+at actual USD float precision across all three scales, with hand contact
+triangles retained. `eka_v6/manifest.json`, `mesh_repair_report.json` and
+`float_precision_repair.json` record source/repair/precision details. Digital
+closure and orientation do not establish printed fit, physical validity or
+simulator contact stability.
+
+Eka retains the original wrist-relative camera pose/optics and configured
+640x480/30 Hz capture. Its new physical camera attachment is provisional;
+mount measurement and optical calibration remain necessary. The camera pose
+is not inferred from an unmeasured new bracket. Finger contact references,
+XL330 priors, limits and box-based inertias are simulation estimates.
+
+Old six-action stock checkpoints cannot initialize or resume Eka's nine-action
+network. The bundled stable-peg JSON/NPZ is stock-only; an Eka stable-grasp reset
+needs its own exact-asset receipt. Keeping stock as the default does not promise
+exact old stock checkpoint/SGS-bank replay across changed implementation
+fingerprints. Historical all-30 GPU/contact/training results concern stock.
+Eka's all-30 CPU catalog/critic construction and focused CPU contracts do not
+establish new-hand rendering, GPU execution or successful manipulation.
+
+## Stock asset details
 
 `generated/hiwonder_soarm101.usdc` is a local conversion of the supplied assembled
 HiWonder follower CAD. It contains seven rigid bodies, six revolute joints and a

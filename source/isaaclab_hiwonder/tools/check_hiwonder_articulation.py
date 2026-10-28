@@ -16,21 +16,24 @@ from isaaclab.app import add_launcher_args, launch_simulation
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output", type=Path, required=True)
+parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
 add_launcher_args(parser)
 args = parser.parse_args()
 
 import numpy as np
 import torch
-from isaaclab_hiwonder.assets.kinematics import forward_kinematics
-from isaaclab_hiwonder.assets.registration import JOINT_NAMES, NOMINAL_JOINT_POSITIONS_RAD, USD_PATH
 from isaaclab_physx.sim.schemas import PhysxArticulationCfg, PhysxRigidBodyCfg
 
 import isaaclab.sim as sim_utils
 from isaaclab.actuators import ImplicitActuatorCfg
 from isaaclab.assets import Articulation, ArticulationCfg
 
+from isaaclab_hiwonder.assets.kinematics import forward_kinematics
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
+
 
 def main():
+    model = get_robot_model(args.robot_model)
     cfg = sim_utils.SimulationCfg(dt=1 / 240, device=args.device, use_fabric=False)
     with launch_simulation(cfg, args):
         sim = sim_utils.SimulationContext(cfg)
@@ -39,7 +42,7 @@ def main():
             ArticulationCfg(
                 prim_path="/World/Robot",
                 spawn=sim_utils.UsdFileCfg(
-                    usd_path=str(USD_PATH),
+                    usd_path=str(model.asset_path()),
                     rigid_props=PhysxRigidBodyCfg(disable_gravity=False),
                     articulation_props=PhysxArticulationCfg(
                         enabled_self_collisions=False,
@@ -48,7 +51,7 @@ def main():
                     ),
                 ),
                 init_state=ArticulationCfg.InitialStateCfg(
-                    pos=tuple(translation), joint_pos=dict(zip(JOINT_NAMES, NOMINAL_JOINT_POSITIONS_RAD))
+                    pos=tuple(translation), joint_pos=dict(zip(model.joint_names, model.nominal_joint_positions_rad))
                 ),
                 actuators={
                     "all": ImplicitActuatorCfg(
@@ -62,19 +65,20 @@ def main():
             )
         )
         sim.reset()
-        expected_names = set(JOINT_NAMES)
+        expected_names = set(model.joint_names)
         if set(robot.joint_names) != expected_names:
             raise RuntimeError(f"Backend joint names disagree: {robot.joint_names}")
-        order = [robot.joint_names.index(name) for name in JOINT_NAMES]
+        order = [robot.joint_names.index(name) for name in model.joint_names]
         max_position_error, max_base_drift = 0.0, 0.0
-        samples = [
-            list(NOMINAL_JOINT_POSITIONS_RAD),
-            [0.2, -0.15, 0.1, -0.1, 0.15, -0.2],
-            [-0.2, 0.1, -0.1, 0.15, -0.2, 0.1],
-        ]
+        samples = [list(model.nominal_joint_positions_rad)]
+        for index, joint in enumerate(model.joints):
+            sample = list(model.nominal_joint_positions_rad)
+            lo, hi = np.deg2rad(joint["limits_deg"])
+            sample[index] = float(lo + 0.65 * (hi - lo))
+            samples.append(sample)
         records = []
         for sample in samples:
-            target = torch.zeros((1, 6), device=sim.device)
+            target = torch.zeros((1, model.num_joints), device=sim.device)
             target[0, order] = torch.tensor(sample, device=sim.device)
             robot.write_joint_position_to_sim_index(position=target)
             robot.write_joint_velocity_to_sim_index(velocity=torch.zeros_like(target))
@@ -87,7 +91,7 @@ def main():
             body_pose = robot.data.body_link_pose_w.torch[0].detach().cpu().numpy()
             if not np.isfinite(q).all() or not np.isfinite(body_pose).all():
                 raise RuntimeError("Nonfinite articulation state")
-            expected = forward_kinematics(q)
+            expected = forward_kinematics(q, robot_model=model)
             errors = {
                 name: float(np.linalg.norm(body_pose[i, :3] - translation - expected[name][:3, 3]))
                 for i, name in enumerate(robot.body_names)
@@ -100,7 +104,8 @@ def main():
             raise RuntimeError(f"Registration/fixed-base mismatch: body {max_position_error}m, base {max_base_drift}m")
         result = dict(
             status="PASS_PHYSX_ARTICULATION_KINEMATICS",
-            steps=240,
+            robot_model=model.name,
+            steps=len(samples) * 80,
             physics_dt=cfg.dt,
             support_translation_m=translation.tolist(),
             backend_joint_order=robot.joint_names,

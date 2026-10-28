@@ -15,7 +15,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 from isaaclab_hiwonder.assets.kinematics import forward_kinematics
-from isaaclab_hiwonder.assets.registration import NOMINAL_JOINT_POSITIONS_RAD, USD_PATH
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.tasks.api import ActorState
 
 from .reachability import solve_position, task_landmarks
@@ -34,17 +34,22 @@ class ResetRecord:
     ik_witnesses: np.ndarray
 
 
-def load_grasp_library(path):
+def load_grasp_library(path, robot_model="stock"):
     """Require measured retention and both jaw contacts, plus the exact robot asset hash."""
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    data = copy.deepcopy(path) if isinstance(path, dict) else json.loads(Path(path).read_text(encoding="utf-8"))
+    model = get_robot_model(robot_model)
     if data.get("status") != "PASS_PHYSICS_GRASP" or data.get("hold_seconds", 0) < 0.5:
         raise ValueError("Stable grasp library lacks a passing >=0.5s physical retention receipt")
     if not all(data.get("jaw_contacts", {}).get(key, False) for key in ("left_finger", "right_finger")):
         raise ValueError("Stable grasp must have measured contact with both jaws")
-    if data.get("robot_asset_sha256") != hashlib.sha256(USD_PATH.read_bytes()).hexdigest():
+    if data.get("robot_asset_sha256") != hashlib.sha256(model.asset_path().read_bytes()).hexdigest():
         raise ValueError("Stable grasp receipt is for a different robot asset")
-    if len(data.get("joint_positions", [])) != 6 or len(data.get("joint_targets", [])) != 6:
-        raise ValueError("Stable grasp requires measured and commanded six-joint states")
+    for field in ("joint_positions", "joint_targets"):
+        values = np.asarray(data.get(field, []), dtype=float)
+        if values.shape != (model.num_joints,):
+            raise ValueError(f"Stable grasp requires measured and commanded {model.num_joints}-joint states")
+        if not np.isfinite(values).all():
+            raise ValueError("Stable grasp joint states must be finite")
     return data
 
 
@@ -58,6 +63,7 @@ def make_reset(
     base_position=(0, 0, 0),
     base_yaw=np.pi / 2,
     geometry_scale=1.0,
+    robot_model="stock",
 ):
     """Generate a deterministic bank entry; stable seeds never fabricate held objects.
 
@@ -68,8 +74,9 @@ def make_reset(
         raise ValueError("Reset families must select reaching, near_goal and/or stable_grasp")
     task = copy.deepcopy(definition)
     rng = np.random.default_rng(seed + int(configuration_id) * 1009 + 7919)
-    q = np.asarray(NOMINAL_JOINT_POSITIONS_RAD).copy()
-    q[:5] += rng.uniform(-0.035, 0.035, 5)
+    model = get_robot_model(robot_model)
+    q = np.asarray(model.nominal_joint_positions_rad, dtype=float).copy()
+    q[list(model.arm_joint_indices)] += rng.uniform(-0.035, 0.035, len(model.arm_joint_indices))
     family = families[(int(configuration_id) // cohort_count) % len(families)]
     connected = {name for joint in task.joints for name in (joint.parent, joint.child)}
     if task.name == "bottle_cap" and task.parameters["operation"] == "open":
@@ -95,7 +102,7 @@ def make_reset(
     if family == "stable_grasp":
         if grasp_library is None:
             raise ValueError("stable_grasp requires a physics-validated grasp_library")
-        receipt = load_grasp_library(grasp_library) if isinstance(grasp_library, (str, Path)) else grasp_library
+        receipt = load_grasp_library(grasp_library, robot_model=model)
         if receipt["task"] != task.name or not np.isclose(geometry_scale, 1.0):
             family = "reaching"
         else:
@@ -105,8 +112,8 @@ def make_reset(
             delta = rng.uniform(-0.06, 0.06)
             q[0] += delta
             target_q[0] += delta
-            transform = forward_kinematics(q)["gripper_body"] @ np.linalg.inv(
-                forward_kinematics(reference_q)["gripper_body"]
+            transform = forward_kinematics(q, robot_model=model)["gripper_body"] @ np.linalg.inv(
+                forward_kinematics(reference_q, robot_model=model)["gripper_body"]
             )
             body_pose = np.eye(4)
             body_pose[:3, 3] = receipt["object_pose_robot_base"][:3]
@@ -118,7 +125,7 @@ def make_reset(
             task.initial[receipt["object_name"]] = ActorState(pose[:3, 3], Rotation.from_matrix(pose[:3, :3]).as_quat())
     witnesses = []
     for point in task_landmarks(task):
-        witness = solve_position(point, base_position, base_yaw, geometry_scale)
+        witness = solve_position(point, base_position, base_yaw, geometry_scale, robot_model=model)
         if witness is None:
             raise UnreachableReset(f"Sampled base cannot reach {family} reset for {task.name}")
         witnesses.append(witness)

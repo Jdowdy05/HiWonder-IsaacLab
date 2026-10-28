@@ -11,6 +11,8 @@ import re
 import numpy as np
 import torch
 
+from ..assets.robot_models import get_robot_model
+from ..sim.contact_filtering import body_contact_aliases
 from .api import ActorState, SceneState, rotation_matrix
 from .backend import TaskMechanics
 
@@ -119,6 +121,7 @@ class TaskRuntime:
     def __init__(self, scene, metadata, definitions, native_binding=None):
         self.scene = scene
         self.metadata = metadata
+        self.robot_model = get_robot_model(metadata.get("robot_model", "stock"))
         self.definitions = list(definitions)
         self.count = len(definitions)
         self.device = scene.device
@@ -301,8 +304,13 @@ class TaskRuntime:
         from ..sim.contact_filtering import actor_contact_presence
 
         for actor, entry in self.metadata["task_contacts"].items():
+            actor_aliases = entry.get("actor_aliases", (actor,))
+            filter_aliases = entry.get("filter_aliases", {})
             if required is not None and not any(
-                frozenset((actor, label)) in required["contacts"] for label in entry["filter_labels"]
+                frozenset((source, target)) in required["contacts"]
+                for source in actor_aliases
+                for label in entry["filter_labels"]
+                for target in filter_aliases.get(label, (label,))
             ):
                 continue
             sensor = self.scene[entry["sensor_key"]]
@@ -314,7 +322,11 @@ class TaskRuntime:
             for i, state in enumerate(states):
                 for label, contact in touching.items():
                     if contact[i]:
-                        state.contacts.add((actor, label))
+                        state.contacts.update(
+                            (source, target)
+                            for source in actor_aliases
+                            for target in filter_aliases.get(label, (label,))
+                        )
         if self.definitions[0].deformables and required is None:
             self._native_contacts(states)
         for mechanics, state in zip(self.mechanics, states):
@@ -352,16 +364,17 @@ class TaskRuntime:
                     if label.startswith(task_path + "/"):
                         tail = label[len(task_path) + 1 :]
                         if tail in definition.initial:
-                            body_alias[index] = (env_id, tail)
-                    elif label == room + "/Robot/gripper_body":
-                        body_alias[index] = (env_id, "left_finger")
-                    elif label == room + "/Robot/moving_jaw":
-                        body_alias[index] = (env_id, "right_finger")
+                            body_alias[index] = ((env_id, tail),)
+                    elif label.startswith(room + "/Robot/"):
+                        body = label[len(room + "/Robot/") :]
+                        body_alias[index] = tuple(
+                            (env_id, alias) for alias in body_contact_aliases(self.robot_model, body)
+                        )
                     elif label == room + "/Tabletop":
-                        body_alias[index] = (env_id, "table")
+                        body_alias[index] = ((env_id, "table"),)
                     for spec in definition.deformables:
                         if spec.kind == "cable" and label.startswith(paths[spec.name]):
-                            body_alias[index] = (env_id, spec.name)
+                            body_alias[index] = ((env_id, spec.name),)
                 for spec in definition.deformables:
                     if spec.kind != "cable":
                         for path, (offset, count, _) in ranges.items():
@@ -369,11 +382,11 @@ class TaskRuntime:
                                 particle_ranges.append((offset, offset + count, env_id, spec.name))
             aliases = []
             for body, label in zip(shape_body, shape_labels):
-                alias = body_alias.get(int(body))
-                if alias is None:
+                alias = body_alias.get(int(body), ())
+                if not alias:
                     for env_id, _, task_path, _ in entries:
                         if label.startswith(task_path.rsplit("/", 1)[0] + "/Tabletop"):
-                            alias = (env_id, "table")
+                            alias = ((env_id, "table"),)
                             break
                 aliases.append(alias)
             self._contact_topology = (topology, aliases, particle_ranges)
@@ -410,9 +423,10 @@ class TaskRuntime:
             for first, second, force in zip(a, b, forces):
                 if first < 0 or second < 0 or np.linalg.norm(force) < 1e-5:
                     continue
-                left, right = shape_alias(first), shape_alias(second)
-                if left and right and left[0] == right[0]:
-                    states[left[0]].contacts.add((left[1], right[1]))
+                for left in shape_alias(first):
+                    for right in shape_alias(second):
+                        if left[0] == right[0] and left[1] != right[1]:
+                            states[left[0]].contacts.add((left[1], right[1]))
         count = int(_numpy(contacts.soft_contact_count)[0])
         if count:
             indices = _numpy(contacts.soft_contact_indices)[:count]
@@ -420,12 +434,10 @@ class TaskRuntime:
             for ids, shape in zip(indices, shapes):
                 if shape < 0:
                     continue
-                rigid = shape_alias(shape)
-                if rigid is None:
-                    continue
-                for lo, hi, env_id, name in particle_ranges:
-                    if env_id == rigid[0] and np.any((ids >= lo) & (ids < hi)):
-                        states[env_id].contacts.add((name, rigid[1]))
+                for rigid in shape_alias(shape):
+                    for lo, hi, env_id, name in particle_ranges:
+                        if env_id == rigid[0] and np.any((ids >= lo) & (ids < hi)):
+                            states[env_id].contacts.add((name, rigid[1]))
 
     def reset(self, env_ids, definitions=None):
         ids = np.asarray(_numpy(env_ids), dtype=int).reshape(-1)

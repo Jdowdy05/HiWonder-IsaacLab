@@ -19,6 +19,7 @@ from functools import lru_cache
 import torch
 
 from .assets.registration import MANIFEST_PATH
+from .assets.robot_models import get_robot_model
 from .config import RandomizationConfig
 from .lighting import rgb_light_colors
 
@@ -241,10 +242,17 @@ class RandomizationManager:
         seed: int = 0,
         device: str = "cpu",
         bootstrap_attempts: int = 1,
+        robot_model="stock",
     ):
         if num_envs < 1:
             raise ValueError("num_envs must be positive")
         self.num_envs, self.config, self.device = num_envs, config or RandomizationConfig(), torch.device(device)
+        self.robot_model = get_robot_model(robot_model)
+        if (self.config.actuator.num_joints, self.config.robot.num_links) != (
+            self.robot_model.num_joints,
+            self.robot_model.num_links,
+        ):
+            raise ValueError("Randomization joint/link counts disagree with selected robot model")
         self.generators = {
             group: [
                 torch.Generator().manual_seed(
@@ -445,6 +453,8 @@ class RandomizationManager:
                 bounds = getattr(actuator_cfg, key)
                 unit = shared * actuator_cfg.correlation + _uniform(rng, (0, 1), shape) * (1 - actuator_cfg.correlation)
                 actuator[key] = unit * (bounds[1] - bounds[0]) + bounds[0]
+                if key in self.robot_model.actuator_scales:
+                    actuator[key] *= torch.tensor(self.robot_model.actuator_scales[key])
             actuator["backlash_radians"] = (
                 _uniform(rng, actuator_cfg.backlash_radians, shape)
                 if actuator_cfg.backlash_enabled
@@ -766,6 +776,7 @@ class RandomizationManager:
     def state_dict(self) -> dict:
         return dict(
             version=2,
+            robot_model=self.robot_model.name,
             config=asdict(self.config),
             num_envs=self.num_envs,
             samples=self.snapshot(),
@@ -776,7 +787,12 @@ class RandomizationManager:
 
     def load_state_dict(self, state: dict) -> None:
         """Restore parameter state and per-env streams; changed nuisance distributions are rejected."""
-        if state["version"] != 2 or state["num_envs"] != self.num_envs or state["config"] != asdict(self.config):
+        if (
+            state["version"] != 2
+            or state["num_envs"] != self.num_envs
+            or state["config"] != asdict(self.config)
+            or state.get("robot_model", "stock") != self.robot_model.name
+        ):
             raise ValueError(
                 "Randomization schema/environment/config mismatch; version SGS histories when changing distributions"
             )

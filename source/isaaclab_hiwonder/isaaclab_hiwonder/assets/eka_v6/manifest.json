@@ -1,0 +1,1600 @@
+{
+  "name": "HiWonder_SOARM101_Eka_XL330_V6",
+  "robot_model": "eka_v6",
+  "units": "m",
+  "source": {
+    "filename": "Eka_XL330_SO100_V6_Distal_Assembly_Printable_Parts.step",
+    "sha256": "141ab8a721d850ed88da9d97f17257ebce1f85cfca7a0403f4c6e20c1f60e944",
+    "printable_solids": 15,
+    "raw_invalid_brep_parts": [
+      "RightCap"
+    ],
+    "unclosed_printable_mesh_parts": []
+  },
+  "artifacts": [
+    {
+      "file": "hiwonder_eka_v6.usdc",
+      "scale": 1.0,
+      "sha256": "bf51defe4932f67b41e303af4323ac855220166b6393b50417d54f0dac5cee85",
+      "links": {
+        "gripper_body": {
+          "mass_kg": 0.0826,
+          "center_of_mass_m": [
+            -0.00020954543925584893,
+            -0.02811742844262497,
+            0.008945270597896977
+          ],
+          "diagonal_inertia_kg_m2": [
+            0.00011484243514848362,
+            0.00011133013432507268,
+            7.096896749007765e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.03520954543925585,
+              -0.0648946687579155,
+              -0.04414396888025204
+            ],
+            [
+              0.03479045456074415,
+              0.008659811872665558,
+              0.06203451007604599
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_proximal": {
+          "mass_kg": 0.0266,
+          "center_of_mass_m": [
+            0.0012499964237213139,
+            -0.01839814360532396,
+            -0.010635814710025485
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.817968885392829e-05,
+            1.0928125706341606e-05,
+            1.0134333942885839e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.011499994277954102,
+              -0.049709606852284226,
+              -0.04334564683312965
+            ],
+            [
+              0.01399998712539673,
+              0.012913319641636306,
+              0.02207401741307868
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_tip": {
+          "mass_kg": 0.0136,
+          "center_of_mass_m": [
+            0.0013000017218291757,
+            -0.00969887477316152,
+            -0.001829051439294219
+          ],
+          "diagonal_inertia_kg_m2": [
+            4.954029336159155e-06,
+            3.1303687764936283e-06,
+            2.8811909203135705e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.009499969482421875,
+              -0.032478634268045425,
+              -0.02578490972518921
+            ],
+            [
+              0.012099972926080227,
+              0.013080884721722384,
+              0.02212680684660077
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_proximal": {
+          "mass_kg": 0.0266,
+          "center_of_mass_m": [
+            -0.0012499964237213139,
+            -0.01839814360532396,
+            -0.010635814710025485
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.817968885392829e-05,
+            1.0928125706341606e-05,
+            1.0134333942885839e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.01399998712539673,
+              -0.049709606852284226,
+              -0.04334564683312965
+            ],
+            [
+              0.011499994277954102,
+              0.012913319641636306,
+              0.02207401741307868
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_tip": {
+          "mass_kg": 0.0143,
+          "center_of_mass_m": [
+            -0.001406168699264525,
+            -0.009675215708470164,
+            -0.0024143481622929674
+          ],
+          "diagonal_inertia_kg_m2": [
+            5.330191887437065e-06,
+            3.4286829822832514e-06,
+            3.035412512206974e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.012312173366546629,
+              -0.032431728840603344,
+              -0.026916657938200757
+            ],
+            [
+              0.00949983596801758,
+              0.013081297423663017,
+              0.022087961613614822
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        }
+      },
+      "parts": [
+        {
+          "label": "Palm",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_0",
+          "collision": "/HiWonder/gripper_body/collisions/eka_0",
+          "triangles": 36902,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "SO100Adapter",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_1",
+          "collision": "/HiWonder/gripper_body/collisions/eka_1",
+          "triangles": 13496,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_2",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_2",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal001",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_3",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_3",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_4",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_4",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_5",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_5",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_6",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_6",
+          "triangles": 4150,
+          "source_brep_valid": false,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3775,
+            "repaired_faces": 4164,
+            "original_vertices": 1958,
+            "repaired_vertices": 2082,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6284.686634327671,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightLiner",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_7",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_7",
+          "triangles": 260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_8",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_8",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightProximal(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_9",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_9",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal(Mirror)001",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_10",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_10",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_11",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_11",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_12",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_12",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_13",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_13",
+          "triangles": 4148,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3785,
+            "repaired_faces": 4162,
+            "original_vertices": 1963,
+            "repaired_vertices": 2081,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6289.923259186322,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_14",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_14",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "LeftRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_15",
+          "collision": "/HiWonder/gripper_body/collisions/eka_15",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_16",
+          "collision": "/HiWonder/gripper_body/collisions/eka_16",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipMotor",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_17",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_17",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipMotor",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_18",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_18",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootHorn",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_19",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_19",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootHorn",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_20",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_20",
+          "triangles": 13664,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipHorn",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_21",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_21",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipHorn",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_22",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_22",
+          "triangles": 13454,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_23",
+          "collision": "/HiWonder/gripper_body/collisions/eka_23",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_24",
+          "collision": "/HiWonder/gripper_body/collisions/eka_24",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipBearing",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_25",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_25",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipBearing",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_26",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_26",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        }
+      ]
+    },
+    {
+      "file": "hiwonder_eka_v6_scale099.usdc",
+      "scale": 0.99,
+      "sha256": "93ab5654d2f8b24723212f7c54c2870e26ec1ec64ea8ce8f90a428b03226bb75",
+      "links": {
+        "gripper_body": {
+          "mass_kg": 0.08014669740000001,
+          "center_of_mass_m": [
+            -0.00020744998486328659,
+            -0.027836254716992265,
+            0.008855817184112852
+          ],
+          "diagonal_inertia_kg_m2": [
+            0.00010921401223187521,
+            0.00010587384800947935,
+            6.749078302181688e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.03485744998486329,
+              -0.06424572318792343,
+              -0.04370252919144951
+            ],
+            [
+              0.034442550015136714,
+              0.008573213753938902,
+              0.06141416355967522
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_proximal": {
+          "mass_kg": 0.0258099534,
+          "center_of_mass_m": [
+            0.0012374964594841003,
+            -0.01821416216927072,
+            -0.010529456562925232
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.728870321036373e-05,
+            1.0392538810787272e-05,
+            9.637650742048266e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.01138499433517456,
+              -0.04921251078376138,
+              -0.042912190364798354
+            ],
+            [
+              0.013859987254142761,
+              0.012784186445219944,
+              0.02185327723894789
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_tip": {
+          "mass_kg": 0.0131960664,
+          "center_of_mass_m": [
+            0.0012870019234716892,
+            -0.00960188634207958,
+            -0.0018107606268780527
+          ],
+          "diagonal_inertia_kg_m2": [
+            4.7112326062428255e-06,
+            2.976949517369476e-06,
+            2.7399839804894664e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.009404969787597656,
+              -0.03215384855866432,
+              -0.02552706003189087
+            ],
+            [
+              0.011978973634541035,
+              0.012950075874505161,
+              0.021905538778134764
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_proximal": {
+          "mass_kg": 0.0258099534,
+          "center_of_mass_m": [
+            -0.0012374964594841003,
+            -0.01821416216927072,
+            -0.010529456562925232
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.728870321036373e-05,
+            1.0392538810787272e-05,
+            9.637650742048266e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.013859987254142761,
+              -0.04921251078376138,
+              -0.042912190364798354
+            ],
+            [
+              0.01138499433517456,
+              0.012784186445219944,
+              0.02185327723894789
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_tip": {
+          "mass_kg": 0.0138752757,
+          "center_of_mass_m": [
+            -0.0013921070122718806,
+            -0.009578463551385462,
+            -0.002390204680670036
+          ],
+          "diagonal_inertia_kg_m2": [
+            5.0689594490103514e-06,
+            3.2606434004128304e-06,
+            2.8866470964507958e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.012189051632881164,
+              -0.03210741155219731,
+              -0.026647491358818748
+            ],
+            [
+              0.009404837608337402,
+              0.012950484449426387,
+              0.021867081997478676
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        }
+      },
+      "parts": [
+        {
+          "label": "Palm",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_0",
+          "collision": "/HiWonder/gripper_body/collisions/eka_0",
+          "triangles": 36902,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "SO100Adapter",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_1",
+          "collision": "/HiWonder/gripper_body/collisions/eka_1",
+          "triangles": 13496,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_2",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_2",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal001",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_3",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_3",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_4",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_4",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_5",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_5",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_6",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_6",
+          "triangles": 4150,
+          "source_brep_valid": false,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3775,
+            "repaired_faces": 4164,
+            "original_vertices": 1958,
+            "repaired_vertices": 2082,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6284.686634327671,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightLiner",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_7",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_7",
+          "triangles": 260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_8",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_8",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightProximal(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_9",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_9",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal(Mirror)001",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_10",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_10",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_11",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_11",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_12",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_12",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_13",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_13",
+          "triangles": 4148,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3785,
+            "repaired_faces": 4162,
+            "original_vertices": 1963,
+            "repaired_vertices": 2081,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6289.923259186322,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_14",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_14",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "LeftRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_15",
+          "collision": "/HiWonder/gripper_body/collisions/eka_15",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_16",
+          "collision": "/HiWonder/gripper_body/collisions/eka_16",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipMotor",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_17",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_17",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipMotor",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_18",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_18",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootHorn",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_19",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_19",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootHorn",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_20",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_20",
+          "triangles": 13664,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipHorn",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_21",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_21",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipHorn",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_22",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_22",
+          "triangles": 13454,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_23",
+          "collision": "/HiWonder/gripper_body/collisions/eka_23",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_24",
+          "collision": "/HiWonder/gripper_body/collisions/eka_24",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipBearing",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_25",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_25",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipBearing",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_26",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_26",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        }
+      ]
+    },
+    {
+      "file": "hiwonder_eka_v6_scale101.usdc",
+      "scale": 1.01,
+      "sha256": "af2ce4388cf537eee2f231a5b0ef98170b50abdbca8fdaaef96542e0b33c5162",
+      "links": {
+        "gripper_body": {
+          "mass_kg": 0.08510286260000002,
+          "center_of_mass_m": [
+            -0.0002116408936484078,
+            -0.028398602168257674,
+            0.009034722149035956
+          ],
+          "diagonal_inertia_kg_m2": [
+            0.00012070054882819703,
+            0.0001170090865414366,
+            7.458909689967283e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.03556164089364841,
+              -0.06554361432790756,
+              -0.04458540856905455
+            ],
+            [
+              0.035138359106351595,
+              0.008746409991392213,
+              0.06265485286712646
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_proximal": {
+          "mass_kg": 0.0274060066,
+          "center_of_mass_m": [
+            0.0012624963879585265,
+            -0.018582125041377198,
+            -0.01074217285712574
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.9107035693169583e-05,
+            1.1485569946121188e-05,
+            1.0651286825042577e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.011614994220733643,
+              -0.05020670292080707,
+              -0.043779103301460946
+            ],
+            [
+              0.014139986996650696,
+              0.01304245283805267,
+              0.022294757587209467
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_left_tip": {
+          "mass_kg": 0.0140120936,
+          "center_of_mass_m": [
+            0.0013130019858479496,
+            -0.00979586320424346,
+            -0.0018473422517103835
+          ],
+          "diagonal_inertia_kg_m2": [
+            5.206734620097202e-06,
+            3.290049137120846e-06,
+            3.0281605705991314e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.009594969177246095,
+              -0.03280341997742653,
+              -0.02604275941848755
+            ],
+            [
+              0.012220973148941994,
+              0.013211693568939609,
+              0.022348074915066782
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_proximal": {
+          "mass_kg": 0.0274060066,
+          "center_of_mass_m": [
+            -0.0012624963879585265,
+            -0.018582125041377198,
+            -0.01074217285712574
+          ],
+          "diagonal_inertia_kg_m2": [
+            1.9107035693169583e-05,
+            1.1485569946121188e-05,
+            1.0651286825042577e-05
+          ],
+          "bounds_local_m": [
+            [
+              -0.014139986996650696,
+              -0.05020670292080707,
+              -0.043779103301460946
+            ],
+            [
+              0.011614994220733643,
+              0.01304245283805267,
+              0.022294757587209467
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        },
+        "eka_right_tip": {
+          "mass_kg": 0.014733304300000001,
+          "center_of_mass_m": [
+            -0.001420230386257171,
+            -0.009771967865554863,
+            -0.0024384916439158973
+          ],
+          "diagonal_inertia_kg_m2": [
+            5.6020852426578445e-06,
+            3.603580272986538e-06,
+            3.19024905652882e-06
+          ],
+          "bounds_local_m": [
+            [
+              -0.012435295100212096,
+              -0.03275604612900938,
+              -0.027185824517582766
+            ],
+            [
+              0.009594834327697754,
+              0.013212110397899648,
+              0.02230884122975097
+            ]
+          ],
+          "qualification": "estimated_mass_and_box_inertia"
+        }
+      },
+      "parts": [
+        {
+          "label": "Palm",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_0",
+          "collision": "/HiWonder/gripper_body/collisions/eka_0",
+          "triangles": 36902,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "SO100Adapter",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_1",
+          "collision": "/HiWonder/gripper_body/collisions/eka_1",
+          "triangles": 13496,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_2",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_2",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal001",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_3",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_3",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_4",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_4",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_5",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_5",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_6",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_6",
+          "triangles": 4150,
+          "source_brep_valid": false,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3775,
+            "repaired_faces": 4164,
+            "original_vertices": 1958,
+            "repaired_vertices": 2082,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6284.686634327671,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightLiner",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_7",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_7",
+          "triangles": 260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_8",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_8",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightProximal(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_9",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_9",
+          "triangles": 5850,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightProximal(Mirror)001",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_10",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_10",
+          "triangles": 8916,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootSpacer(Mirror)",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_11",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_11",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "RightTip(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_12",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_12",
+          "triangles": 7446,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightCap(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_13",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_13",
+          "triangles": 4148,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": {
+            "method": "PyMeshFix0.18.1_boundary_fill_only",
+            "original_faces": 3785,
+            "repaired_faces": 4162,
+            "original_vertices": 1963,
+            "repaired_vertices": 2081,
+            "original_vertices_and_triangles_preserved": true,
+            "watertight": true,
+            "winding_consistent": true,
+            "volume_mm3": 6289.923259186322,
+            "user_authorized_patch": true
+          },
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipSpacer(Mirror)",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_14",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_14",
+          "triangles": 1260,
+          "source_brep_valid": true,
+          "source_mesh_closed": true,
+          "source_kind": "supplied_printable_STEP",
+          "mesh_repair": null,
+          "internal_spacer_proxy": true
+        },
+        {
+          "label": "LeftRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_15",
+          "collision": "/HiWonder/gripper_body/collisions/eka_15",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootMotor",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_16",
+          "collision": "/HiWonder/gripper_body/collisions/eka_16",
+          "triangles": 30978,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipMotor",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_17",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_17",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipMotor",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_18",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_18",
+          "triangles": 29927,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootHorn",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_19",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_19",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootHorn",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_20",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_20",
+          "triangles": 13664,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipHorn",
+          "body": "eka_left_tip",
+          "visual": "/HiWonder/eka_left_tip/visuals/eka_21",
+          "collision": "/HiWonder/eka_left_tip/collisions/eka_21",
+          "triangles": 13170,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipHorn",
+          "body": "eka_right_tip",
+          "visual": "/HiWonder/eka_right_tip/visuals/eka_22",
+          "collision": "/HiWonder/eka_right_tip/collisions/eka_22",
+          "triangles": 13454,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_23",
+          "collision": "/HiWonder/gripper_body/collisions/eka_23",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightRootBearing",
+          "body": "gripper_body",
+          "visual": "/HiWonder/gripper_body/visuals/eka_24",
+          "collision": "/HiWonder/gripper_body/collisions/eka_24",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "LeftTipBearing",
+          "body": "eka_left_proximal",
+          "visual": "/HiWonder/eka_left_proximal/visuals/eka_25",
+          "collision": "/HiWonder/eka_left_proximal/collisions/eka_25",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        },
+        {
+          "label": "RightTipBearing",
+          "body": "eka_right_proximal",
+          "visual": "/HiWonder/eka_right_proximal/visuals/eka_26",
+          "collision": "/HiWonder/eka_right_proximal/collisions/eka_26",
+          "triangles": 2240,
+          "source_brep_valid": true,
+          "source_mesh_closed": false,
+          "source_kind": "reference_hardware",
+          "mesh_repair": null,
+          "internal_spacer_proxy": false
+        }
+      ]
+    }
+  ],
+  "joint_order": [
+    "shoulder_pan",
+    "shoulder_lift",
+    "elbow_flex",
+    "wrist_flex",
+    "wrist_roll",
+    "left_finger_root",
+    "left_finger_tip",
+    "right_finger_root",
+    "right_finger_tip"
+  ],
+  "mount": {
+    "rotation": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.7071067811865476,
+        -0.7071067811865476
+      ],
+      [
+        0.0,
+        0.7071067811865476,
+        0.7071067811865476
+      ]
+    ],
+    "translation_cad_mm": [
+      0.4998776259297,
+      -140.63567881227104,
+      242.85187178795863
+    ],
+    "translation_support_mm": [
+      0.4998776259297,
+      -140.63567881227104,
+      242.46187178795864
+    ],
+    "adapter_holes_mm": [
+      [
+        -4.949747468305833,
+        42.195,
+        -2.2687474683058326
+      ],
+      [
+        4.949747468305833,
+        42.195,
+        -2.2687474683058326
+      ],
+      [
+        -4.949747468305833,
+        42.195,
+        7.630747468305833
+      ],
+      [
+        4.949747468305833,
+        42.195,
+        7.630747468305833
+      ]
+    ],
+    "horn_holes_support_mm": [
+      [
+        -4.449871166857875,
+        -109.19506052391577,
+        270.6939947639361
+      ],
+      [
+        5.449626418717215,
+        -109.19506052391588,
+        270.693994763936
+      ],
+      [
+        -4.449871166857847,
+        -116.19506239701568,
+        277.6939966370361
+      ],
+      [
+        5.449626418717242,
+        -116.19506239701579,
+        277.693996637036
+      ]
+    ],
+    "adapter_center_mm": [
+      0.0,
+      42.195,
+      2.681
+    ],
+    "horn_center_cad_mm": [
+      0.4998776259297,
+      -112.6950614604658,
+      274.5839957004861
+    ],
+    "source_step": "source.step",
+    "qualification": "CAD_hole_pattern_fit; physical_threads_clearances_and_camera_mount_unqualified"
+  },
+  "mesh_repairs": [
+    {
+      "label": "RightCap",
+      "method": "PyMeshFix0.18.1_boundary_fill_only",
+      "original_faces": 3775,
+      "repaired_faces": 4164,
+      "original_vertices": 1958,
+      "repaired_vertices": 2082,
+      "original_vertices_and_triangles_preserved": true,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 6284.686634327671,
+      "user_authorized_patch": true
+    },
+    {
+      "label": "RightCap(Mirror)",
+      "method": "PyMeshFix0.18.1_boundary_fill_only",
+      "original_faces": 3785,
+      "repaired_faces": 4162,
+      "original_vertices": 1963,
+      "repaired_vertices": 2081,
+      "original_vertices_and_triangles_preserved": true,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 6289.923259186322,
+      "user_authorized_patch": true
+    }
+  ],
+  "float_precision_repair_sha256": "e8c7ca6707f3fdcb7deb0bf15b878c9a110c54004c46825278df9a9a695d85ce",
+  "qualification": "raw_source_caps_have_BRep_defects; user_authorized_derived_mesh_patch; collision_contact_qualification_is_separate",
+  "camera_qualification": "retained_original_wrist_relative_optics_and_hardware; new_attachment_not_measured",
+  "dynamics_qualification": "estimated_mass_inertia_joint_travel_and_XL330_continuous_effort; no_hardware_calibration",
+  "generator_sha256": "4aaa4c8b53bf70cdcfb7f28087163dbcd6d7da1b256ed37cf495657c4cf4b1b4"
+}

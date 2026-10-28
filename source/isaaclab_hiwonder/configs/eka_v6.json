@@ -1,0 +1,13 @@
+{
+  "robot_model": "eka_v6",
+  "num_envs": 4,
+  "randomization": {
+    "robot": {
+      "num_links": 10
+    },
+    "actuator": {
+      "num_joints": 9,
+      "qualification": "HX arm plus XL330 hand conservative simulation estimates; not hardware identification"
+    }
+  }
+}

@@ -16,8 +16,9 @@ import json
 from pathlib import Path
 
 import numpy as np
+
 from isaaclab_hiwonder.assets.collision_geometry import certify_hull_cover, select_collision_hulls
-from isaaclab_hiwonder.assets.registration import ASSET_DIR
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.tasks.api import rotation_matrix
 
 PROTECTED = ("gripper_body", "moving_jaw")
@@ -34,8 +35,10 @@ def body_vertices(part):
     return (np.asarray(part["vertices"]) * part["scale"]) @ rotation_matrix(transform[3:]).T + transform[:3]
 
 
-def build_variant(variant, assets, loss):
-    source = assets / ("hiwonder_soarm101" + ("" if variant == "nominal" else "_" + variant) + ".usdc")
+def build_variant(variant, assets, loss, model=None):
+    selected_model = get_robot_model(model or "stock")
+    protected = selected_model.protected_links
+    source = assets / (selected_model.asset_prefix + ("" if variant == "nominal" else "_" + variant) + ".usdc")
     reference = assets / ("collision_reference_" + variant + ".json.gz")
     with gzip.open(reference, "rb") as stream:
         envelope = json.load(stream)
@@ -66,9 +69,9 @@ def build_variant(variant, assets, loss):
             link=link,
             references=[[record[0], record[1]] for record in records],
             reference_hulls=len(original),
-            protected=link in PROTECTED,
+            protected=link in protected,
         )
-        if link in PROTECTED:
+        if link in protected:
             selected = [dict(reference_index=i, unchanged=True) for i in range(len(original))]
             proof.update(witnesses=list(range(len(original))), maximum_body_loss_m=0.0)
         else:
@@ -121,10 +124,13 @@ def build_variant(variant, assets, loss):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--variant", choices=(*VARIANTS, "all"), default="all")
-    parser.add_argument("--assets", type=Path, default=ASSET_DIR / "generated")
+    parser.add_argument("--assets", type=Path)
+    parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--body-surface-loss-m", type=float, default=0.002)
     args = parser.parse_args()
+    model = get_robot_model(args.robot_model)
+    args.assets = args.assets or model.asset_directory
     if args.output.exists():
         raise FileExistsError("Refusing to overwrite an existing profile artifact")
     if not 0 < args.body_surface_loss_m <= 0.002:
@@ -133,12 +139,14 @@ def main():
     result = dict(
         schema_version=1,
         name="manipulation",
-        protected_links=list(PROTECTED),
+        protected_links=list(model.protected_links),
         maximum_body_surface_loss_m=args.body_surface_loss_m,
         variants={},
     )
+    if model.name != "stock":
+        result["robot_model"] = model.name
     for variant in variants:
-        result["variants"][variant] = build_variant(variant, args.assets, args.body_surface_loss_m)
+        result["variants"][variant] = build_variant(variant, args.assets, args.body_surface_loss_m, model=model)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, sort_keys=True, separators=(",", ":"), allow_nan=False))
     manifest = dict(

@@ -1,0 +1,336 @@
+{
+  "status": "PASS_SAMPLED_COLLISION_PROFILE",
+  "device": "cuda:0",
+  "robot_model": "eka_v6",
+  "joint_names": [
+    "shoulder_pan",
+    "shoulder_lift",
+    "elbow_flex",
+    "wrist_flex",
+    "wrist_roll",
+    "left_finger_root",
+    "left_finger_tip",
+    "right_finger_root",
+    "right_finger_tip"
+  ],
+  "protected_links": [
+    "gripper_body",
+    "eka_left_proximal",
+    "eka_left_tip",
+    "eka_right_proximal",
+    "eka_right_tip"
+  ],
+  "profile_sha256": "e394f0c0aa1b69ee40713834b17778fc1aea7650cd7d9c5ff9014bd4275c1d80",
+  "poses_per_variant": 222,
+  "contact_capacity": 8388608,
+  "penetration_threshold_m": 2e-06,
+  "variants": {
+    "nominal": {
+      "certificate": [
+        {
+          "link": "base",
+          "protected": false,
+          "reference_hulls": 309,
+          "retained_hulls": 254,
+          "maximum_body_loss_m": 0.001996501348912716,
+          "subset_certified": true
+        },
+        {
+          "link": "shoulder",
+          "protected": false,
+          "reference_hulls": 265,
+          "retained_hulls": 170,
+          "maximum_body_loss_m": 0.0019796565175056458,
+          "subset_certified": true
+        },
+        {
+          "link": "upper_arm",
+          "protected": false,
+          "reference_hulls": 153,
+          "retained_hulls": 126,
+          "maximum_body_loss_m": 0.0019853810746441546,
+          "subset_certified": true
+        },
+        {
+          "link": "forearm",
+          "protected": false,
+          "reference_hulls": 328,
+          "retained_hulls": 228,
+          "maximum_body_loss_m": 0.0019785279694736345,
+          "subset_certified": true
+        },
+        {
+          "link": "wrist",
+          "protected": false,
+          "reference_hulls": 347,
+          "retained_hulls": 187,
+          "maximum_body_loss_m": 0.001974812085775815,
+          "subset_certified": true
+        },
+        {
+          "link": "gripper_body",
+          "protected": true,
+          "reference_hulls": 494,
+          "retained_hulls": 494,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_proximal",
+          "protected": true,
+          "reference_hulls": 173,
+          "retained_hulls": 173,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_tip",
+          "protected": true,
+          "reference_hulls": 227,
+          "retained_hulls": 227,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_proximal",
+          "protected": true,
+          "reference_hulls": 215,
+          "retained_hulls": 215,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_tip",
+          "protected": true,
+          "reference_hulls": 238,
+          "retained_hulls": 238,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        }
+      ],
+      "before": {
+        "shapes": 3049,
+        "mesh_source_bytes": 13081764,
+        "setup_seconds": 22.810584700000618,
+        "maximum_contacts": 2723127,
+        "median_query_ms": 16.052099999797065,
+        "p95_query_ms": 26.086100000611623
+      },
+      "after": {
+        "shapes": 2612,
+        "mesh_source_bytes": 11725560,
+        "setup_seconds": 17.035041700000875,
+        "maximum_contacts": 1943893,
+        "median_query_ms": 10.545600000114064,
+        "p95_query_ms": 15.293200000087381
+      },
+      "new_penetrating_body_pairs": [],
+      "baseline_poses_with_penetration": 58
+    },
+    "scale099": {
+      "certificate": [
+        {
+          "link": "base",
+          "protected": false,
+          "reference_hulls": 323,
+          "retained_hulls": 274,
+          "maximum_body_loss_m": 0.0019994313391752073,
+          "subset_certified": true
+        },
+        {
+          "link": "shoulder",
+          "protected": false,
+          "reference_hulls": 254,
+          "retained_hulls": 177,
+          "maximum_body_loss_m": 0.0019865930820538377,
+          "subset_certified": true
+        },
+        {
+          "link": "upper_arm",
+          "protected": false,
+          "reference_hulls": 159,
+          "retained_hulls": 123,
+          "maximum_body_loss_m": 0.001982187430439444,
+          "subset_certified": true
+        },
+        {
+          "link": "forearm",
+          "protected": false,
+          "reference_hulls": 308,
+          "retained_hulls": 221,
+          "maximum_body_loss_m": 0.001982145070586838,
+          "subset_certified": true
+        },
+        {
+          "link": "wrist",
+          "protected": false,
+          "reference_hulls": 341,
+          "retained_hulls": 215,
+          "maximum_body_loss_m": 0.0019916600576834753,
+          "subset_certified": true
+        },
+        {
+          "link": "gripper_body",
+          "protected": true,
+          "reference_hulls": 511,
+          "retained_hulls": 511,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_proximal",
+          "protected": true,
+          "reference_hulls": 173,
+          "retained_hulls": 173,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_tip",
+          "protected": true,
+          "reference_hulls": 227,
+          "retained_hulls": 227,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_proximal",
+          "protected": true,
+          "reference_hulls": 215,
+          "retained_hulls": 215,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_tip",
+          "protected": true,
+          "reference_hulls": 238,
+          "retained_hulls": 238,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        }
+      ],
+      "before": {
+        "shapes": 3049,
+        "mesh_source_bytes": 13036080,
+        "setup_seconds": 21.44737720000012,
+        "maximum_contacts": 2735827,
+        "median_query_ms": 16.336900000169408,
+        "p95_query_ms": 24.00099999977101
+      },
+      "after": {
+        "shapes": 2674,
+        "mesh_source_bytes": 11817732,
+        "setup_seconds": 16.916256700000304,
+        "maximum_contacts": 2048844,
+        "median_query_ms": 11.385100000552484,
+        "p95_query_ms": 16.15229999879375
+      },
+      "new_penetrating_body_pairs": [],
+      "baseline_poses_with_penetration": 58
+    },
+    "scale101": {
+      "certificate": [
+        {
+          "link": "base",
+          "protected": false,
+          "reference_hulls": 297,
+          "retained_hulls": 240,
+          "maximum_body_loss_m": 0.001993755303993716,
+          "subset_certified": true
+        },
+        {
+          "link": "shoulder",
+          "protected": false,
+          "reference_hulls": 318,
+          "retained_hulls": 209,
+          "maximum_body_loss_m": 0.001993827382571473,
+          "subset_certified": true
+        },
+        {
+          "link": "upper_arm",
+          "protected": false,
+          "reference_hulls": 161,
+          "retained_hulls": 136,
+          "maximum_body_loss_m": 0.0019998085542416257,
+          "subset_certified": true
+        },
+        {
+          "link": "forearm",
+          "protected": false,
+          "reference_hulls": 309,
+          "retained_hulls": 215,
+          "maximum_body_loss_m": 0.0019924938772908716,
+          "subset_certified": true
+        },
+        {
+          "link": "wrist",
+          "protected": false,
+          "reference_hulls": 277,
+          "retained_hulls": 198,
+          "maximum_body_loss_m": 0.001977601890364217,
+          "subset_certified": true
+        },
+        {
+          "link": "gripper_body",
+          "protected": true,
+          "reference_hulls": 506,
+          "retained_hulls": 506,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_proximal",
+          "protected": true,
+          "reference_hulls": 173,
+          "retained_hulls": 173,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_left_tip",
+          "protected": true,
+          "reference_hulls": 227,
+          "retained_hulls": 227,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_proximal",
+          "protected": true,
+          "reference_hulls": 215,
+          "retained_hulls": 215,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        },
+        {
+          "link": "eka_right_tip",
+          "protected": true,
+          "reference_hulls": 238,
+          "retained_hulls": 238,
+          "maximum_body_loss_m": 0.0,
+          "subset_certified": true
+        }
+      ],
+      "before": {
+        "shapes": 3021,
+        "mesh_source_bytes": 13043220,
+        "setup_seconds": 21.307429100001173,
+        "maximum_contacts": 2693383,
+        "median_query_ms": 15.85979999981646,
+        "p95_query_ms": 25.016600000526523
+      },
+      "after": {
+        "shapes": 2657,
+        "mesh_source_bytes": 11728980,
+        "setup_seconds": 17.652858199999173,
+        "maximum_contacts": 2014371,
+        "median_query_ms": 10.960400000840309,
+        "p95_query_ms": 15.817399998923065
+      },
+      "new_penetrating_body_pairs": [],
+      "baseline_poses_with_penetration": 58
+    }
+  },
+  "qualification": "geometric subsets plus sampled rigid contacts; no solver or SDF qualification"
+}

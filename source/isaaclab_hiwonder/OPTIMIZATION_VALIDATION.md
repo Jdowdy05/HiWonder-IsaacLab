@@ -1,6 +1,16 @@
 # Runtime optimization evidence, 2026-10-19
 
-> Historical validation record. Dates, source digests and results below refer to the original recorded experiments. `external-evidence/` denotes owner-retained evidence outside this repository; those large bundles are not included. This publication did not rerun simulator or hardware qualification.
+> Historical **stock robot only** optimization record. Every all-30 GPU, contact and RGB training receipt below uses the original six-action/seven-body robot. Dates and source digests identify those experiments. `external-evidence/` denotes owner-retained evidence outside this repository; large bundles are not included. These results do not qualify Eka or exact replay under a changed implementation fingerprint.
+
+## Eka boundary, 2026-10-28
+
+`eka_v6` is selected explicitly by `configs/eka_v6.json` or `configs/eka_v6_rgb_spots.json`; stock remains the default. Eka's two finger chains have four independently actuated joints, yielding nine actions, ten bodies, 27 proprioceptive values and critic capacity 320. Its focused 106-test CPU lane includes all 30 task/critic constructions and a small CPU PPO contract. Integrated full-suite and runtime qualification are recorded separately when complete; no Eka GPU throughput, rendering, contact or learning result follows from the old measurements below.
+
+The new hand uses the separately supplied unchanged STEP and repaired derivative, with 13 NURBS-reparameterized printed parts and two boundary-patched faceted caps. Its mesh closure/winding/positive-volume checks at actual USD float precision over three scales retain contact triangles; they do not establish runtime contact equivalence. The measured four-hole/14 mm pitch-circle mount, retained 640x480/30 Hz wrist camera pose/optics and provisional new physical attachment are documented in the asset guide. Physical fit, limits and dynamics remain unmeasured.
+
+Old six-action stock checkpoints cannot initialize Eka's nine-action network. Keeping the stock model/profile default does not preserve old SGS history identities when the implementation fingerprint changes. The policy-transfer advice in the historical record applies only where robot model and network dimensions remain compatible; a fresh bank/optimizer is required when exact resume rejects the implementation.
+
+## Historical stock optimization results
 
 All six optimizations are implemented. All 30 presets passed the finite-step execution/reset/restore fixtures in both source versions (32 main control steps; these historical workers were not the new memory-capped processes). Full preservation qualification remains incomplete: strict native trajectories, renderer acceptance and the supplemental live checks have the limits below.
 
@@ -92,3 +102,7 @@ The new capture/adapter suite was refused admission twice; its latest source has
 ## Evidence
 
 The evidence directory contains source manifests, raw JSON/NPZ comparisons and failure arrays, package/CUDA test logs, `review.md`, `review-final-cpu-rechecks.json`, `comparator-review-final.json`, `catalog-comparison.json`, `scene-asset-comparison.json`, `native-model-input-comparison.json`, `native-observed-trajectory-spreads.json`, `images-sgs-gpu.json` and the four PPO contract receipts. Original negative and interrupted evidence is retained.
+
+## Eka V6 integrated acceptance, 2026-10-28
+
+See [EKA_V6_VALIDATION.md](EKA_V6_VALIDATION.md) and the repository `validation/eka_v6-2026-10-28/` receipts for the new hand. The nine-joint articulation, wrist RGB/projection/light isolation, 0.5 s two-tip peg dwell and 23.93 mm lift, native rag stepping/reset, and two-iteration RGB PPO/SGS smoke passed. A 222-pose comparison at each of three scales found no additional penetrating body pairs. These are bounded digital checks; all-30 new-hand solver/task success and physical calibration remain unqualified.

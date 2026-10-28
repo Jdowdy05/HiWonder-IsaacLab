@@ -1,6 +1,20 @@
 # Validation record
 
-> Historical validation record. Dates, source digests and results below refer to the original recorded experiments. `external-evidence/` denotes owner-retained evidence outside this repository; those large bundles are not included. This publication did not rerun simulator or hardware qualification.
+> The historical GPU, contact, all-30 execution and RGB training records below concern `robot_model="stock"` only. Their dates/source digests identify the original experiments. `external-evidence/` denotes owner-retained evidence outside this repository; large bundles are not included. They do not qualify Eka or promise exact replay under the new implementation fingerprint.
+
+## Eka V6 integration scope, 2026-10-28
+
+The explicit `eka_v6` model adds four independently actuated finger joints in two left/right root/tip chains after the retained five-joint arm: nine actions, ten rigid bodies, 27 proprioceptive values and critic capacity 320. Stock remains the default with six actions/seven bodies/18 proprioceptive values/critic capacity 256. Old six-action checkpoints are incompatible with Eka, including weight initialization. Same-model stock compatibility must still satisfy implementation/bank fingerprints and network dimensions.
+
+The staged runtime lane passed 106 focused CPU tests with CUDA masked. This includes all 30 catalog/critic layouts at capacity 320 and a small nine-action CPU PPO update/save/restore contract. Integrated full-suite and saved-asset/runtime qualification are reported separately when complete. These CPU checks do not establish new-hand GPU execution, rendered RGB, contact/grasp stability or learned task success.
+
+The new supplied STEP is preserved unchanged, SHA-256 `141ab8a721d850ed88da9d97f17257ebce1f85cfca7a0403f4c6e20c1f60e944`. The derivative uses exact NURBS reparameterization for 13 printed parts and boundary patches for two faceted caps; no cap parametric-history recovery is claimed. Printable meshes were checked for watertightness, consistent winding and positive volume at actual USD float precision over all three scales, retaining hand contact triangles. This is geometric evidence, separate from physical fit or runtime contact acceptance. Earlier native V6 geometry supplies reference hardware/case meshes, not the changed printed parts.
+
+Matching four-hole patterns on a 14 mm pitch circle establish the CAD mounting transform after `wrist_roll`. Physical screw/thread fit, travel limits and dynamics remain unmeasured. Eka retains 640x480/30 Hz capture and the original wrist-relative camera pose/optics; its new physical camera mount remains provisional. The stock stable-grasp seed does not qualify Eka.
+
+Use the verified profile-based launch interface for training/inspection: `--profile source/isaaclab_hiwonder/configs/eka_v6.json` or `--profile source/isaaclab_hiwonder/configs/eka_v6_rgb_spots.json`. These are launch recipes, not completed simulator receipts. See the extension README for full commands.
+
+## Historical stock validation
 
 ## Runtime optimization review, 2026-10-19
 
@@ -261,3 +275,7 @@ The aggregate is `task-matrix-30/catalog-results.json`; the worker audit is `gpu
 | `cloth_fold:shorts` | cloth | PASS |
 | `cloth_fold:underwear` | cloth | PASS |
 | `cloth_fold:sock` | cloth | PASS |
+
+## Eka V6 integrated acceptance, 2026-10-28
+
+See [EKA_V6_VALIDATION.md](EKA_V6_VALIDATION.md) and the repository `validation/eka_v6-2026-10-28/` receipts for the new hand. The nine-joint articulation, wrist RGB/projection/light isolation, 0.5 s two-tip peg dwell and 23.93 mm lift, native rag stepping/reset, and two-iteration RGB PPO/SGS smoke passed. A 222-pose comparison at each of three scales found no additional penetrating body pairs. These are bounded digital checks; all-30 new-hand solver/task success and physical calibration remain unqualified.

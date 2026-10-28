@@ -24,8 +24,9 @@ def native_diagnostic_snapshot(env):
     if not getattr(env, "hiwonder_native_diagnostics", False):
         return {}
     import numpy as np
-    from isaaclab_hiwonder.tasks.vbd_contact import NewtonHiWonderVBDManager
     from isaaclab_newton.physics import NewtonManager
+
+    from isaaclab_hiwonder.tasks.vbd_contact import NewtonHiWonderVBDManager
 
     model = NewtonManager.get_model()
     arrays = {"native_all_body_labels": np.array(model.body_label)}
@@ -105,9 +106,10 @@ def native_diagnostic_snapshot(env):
 
 def camera_snapshot(env, definition, output_directory, task, label):
     import numpy as np
+    from PIL import Image
+
     from isaaclab_hiwonder.assets.kinematics import forward_kinematics
     from isaaclab_hiwonder.tasks.api import rotation_matrix
-    from PIL import Image
 
     # state_debug does not consume camera observations during environment steps.
     # Explicitly refresh the public sensor after rendering before measuring it.
@@ -119,7 +121,9 @@ def camera_snapshot(env, definition, output_directory, task, label):
     scales = env.randomization.snapshot()["robot"]["geometry_scale"].numpy()
     expected = np.array(
         [
-            root[:3] + rotation_matrix(root[3:]) @ forward_kinematics(q, float(scale))["camera_opencv"][:3, 3]
+            root[:3]
+            + rotation_matrix(root[3:])
+            @ forward_kinematics(q, float(scale), robot_model=env.robot_model)["camera_opencv"][:3, 3]
             for root, q, scale in zip(roots, joints, scales)
         ]
     )
@@ -275,6 +279,7 @@ def retained_physics_snapshot(env):
 def check_measured_task_health(env):
     """Check actual physical state after integration following an indexed reset."""
     import numpy as np
+
     from isaaclab_hiwonder.tasks.api import rotation_matrix
 
     metrics = {}
@@ -341,7 +346,9 @@ def verify_indexed_reset(env, output_directory, task):
         raise RuntimeError(f"Indexed reset integrated physics: {start} -> {after_reset}")
     for _ in range(8):
         with torch.inference_mode():
-            observations, reward, _, _, _ = env.step(torch.zeros((env.num_envs, 6), device=env.device))
+            observations, reward, _, _, _ = env.step(
+                torch.zeros((env.num_envs, env.cfg.action_space), device=env.device)
+            )
         check_finite_observations(observations, reward)
     return {
         "reset_env_ids": [0],
@@ -523,6 +530,8 @@ def child_command(args, name):
         str(args.num_envs),
         "--device",
         args.device,
+        "--robot-model",
+        getattr(args, "robot_model", "stock"),
         "--output-directory",
         str(args.output_directory),
     ]
@@ -546,6 +555,7 @@ def main():
         "--native-diagnostics", action="store_true", help="Synchronized initial/final native model/control snapshots"
     )
     parser.add_argument("--task", default="peg_insert")
+    parser.add_argument("--robot-model", choices=("stock", "eka_v6"), default="stock")
     parser.add_argument("--steps", type=int, default=32)
     parser.add_argument("--num-envs", type=int, default=1)
     parser.add_argument("--output-directory", type=Path, required=True)
@@ -575,11 +585,11 @@ def main():
             raise SystemExit(1)
         return
 
-    from isaaclab_hiwonder.tasks import build_task
-    from isaaclab_hiwonder.tasks.native_backend import physics_config
-
     from isaaclab.app import launch_simulation
     from isaaclab.sim import SimulationCfg
+
+    from isaaclab_hiwonder.tasks import build_task
+    from isaaclab_hiwonder.tasks.native_backend import physics_config
 
     name, _, variant = args.task.partition(":")
     definition = build_task(name, variant or None)
@@ -590,11 +600,21 @@ def main():
     bootstrap = SimulationCfg(dt=1 / 240, render_interval=8, device=args.device, physics=physics_config(definition))
     with launch_simulation(bootstrap, {"device": args.device, "enable_cameras": True, "require_kit": True}):
         import torch
+
+        from isaaclab_hiwonder.config import HiWonderEnvConfig
         from isaaclab_hiwonder.sim.env import make_cfg, make_env
 
+        profile = HiWonderEnvConfig(
+            robot_model=args.robot_model,
+            num_envs=args.num_envs,
+            seed=31,
+            task=args.task,
+            actor_mode="rgb" if args.rgb else "state_debug",
+        )
         cfg = make_cfg(
             args.task,
-            args.num_envs,
+            num_envs=args.num_envs,
+            profile=profile,
             seed=31,
             actor_mode="rgb" if args.rgb else "state_debug",
             output_directory=args.output_directory / args.task.replace(":", "_"),
@@ -667,7 +687,7 @@ def main():
                 # inference mode below to qualify persistent-buffer ownership.
                 with torch.inference_mode():
                     observations, reward, terminal, timeout, _ = env.step(
-                        torch.zeros((args.num_envs, 6), device=env.device)
+                        torch.zeros((args.num_envs, env.cfg.action_space), device=env.device)
                     )
                 check_finite_observations(observations, reward)
                 reward_total += reward
@@ -678,6 +698,7 @@ def main():
             native_metrics = dict(native_rest_metrics)
             if definition.deformables:
                 import numpy as np
+
                 from isaaclab_hiwonder.tasks.api import rotation_matrix
 
                 if env.native_binding is None or env.native_binding.hook is None:
@@ -718,7 +739,9 @@ def main():
             # the immediate written state, to catch stale solver/contact history.
             for _ in range(8):
                 with torch.inference_mode():
-                    observations, reward, _, _, _ = env.step(torch.zeros((args.num_envs, 6), device=env.device))
+                    observations, reward, _, _, _ = env.step(
+                        torch.zeros((args.num_envs, env.cfg.action_space), device=env.device)
+                    )
                 check_finite_observations(observations, reward)
             indexed_reset = verify_indexed_reset(env, args.output_directory, args.task) if args.num_envs > 1 else None
             report = {

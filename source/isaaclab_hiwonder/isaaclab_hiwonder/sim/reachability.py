@@ -18,7 +18,7 @@ import numpy as np
 from scipy.optimize import least_squares
 
 from isaaclab_hiwonder.assets.kinematics import forward_kinematics
-from isaaclab_hiwonder.assets.registration import JOINTS
+from isaaclab_hiwonder.assets.robot_models import get_robot_model
 from isaaclab_hiwonder.tasks.api import rotation_matrix
 
 
@@ -83,8 +83,11 @@ def _initial_base_overlap(definition, base, yaw, scale):
     return False
 
 
-def solve_position(target, base_position=(0, 0, 0), base_yaw=np.pi / 2, scale=1.0, tolerance=0.004):
-    """Return a bounded six-joint witness or None; jaw stays open at -20 degrees."""
+def solve_position(
+    target, base_position=(0, 0, 0), base_yaw=np.pi / 2, scale=1.0, tolerance=0.004, robot_model="stock"
+):
+    """Return a complete bounded witness; optimize five arm DOFs with the hand open."""
+    model = get_robot_model(robot_model)
     target = np.asarray(target, dtype=float)
     if target.shape != (3,) or not np.isfinite(target).all():
         raise ValueError("Need a finite Cartesian target")
@@ -93,10 +96,16 @@ def solve_position(target, base_position=(0, 0, 0), base_yaw=np.pi / 2, scale=1.
     local = rotation.T @ (target - base_position)
     if np.linalg.norm(local) > 0.55:
         return None
-    limits = np.deg2rad(np.array([joint["limits_deg"] for joint in JOINTS[:5]]))
+    limits = np.deg2rad(np.array([model.joints[i]["limits_deg"] for i in model.arm_joint_indices]))
+
+    def complete(arm):
+        q = np.asarray(model.nominal_joint_positions_rad, dtype=float).copy()
+        q[list(model.arm_joint_indices)] = arm
+        q[list(model.gripper_joint_indices)] = model.gripper_open_positions_rad
+        return q
 
     def residual(arm):
-        return forward_kinematics(np.r_[arm, -np.pi / 9], scale)["tool_center"][:3, 3] - local
+        return forward_kinematics(complete(arm), scale, robot_model=model)["tool_center"][:3, 3] - local
 
     seeds = [np.zeros(5), [0, -0.6, 0.8, 0.4, 0], [0, 0.6, -0.8, -0.4, 0], [0, -0.9, -0.7, 0.8, 0]]
     for seed in seeds:
@@ -104,7 +113,7 @@ def solve_position(target, base_position=(0, 0, 0), base_yaw=np.pi / 2, scale=1.
             residual, seed, bounds=(limits[:, 0], limits[:, 1]), max_nfev=80, ftol=1e-7, xtol=1e-7, gtol=1e-7
         )
         if np.linalg.norm(residual(result.x)) <= tolerance:
-            return np.r_[result.x, -np.pi / 9]
+            return complete(result.x)
     return None
 
 
@@ -133,7 +142,7 @@ def task_landmarks(definition):
     return np.asarray(points)
 
 
-def reject_unreachable_bases(manager, definitions, env_ids=None, max_attempts=32):
+def reject_unreachable_bases(manager, definitions, env_ids=None, max_attempts=32, robot_model="stock"):
     """Resample base draws until initial geometry clears the base and CAD IK succeeds.
 
     Structural geometry and bank IDs remain untouched. The small outward margin
@@ -157,7 +166,7 @@ def reject_unreachable_bases(manager, definitions, env_ids=None, max_attempts=32
                 target = point.copy()
                 delta = target[:2] - base[:2]
                 target[:2] += 0.009 * delta / max(np.linalg.norm(delta), 1e-8)
-                witness = solve_position(target, base, yaw, scale)
+                witness = solve_position(target, base, yaw, scale, robot_model=robot_model)
                 if witness is None:
                     break
                 poses.append(witness)

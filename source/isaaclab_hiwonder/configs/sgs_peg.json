@@ -1,0 +1,9 @@
+{
+  "task": "peg_insert",
+  "num_envs": 4,
+  "reset_families": ["reaching", "near_goal", "stable_grasp"],
+  "grasp_library": "source/isaaclab_hiwonder/isaaclab_hiwonder/assets/generated/stable_peg_grasp.json",
+  "randomization": {
+    "robot": {"geometry_variants": ["nominal"], "variant_scales": [1.0]}
+  }
+}

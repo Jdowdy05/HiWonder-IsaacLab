@@ -1,0 +1,199 @@
+# Copyright (c) 2022-2026, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+"""Check immutable hull certificates and sample actual Newton self contacts.
+
+This is an isolated collision query, without a room, cameras, SDFs or solver.
+The original reference hulls and the manipulation profile use identical query
+settings. Run inside an external process memory limit; GPU runs are serial.
+"""
+
+import argparse
+import copy
+import gzip
+import json
+import time
+from pathlib import Path
+
+import newton
+import numpy as np
+import warp as wp
+from isaaclab_hiwonder.assets.collision_geometry import certify_hull_cover
+from isaaclab_hiwonder.assets.registration import ASSET_DIR, JOINT_NAMES, JOINTS
+from isaaclab_hiwonder.sim.robot_collisions import (
+    apply_robot_collision_profile,
+    load_collision_profile,
+    restore_profile_hulls,
+)
+from isaaclab_hiwonder.tasks.api import rotation_matrix
+
+from pxr import Usd, UsdGeom
+
+
+def points(part):
+    transform = np.asarray(part["transform"])
+    return (np.asarray(part["vertices"]) * part["scale"]) @ rotation_matrix(transform[3:]).T + transform[:3]
+
+
+def reference_and_certificate(data, variant):
+    row = data["variants"][variant]
+    with gzip.open(ASSET_DIR / "generated" / row["reference_file"], "rb") as stream:
+        reference = json.load(stream)["payload"]
+    original = copy.deepcopy(data)
+    original_row = original["variants"][variant]
+    original_row["shapes"] = []
+    checks = []
+    for group in row["groups"]:
+        sources = [reference["groups"][g]["parts"][i] for g, i in group["references"]]
+        selected = [row["shapes"][i] for i in group["shape_indices"]]
+        cover = dict(
+            witnesses=group["witnesses"],
+            parts=[
+                dict(reference_index=p["reference_index"], unchanged=p["kind"] == "reference", vertices=points(p))
+                for p in selected
+            ],
+        )
+        checks.append(
+            dict(
+                link=group["link"],
+                **certify_hull_cover(
+                    [points(p) for p in sources], cover, max_surface_loss=data["maximum_body_surface_loss_m"]
+                ),
+            )
+        )
+        if group["protected"]:
+            for part, source in zip(selected, sources, strict=True):
+                for name in ("vertices", "triangles", "transform", "scale"):
+                    if part[name] != source[name]:
+                        raise ValueError("Protected gripper data differs from immutable reference")
+        for i, source in enumerate(sources):
+            original_row["shapes"].append(
+                dict(
+                    **{key: source[key] for key in ("vertices", "triangles", "transform", "scale")},
+                    kind="reference",
+                    link=group["link"],
+                    path=f"{group['link']}/manipulation_collisions/reference/hull_{i}",
+                )
+            )
+    return original, checks
+
+
+def query(data, variant, poses, device):
+    row = data["variants"][variant]
+    source = ASSET_DIR / "generated" / row["asset_file"]
+    stage = Usd.Stage.CreateInMemory()
+    UsdGeom.SetStageMetersPerUnit(stage, 1)
+    root = stage.DefinePrim("/Robot", "Xform")
+    root.GetReferences().AddReference(str(source))
+    root.SetCustomDataByKey("hiwonder:sourceAsset", str(source))
+    started = time.perf_counter()
+    apply_robot_collision_profile(stage, "/Robot", native=True, self_collisions=True, profile=data)
+    builder = newton.ModelBuilder()
+    builder.add_usd(stage)
+    restore_profile_hulls(builder, stage, "/Robot")
+    mesh_bytes = sum(
+        np.asarray(s.vertices).nbytes + np.asarray(s.indices).nbytes for s in builder.shape_source if s is not None
+    )
+    model = builder.finalize(device=device)
+    state = model.state()
+    pipeline = newton.CollisionPipeline(model, rigid_contact_max=2097152, broad_phase="sap")
+    contacts = pipeline.contacts()
+    distance = wp.empty(contacts.rigid_contact_max, dtype=wp.float32, device=device)
+    shape_bodies = model.shape_body.numpy()
+    names = [label.rsplit("/", 1)[-1] for label in builder.body_label]
+    starts = {label.rsplit("/", 1)[-1]: builder.joint_q_start[i] for i, label in enumerate(builder.joint_label)}
+    setup_seconds = time.perf_counter() - started
+    records, elapsed, maximum_contacts = [], [], 0
+    for pose in poses:
+        q = np.asarray(builder.joint_q, dtype=np.float32).copy()
+        for name, value in zip(JOINT_NAMES, pose, strict=True):
+            q[starts[name]] = value
+        state.joint_q.assign(q)
+        newton.eval_fk(model, state.joint_q, state.joint_qd, state)
+        wp.synchronize_device(device)
+        started = time.perf_counter()
+        pipeline.collide(state, contacts)
+        wp.synchronize_device(device)
+        elapsed.append(time.perf_counter() - started)
+        count = int(contacts.rigid_contact_count.numpy()[0])
+        maximum_contacts = max(maximum_contacts, count)
+        if count >= contacts.rigid_contact_max:
+            raise RuntimeError("Collision query contact buffer saturated")
+        newton.eval_rigid_contact_kinematics(model, state, contacts, out_distance=distance)
+        d = distance[:count].numpy()
+        if not np.isfinite(d).all() or not np.isfinite(state.body_q.numpy()).all():
+            raise RuntimeError("Collision query produced nonfinite geometry")
+        a, b = contacts.rigid_contact_shape0[:count].numpy(), contacts.rigid_contact_shape1[:count].numpy()
+        pairs = set()
+        for i in np.flatnonzero(d < -0.000002):
+            pair = tuple(sorted((names[shape_bodies[a[i]]], names[shape_bodies[b[i]]])))
+            pairs.add(pair)
+        records.append(pairs)
+    return records, dict(
+        shapes=builder.shape_count,
+        mesh_source_bytes=mesh_bytes,
+        setup_seconds=setup_seconds,
+        maximum_contacts=maximum_contacts,
+        median_query_ms=float(np.median(elapsed[1:]) * 1000),
+        p95_query_ms=float(np.percentile(elapsed[1:], 95) * 1000),
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--random-poses", type=int, default=128)
+    args = parser.parse_args()
+    if args.random_poses < 0 or args.output.exists():
+        raise ValueError("Need nonnegative sample count and a fresh output path")
+    wp.set_device(args.device)
+    limits = np.deg2rad([j["limits_deg"] for j in JOINTS])
+    poses = [np.zeros(6)]
+    for joint in range(6):
+        for angle in np.linspace(*limits[joint], 21):
+            pose = np.zeros(6)
+            pose[joint] = angle
+            poses.append(pose)
+    poses.extend(np.random.default_rng(7529).uniform(limits[:, 0], limits[:, 1], (args.random_poses, 6)))
+    data = load_collision_profile()
+    result = dict(
+        status="PASS_SAMPLED_COLLISION_PROFILE",
+        device=args.device,
+        profile_sha256=data["sha256"],
+        poses_per_variant=len(poses),
+        penetration_threshold_m=0.000002,
+        variants={},
+        qualification="geometric subsets plus sampled rigid contacts; no solver or SDF qualification",
+    )
+    for variant in data["variants"]:
+        original, proof = reference_and_certificate(data, variant)
+        before, before_metrics = query(original, variant, poses, args.device)
+        after, after_metrics = query(data, variant, poses, args.device)
+        additions = [
+            dict(pose=i, joint_positions_rad=poses[i].tolist(), pairs=sorted(a - b))
+            for i, (a, b) in enumerate(zip(after, before, strict=True))
+            if a - b
+        ]
+        result["variants"][variant] = dict(
+            certificate=proof,
+            before=before_metrics,
+            after=after_metrics,
+            new_penetrating_body_pairs=additions,
+            baseline_poses_with_penetration=sum(bool(p) for p in before),
+        )
+        print(
+            json.dumps(dict(variant=variant, before=before_metrics, after=after_metrics, additions=len(additions))),
+            flush=True,
+        )
+        if additions:
+            result["status"] = "FAIL_NEW_SAMPLED_CONTACT_PAIRS"
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2) + "\n")
+    if result["status"] != "PASS_SAMPLED_COLLISION_PROFILE":
+        raise RuntimeError(result["status"])
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "isaaclab-hiwonder"
+version = "0.1.0"
+description = "HiWonder SO-ARM101 visual reinforcement-learning environments"
+requires-python = ">=3.12,<3.13"
+license = "BSD-3-Clause"
+dependencies = ["numpy>=2", "torch>=2.11", "gymnasium>=1.2", "scipy>=1.15", "pillow>=11"]
+
+[project.optional-dependencies]
+assets = ["rhino3dm>=8.17", "trimesh>=4.6.8", "fast-simplification>=0.1.11"]
+calibration = ["opencv-python-headless>=4.11"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["isaaclab_hiwonder*"]
+
+[tool.setuptools.package-data]
+isaaclab_hiwonder = ["assets/**/*.json", "assets/**/*.json.gz", "assets/**/*.yaml", "assets/**/*.usda", "assets/**/*.usd", "assets/**/*.usdc", "assets/**/*.npz", "assets/**/*.obj"]

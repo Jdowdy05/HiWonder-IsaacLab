@@ -1,0 +1,10 @@
+{
+  "num_envs": 4,
+  "randomization": {
+    "lighting": {"profile": "rgb_disco", "count": [3, 4], "intensity": [500, 2200], "beam_angle_degrees": [10, 35]},
+    "image": {"mode": "all"},
+    "smudge": {"spot_count": [1, 8], "streak_count": [0, 3]},
+    "confetti": {"count": [60, 100], "size_m": [0.005, 0.015], "opacity": [0.6, 1.0]},
+    "actuator": {"backlash_enabled": true, "backlash_radians": [0.0, 0.02]}
+  }
+}

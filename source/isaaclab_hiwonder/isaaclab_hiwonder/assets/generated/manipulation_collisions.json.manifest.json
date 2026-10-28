@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "file": "manipulation_collisions.json",
+  "sha256": "e2079348b1a8654f68a174fc2c0eea371a0d9a38a96906c21041f4c3d068cfbb",
+  "generator_sha256": "a183143c5b674559105faf7507dfe2fdeb398fe21a96ede9f0397ec084f3c05b",
+  "qualification": "geometric_subset_and_body_loss_verified_backend_checks_required"
+}

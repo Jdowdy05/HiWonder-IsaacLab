@@ -1,0 +1,7 @@
+{
+  "upstream_url": "https://github.com/isaac-sim/IsaacLab.git",
+  "upstream_tag": "v3.0.0",
+  "upstream_commit": "e3f7d9ff1f5d7f8280de3ece9000b7117f66bcf4",
+  "upstream_pyproject_sha256": "5123089f1bbf3afb916140915e4ae36fa0952665da55b693cdce7242acf35f7c",
+  "uv_minimum": "0.13.1"
+}

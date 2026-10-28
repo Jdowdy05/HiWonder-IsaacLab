@@ -1,0 +1,19 @@
+{
+  "num_envs": 4,
+  "randomization": {
+    "lighting": {
+      "profile": "rgb_disco",
+      "motion_mode": "wrist_view",
+      "count": [3, 4],
+      "intensity": [1500, 4500],
+      "color_saturation": [0.2, 1.0],
+      "saturation_period_s": 8.0,
+      "angular_speed": [0.5, 1.5],
+      "spot_radius_m": [0.03, 0.07],
+      "edge_softness": [0.2, 0.45],
+      "view_extent": [0.3, 0.6],
+      "emitter_radius_m": 0.004,
+      "white_fill_intensity": [80, 220]
+    }
+  }
+}

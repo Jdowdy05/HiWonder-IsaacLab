@@ -1,0 +1,630 @@
+{
+  "num_envs": 16,
+  "seed": 0,
+  "task": "peg_insert",
+  "task_parameters": {},
+  "backend": "auto",
+  "control_hz": 30.0,
+  "physics_substeps": 8,
+  "episode_seconds": null,
+  "frame_stack": 1,
+  "reset_families": [
+    "reaching",
+    "near_goal"
+  ],
+  "grasp_library": null,
+  "reward": {
+    "dense": true,
+    "shaping_discount": 0.99,
+    "progress_weight": 1.0,
+    "reach_weight": 0.4,
+    "grasp_weight": 0.2,
+    "lift_weight": 0.2,
+    "success_bonus": 10.0,
+    "failure_penalty": 10.0,
+    "time_cost": 0.01,
+    "action_cost": 0.01,
+    "velocity_cost": 0.0001,
+    "effort_cost": 0.0001
+  },
+  "camera": {
+    "width": 640,
+    "height": 480,
+    "fps": 30.0,
+    "calibration_status": "estimated",
+    "provenance": "USB capture dimensions verified; optical parameters and mount require calibration",
+    "usb_identity": null,
+    "optical_parent_link": "gripper_body",
+    "optical_transform_status": "CAD_mechanical_estimate",
+    "optical_translation_m": [
+      -0.00250012,
+      -0.05209936,
+      0.04465591
+    ],
+    "optical_quaternion_xyzw": [
+      0.984807753,
+      0.0,
+      0.0,
+      0.173648178
+    ],
+    "optical_frame_convention": "opencv",
+    "renderer_frame_convention": "opengl",
+    "intrinsics": [
+      554.2666667,
+      0.0,
+      320.0,
+      0.0,
+      554.2666667,
+      240.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "distortion_model": "brown_conrady",
+    "distortion_coefficients": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "horizontal_fov_degrees": 60.0,
+    "vertical_fov_degrees": 46.826,
+    "sensor_aperture_mm": [
+      4.8,
+      3.6
+    ],
+    "focal_length_mm": 4.157,
+    "f_stop": null,
+    "focus_distance_m": 0.25,
+    "clipping_range_m": [
+      0.01,
+      10.0
+    ],
+    "exposure_seconds": 0.008,
+    "gain": 1.0,
+    "white_balance_rgb": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "response_gamma": 2.2,
+    "latency_seconds": 0.0,
+    "frame_drop_probability": 0.0,
+    "reprojection_error_px": null,
+    "calibration_source": null
+  },
+  "room": {
+    "width_m": 3.6576,
+    "depth_m": 3.6576,
+    "height_m": 3.6576,
+    "wall_thickness_m": 0.05,
+    "ceiling": false,
+    "independent_materials": true,
+    "env_spacing_m": 4.0
+  },
+  "randomization": {
+    "version": "hiwonder-v3-material-priors-coherent-assets",
+    "table": {
+      "shapes": [
+        "rectangle",
+        "rounded_rectangle"
+      ],
+      "width_m": [
+        0.8,
+        1.2
+      ],
+      "depth_m": [
+        0.65,
+        0.95
+      ],
+      "height_m": [
+        0.65,
+        0.85
+      ],
+      "thickness_m": [
+        0.025,
+        0.055
+      ],
+      "edge_radius_m": [
+        0.005,
+        0.025
+      ],
+      "material": {
+        "families": [
+          "matte",
+          "wood",
+          "plastic",
+          "metal"
+        ],
+        "color": [
+          0.05,
+          0.95
+        ],
+        "roughness": [
+          0.15,
+          0.95
+        ],
+        "metallic": [
+          0.0,
+          0.8
+        ],
+        "specular": [
+          0.1,
+          0.8
+        ],
+        "uv_scale": [
+          0.5,
+          4.0
+        ],
+        "friction": [
+          0.3,
+          1.0
+        ],
+        "restitution": [
+          0.0,
+          0.15
+        ],
+        "texture_ids": [
+          "none",
+          "wood_grain",
+          "checker",
+          "noise"
+        ]
+      }
+    },
+    "lighting": {
+      "profile": "stationary",
+      "count": [
+        1,
+        4
+      ],
+      "max_lights": 4,
+      "types": [
+        "sphere",
+        "spot"
+      ],
+      "intensity": [
+        300.0,
+        1800.0
+      ],
+      "temperature_kelvin": [
+        3000.0,
+        8000.0
+      ],
+      "beam_angle_degrees": [
+        15.0,
+        70.0
+      ],
+      "angular_speed": [
+        0.3,
+        2.0
+      ],
+      "shadows_probability": 0.8,
+      "backgrounds": [
+        "none"
+      ],
+      "wall_material": {
+        "families": [
+          "matte",
+          "wood",
+          "plastic",
+          "metal"
+        ],
+        "color": [
+          0.05,
+          0.95
+        ],
+        "roughness": [
+          0.15,
+          0.95
+        ],
+        "metallic": [
+          0.0,
+          0.8
+        ],
+        "specular": [
+          0.1,
+          0.8
+        ],
+        "uv_scale": [
+          0.5,
+          4.0
+        ],
+        "friction": [
+          0.3,
+          1.0
+        ],
+        "restitution": [
+          0.0,
+          0.15
+        ],
+        "texture_ids": [
+          "none",
+          "wood_grain",
+          "checker",
+          "noise"
+        ]
+      }
+    },
+    "robot": {
+      "num_links": 7,
+      "geometry_variants": [
+        "nominal",
+        "scale099",
+        "scale101"
+      ],
+      "variant_scales": [
+        1.0,
+        0.99,
+        1.01
+      ],
+      "mass_scale": [
+        0.9,
+        1.1
+      ],
+      "material": {
+        "families": [
+          "matte",
+          "wood",
+          "plastic",
+          "metal"
+        ],
+        "color": [
+          0.05,
+          0.95
+        ],
+        "roughness": [
+          0.15,
+          0.95
+        ],
+        "metallic": [
+          0.0,
+          0.8
+        ],
+        "specular": [
+          0.1,
+          0.8
+        ],
+        "uv_scale": [
+          0.5,
+          4.0
+        ],
+        "friction": [
+          0.3,
+          1.0
+        ],
+        "restitution": [
+          0.0,
+          0.15
+        ],
+        "texture_ids": [
+          "none",
+          "wood_grain",
+          "checker",
+          "noise"
+        ]
+      }
+    },
+    "smudge": {
+      "enabled": true,
+      "spot_count": [
+        0,
+        6
+      ],
+      "streak_count": [
+        0,
+        2
+      ],
+      "radius": [
+        0.025,
+        0.18
+      ],
+      "anisotropy": [
+        0.3,
+        1.0
+      ],
+      "opacity": [
+        0.05,
+        0.45
+      ],
+      "blur_pixels": [
+        0.0,
+        2.0
+      ],
+      "haze": [
+        0.0,
+        0.1
+      ],
+      "local_contrast": [
+        0.3,
+        0.9
+      ],
+      "tint": [
+        0.3,
+        0.8
+      ],
+      "drift_per_second": [
+        0.0,
+        0.002
+      ]
+    },
+    "task": {
+      "task_names": [
+        "peg_in_hole"
+      ],
+      "weights": [
+        1.0
+      ]
+    },
+    "actuator": {
+      "num_joints": 6,
+      "effort_limit": [
+        0.6,
+        1.2
+      ],
+      "stiffness": [
+        15.0,
+        35.0
+      ],
+      "damping": [
+        0.5,
+        2.5
+      ],
+      "friction": [
+        0.01,
+        0.12
+      ],
+      "armature": [
+        0.0001,
+        0.002
+      ],
+      "velocity_limit": [
+        1.5,
+        4.0
+      ],
+      "delay_seconds": [
+        0.0,
+        0.025
+      ],
+      "encoder_bias_radians": [
+        -0.005,
+        0.005
+      ],
+      "encoder_noise_std": [
+        0.0,
+        0.003
+      ],
+      "correlation": 0.6,
+      "backlash_enabled": false,
+      "backlash_radians": [
+        0.0,
+        0.015
+      ],
+      "qualification": "estimated; not a measured HX-30HM continuous-torque model"
+    },
+    "base": {
+      "x_m": [
+        -0.1,
+        0.1
+      ],
+      "y_m": [
+        -0.1,
+        0.1
+      ],
+      "yaw_radians": [
+        -0.3,
+        0.3
+      ],
+      "support_radius_m": 0.1,
+      "task_clearance_m": 0.3
+    },
+    "image": {
+      "mode": "all",
+      "shear_enabled": true,
+      "crop_enabled": true,
+      "rotation_enabled": true,
+      "color_enabled": true,
+      "transform_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "shear_degrees": [
+        -5.0,
+        5.0
+      ],
+      "crop_scale": [
+        0.85,
+        1.0
+      ],
+      "rotation_degrees": [
+        -12.0,
+        12.0
+      ],
+      "brightness": [
+        0.8,
+        1.2
+      ],
+      "contrast": [
+        0.8,
+        1.2
+      ],
+      "saturation": [
+        0.8,
+        1.2
+      ],
+      "hue_radians": [
+        -0.1,
+        0.1
+      ]
+    },
+    "distractor": {
+      "count": [
+        0,
+        6
+      ],
+      "max_count": 6,
+      "shapes": [
+        "box",
+        "sphere",
+        "cylinder"
+      ],
+      "size_m": [
+        0.015,
+        0.045
+      ],
+      "mass_kg": [
+        0.005,
+        0.08
+      ],
+      "physical_probability": 0.0,
+      "material": {
+        "families": [
+          "matte",
+          "wood",
+          "plastic",
+          "metal"
+        ],
+        "color": [
+          0.05,
+          0.95
+        ],
+        "roughness": [
+          0.15,
+          0.95
+        ],
+        "metallic": [
+          0.0,
+          0.8
+        ],
+        "specular": [
+          0.1,
+          0.8
+        ],
+        "uv_scale": [
+          0.5,
+          4.0
+        ],
+        "friction": [
+          0.3,
+          1.0
+        ],
+        "restitution": [
+          0.0,
+          0.15
+        ],
+        "texture_ids": [
+          "none",
+          "wood_grain",
+          "checker",
+          "noise"
+        ]
+      }
+    },
+    "confetti": {
+      "count": [
+        20,
+        100
+      ],
+      "max_count": 100,
+      "size_m": [
+        0.003,
+        0.012
+      ],
+      "aspect_ratio": [
+        0.3,
+        2.0
+      ],
+      "shapes": [
+        "rectangle",
+        "disc",
+        "triangle"
+      ],
+      "opacity": [
+        0.5,
+        1.0
+      ],
+      "reflectivity": [
+        0.0,
+        0.8
+      ],
+      "elevation_m": 0.0005,
+      "physical_budget": 0
+    },
+    "controls": {
+      "table": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "room": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "robot": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "smudge": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "episode",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "task": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "actuator": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "episode",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "base": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "episode",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "image": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "episode",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "distractor": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      },
+      "confetti": {
+        "enabled": true,
+        "seed": 0,
+        "cadence": "fixed",
+        "reset_interval": 1,
+        "frozen": false
+      }
+    }
+  },
+  "actor_mode": "rgb"
+}

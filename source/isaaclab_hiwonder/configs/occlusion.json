@@ -1,0 +1,16 @@
+{
+  "num_envs": 4,
+  "randomization": {
+    "confetti": {
+      "count": [500, 1000],
+      "max_count": 1000,
+      "size_m": [0.01, 0.025],
+      "aspect_ratio": [0.3, 2.0],
+      "opacity": [0.7, 1.0],
+      "physical_budget": 0
+    },
+    "distractor": {"count": [3, 6], "physical_probability": 0.25},
+    "smudge": {"spot_count": [3, 8], "opacity": [0.1, 0.5]},
+    "image": {"mode": "all"}
+  }
+}

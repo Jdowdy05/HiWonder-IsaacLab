@@ -1,0 +1,16 @@
+{
+  "num_envs": 4,
+  "randomization": {
+    "controls": {
+      "table": {"enabled": false},
+      "room": {"enabled": false},
+      "robot": {"enabled": false},
+      "smudge": {"enabled": false},
+      "actuator": {"enabled": false},
+      "base": {"enabled": false},
+      "image": {"enabled": false},
+      "distractor": {"enabled": false},
+      "confetti": {"enabled": false}
+    }
+  }
+}

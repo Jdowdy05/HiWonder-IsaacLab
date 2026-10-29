@@ -1,0 +1,36 @@
+{
+  "recommended_provider": "Vast.ai",
+  "recommended_gpu": "RTX 4090",
+  "rental_type": "on-demand",
+  "gpu_count": 1,
+  "target_ram_gb": 64,
+  "min_effective_cpu": 8,
+  "recommended_effective_cpu": 16,
+  "min_driver": "595.58.03",
+  "linux_distribution": "Ubuntu24.04",
+  "container_image": "nvidia/cuda:13.0.2-devel-ubuntu24.04@sha256:5dc1bca23d05bd37b011be68ec470c03b403a5da07ec3a86e41af9470e9d0cc6",
+  "container_environment": {
+    "NVIDIA_DRIVER_CAPABILITIES": "all",
+    "OMNI_KIT_ACCEPT_EULA": "YES"
+  },
+  "workspace": "/workspace/hiwonder",
+  "public_service_ports": [],
+  "ssh_only": true,
+  "practical_offer_at_research_time": 52582393,
+  "price_scope": "Refresh quotes before renting; no reservation or purchase is performed",
+  "initial_task": "peg_insert",
+  "robot_profile": "eka_v6_rgb_spots.json",
+  "camera_native_resolution": [
+    640,
+    480
+  ],
+  "camera_capture_hz": 30,
+  "default_learner_precision": "fp32",
+  "optional_learner_precision": "bf16",
+  "gpu_unlock": "not automatically installed; fullVM/host approval and benchmark required",
+  "allocated_storage_gb": 200,
+  "quoted_compute_and_200gb_usd_per_hour": 0.4542222222222222,
+  "quoted_location": "Thailand, TH",
+  "us_fallback_offer_at_research_time": 58188739,
+  "snapshot_utc": "2026-10-29T06:09:45.181074+00:00"
+}

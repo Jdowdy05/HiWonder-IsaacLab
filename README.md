@@ -176,3 +176,7 @@ Software retains its existing BSD-3-Clause headers; see [LICENSE](LICENSE). Sour
 See [Eka repair and validation](source/isaaclab_hiwonder/EKA_V6_VALIDATION.md), [repaired CAD exports](cad/eka_v6/README.md), and the [bounded simulation receipts](validation/eka_v6-2026-10-28/summary.json).
 
 Final package suite:383 passed,1 CUDA-only check skipped. After the final visualizer/API fix and import formatting,19 focused tests passed; independent review has no open findings. A fresh source-only installation matched168 copied hashes at the pinned GA commit and passed the offline lock check. SDK binaries were not reinstalled.
+
+## Hourly Linux GPU training
+
+See [cloud/README.md](cloud/README.md) for the prepared RTX 4090 rental workflow, qualified price search, host preflight, guarded smoke/pilot/train commands, optional BF16 learner precision and measured cost reporting. The tensor-rate unlock requires a permitted full VM/host boot path and is not installed automatically. FP32 remains the default; camera fidelity and physics settings are preserved.

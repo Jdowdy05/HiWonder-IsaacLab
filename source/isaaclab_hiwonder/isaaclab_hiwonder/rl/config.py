@@ -32,6 +32,8 @@ class PPOTrainingConfig:
     lam: float = 0.95
     save_interval: int = 50
     seed: int = 0
+    # RSL-RL autocasts only PPO updates to BF16; parameters and environment inputs stay FP32.
+    use_mixed_precision: bool = False
 
     def __post_init__(self):
         if self.actor_mode not in ("rgb", "state_debug"):
@@ -46,6 +48,8 @@ class PPOTrainingConfig:
             raise ValueError("PPO learning rate/action std must be positive")
         if not 0 < self.gamma <= 1 or not 0 <= self.lam <= 1:
             raise ValueError("Invalid PPO discount or GAE parameter")
+        if not isinstance(self.use_mixed_precision, bool):
+            raise ValueError("use_mixed_precision must be a bool")
 
     def to_runner_config(self) -> dict:
         """Return an owned dictionary accepted by the pinned OnPolicyRunner/PPO constructors."""
@@ -103,9 +107,13 @@ class PPOTrainingConfig:
                 max_grad_norm=1.0,
                 use_clipped_value_loss=True,
                 normalize_advantage_per_mini_batch=False,
-                use_mixed_precision=False,
+                use_mixed_precision=self.use_mixed_precision,
             ),
             hiwonder=dict(
-                actor_mode=self.actor_mode, frame_stack=self.frame_stack, image_resize=None, epoch_augmentation=False
+                actor_mode=self.actor_mode,
+                frame_stack=self.frame_stack,
+                image_resize=None,
+                epoch_augmentation=False,
+                learner_precision="bf16_autocast" if self.use_mixed_precision else "fp32",
             ),
         )

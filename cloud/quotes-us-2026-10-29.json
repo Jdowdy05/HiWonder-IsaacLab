@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-29T06:09:46.181035+00:00",
+  "endpoint": "https://console.vast.ai/api/v0/bundles/",
+  "queried_utc": "2026-10-29T06:09:46.181035+00:00",
+  "filters": {
+    "storage_gb": 200,
+    "vm": false,
+    "region": "US",
+    "max_age_hours": 24,
+    "min_ram_mb": 64000,
+    "min_effective_cpu": 8,
+    "min_reliability": 0.99,
+    "min_driver": "595.58.03"
+  },
+  "price_scope": "USD/hour: GPU+CPU+RAM+requested disk; excludes traffic, tax and stopped storage",
+  "queries": [
+    {
+      "queried_utc": "2026-10-29T06:09:45.632012+00:00",
+      "request": {
+        "limit": 1000,
+        "type": "on-demand",
+        "gpu_name": {
+          "eq": "RTX 3090"
+        },
+        "verified": {
+          "eq": true
+        },
+        "rentable": {
+          "eq": true
+        },
+        "rented": {
+          "eq": false
+        },
+        "num_gpus": {
+          "eq": 1
+        },
+        "cpu_ram": {
+          "gte": 64000
+        },
+        "cpu_cores_effective": {
+          "gte": 8
+        },
+        "disk_space": {
+          "gte": 200
+        },
+        "reliability2": {
+          "gte": 0.99
+        },
+        "driver_version": {
+          "gte": "595.58.03"
+        },
+        "allocated_storage": 200,
+        "order": [
+          [
+            "dph_total",
+            "asc"
+          ]
+        ]
+      }
+    },
+    {
+      "queried_utc": "2026-10-29T06:09:45.910532+00:00",
+      "request": {
+        "limit": 1000,
+        "type": "on-demand",
+        "gpu_name": {
+          "eq": "RTX 4090"
+        },
+        "verified": {
+          "eq": true
+        },
+        "rentable": {
+          "eq": true
+        },
+        "rented": {
+          "eq": false
+        },
+        "num_gpus": {
+          "eq": 1
+        },
+        "cpu_ram": {
+          "gte": 64000
+        },
+        "cpu_cores_effective": {
+          "gte": 8
+        },
+        "disk_space": {
+          "gte": 200
+        },
+        "reliability2": {
+          "gte": 0.99
+        },
+        "driver_version": {
+          "gte": "595.58.03"
+        },
+        "allocated_storage": 200,
+        "order": [
+          [
+            "dph_total",
+            "asc"
+          ]
+        ]
+      }
+    },
+    {
+      "queried_utc": "2026-10-29T06:09:46.181035+00:00",
+      "request": {
+        "limit": 1000,
+        "type": "on-demand",
+        "gpu_name": {
+          "eq": "RTX 5090"
+        },
+        "verified": {
+          "eq": true
+        },
+        "rentable": {
+          "eq": true
+        },
+        "rented": {
+          "eq": false
+        },
+        "num_gpus": {
+          "eq": 1
+        },
+        "cpu_ram": {
+          "gte": 64000
+        },
+        "cpu_cores_effective": {
+          "gte": 8
+        },
+        "disk_space": {
+          "gte": 200
+        },
+        "reliability2": {
+          "gte": 0.99
+        },
+        "driver_version": {
+          "gte": "595.58.03"
+        },
+        "allocated_storage": 200,
+        "order": [
+          [
+            "dph_total",
+            "asc"
+          ]
+        ]
+      }
+    }
+  ],
+  "offers": {
+    "RTX 3090": [
+      {
+        "id": 47766459,
+        "gpu_name": "RTX 3090",
+        "num_gpus": 1,
+        "gpu_frac": 0.5,
+        "gpu_ram": 24576,
+        "cpu_arch": "amd64",
+        "cpu_name": "Xeon\u00ae E5-2690 v3 ",
+        "cpu_ram": 128893,
+        "cpu_cores_effective": 24.0,
+        "driver_version": "595.71.05",
+        "reliability2": 0.9972401,
+        "gpu_max_power": 300.0,
+        "pcie_bw": 11.8,
+        "duration": 2766554.9484665394,
+        "geolocation": "Massachusetts, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 0.29333333333333333,
+        "storage_cost": 0.19999999999999998,
+        "storage_total_cost": 0.05555555555555555,
+        "dph_total": 0.3488888888888889,
+        "inet_down_cost": 0.0026041666666666665,
+        "inet_up_cost": 0.00390625,
+        "internet_down_cost_per_tb": 2.6666666666666665,
+        "internet_up_cost_per_tb": 4.0,
+        "disk_space": 209.5,
+        "disk_bw": 2122.4,
+        "inet_down": 818.7,
+        "inet_up": 633.8,
+        "allocated_storage_gb": 200,
+        "query_index": 0,
+        "quoted_utc": "2026-10-29T06:09:45.632012+00:00"
+      },
+      {
+        "id": 57435749,
+        "gpu_name": "RTX 3090",
+        "num_gpus": 1,
+        "gpu_frac": 1.0,
+        "gpu_ram": 24576,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD Ryzen 9 3900X 12-Core Processor",
+        "cpu_ram": 64235,
+        "cpu_cores_effective": 12.0,
+        "driver_version": "595.91.07",
+        "reliability2": 0.9932586,
+        "gpu_max_power": 420.0,
+        "pcie_bw": 25.1,
+        "duration": 211814.94846653938,
+        "geolocation": "Arizona, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 0.2533333333333333,
+        "storage_cost": 0.39999999999999997,
+        "storage_total_cost": 0.1111111111111111,
+        "dph_total": 0.3644444444444444,
+        "inet_down_cost": 0.02,
+        "inet_up_cost": 0.02,
+        "internet_down_cost_per_tb": 20.48,
+        "internet_up_cost_per_tb": 20.48,
+        "disk_space": 335.0,
+        "disk_bw": 3276.33,
+        "inet_down": 145.3,
+        "inet_up": 134.7,
+        "allocated_storage_gb": 200,
+        "query_index": 0,
+        "quoted_utc": "2026-10-29T06:09:45.632012+00:00"
+      },
+      {
+        "id": 57393244,
+        "gpu_name": "RTX 3090",
+        "num_gpus": 1,
+        "gpu_frac": 0.5,
+        "gpu_ram": 24576,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD EPYC 7352 24-Core Processor",
+        "cpu_ram": 64333,
+        "cpu_cores_effective": 24.0,
+        "driver_version": "595.84",
+        "reliability2": 0.9977446,
+        "gpu_max_power": 250.0,
+        "pcie_bw": 25.0,
+        "duration": 3009228.7096459866,
+        "geolocation": "Florida, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 0.7333333333333334,
+        "storage_cost": 0.1333333333333333,
+        "storage_total_cost": 0.03703703703703703,
+        "dph_total": 0.7703703703703704,
+        "inet_down_cost": 0.013020833333333334,
+        "inet_up_cost": 0.013020833333333334,
+        "internet_down_cost_per_tb": 13.333333333333334,
+        "internet_up_cost_per_tb": 13.333333333333334,
+        "disk_space": 1193.5,
+        "disk_bw": 2059.55,
+        "inet_down": 2185.8,
+        "inet_up": 2238.8,
+        "allocated_storage_gb": 200,
+        "query_index": 0,
+        "quoted_utc": "2026-10-29T06:09:45.632012+00:00"
+      }
+    ],
+    "RTX 4090": [
+      {
+        "id": 58188739,
+        "gpu_name": "RTX 4090",
+        "num_gpus": 1,
+        "gpu_frac": 1.0,
+        "gpu_ram": 24564,
+        "cpu_arch": "amd64",
+        "cpu_name": "12th Gen Core\u2122 i5-12600K",
+        "cpu_ram": 64006,
+        "cpu_cores_effective": 16.0,
+        "driver_version": "610.57.04",
+        "reliability2": 0.995837,
+        "gpu_max_power": 410.0,
+        "pcie_bw": 23.3,
+        "duration": 1468268.7225325108,
+        "geolocation": "Washington, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 0.4666666666666666,
+        "storage_cost": 0.16000000000000003,
+        "storage_total_cost": 0.04444444444444445,
+        "dph_total": 0.5111111111111111,
+        "inet_down_cost": 0.0013020833333333333,
+        "inet_up_cost": 0.005208333333333333,
+        "internet_down_cost_per_tb": 1.3333333333333333,
+        "internet_up_cost_per_tb": 5.333333333333333,
+        "disk_space": 2229.0,
+        "disk_bw": 2694.3,
+        "inet_down": 590.9,
+        "inet_up": 224.1,
+        "allocated_storage_gb": 200,
+        "query_index": 1,
+        "quoted_utc": "2026-10-29T06:09:45.910532+00:00"
+      },
+      {
+        "id": 41245404,
+        "gpu_name": "RTX 4090",
+        "num_gpus": 1,
+        "gpu_frac": 0.125,
+        "gpu_ram": 24564,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD EPYC 7702 64-Core Processor",
+        "cpu_ram": 256491,
+        "cpu_cores_effective": 32.0,
+        "driver_version": "595.99.02",
+        "reliability2": 0.9974209,
+        "gpu_max_power": 450.0,
+        "pcie_bw": 21.6,
+        "duration": 2824574.7225325108,
+        "geolocation": "Texas, US",
+        "vms_enabled": false,
+        "is_vm_deverified": true,
+        "dph_base": 0.45333333333333337,
+        "storage_cost": 0.23999999999999996,
+        "storage_total_cost": 0.06666666666666665,
+        "dph_total": 0.52,
+        "inet_down_cost": 0.028645833333333332,
+        "inet_up_cost": 0.028645833333333332,
+        "internet_down_cost_per_tb": 29.333333333333332,
+        "internet_up_cost_per_tb": 29.333333333333332,
+        "disk_space": 913.5750000000002,
+        "disk_bw": 9547.92,
+        "inet_down": 6521.2,
+        "inet_up": 6059.3,
+        "allocated_storage_gb": 200,
+        "query_index": 1,
+        "quoted_utc": "2026-10-29T06:09:45.910532+00:00"
+      },
+      {
+        "id": 45630893,
+        "gpu_name": "RTX 4090",
+        "num_gpus": 1,
+        "gpu_frac": 0.5,
+        "gpu_ram": 24564,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD Ryzen 9 5950X 16-Core Processor",
+        "cpu_ram": 64364,
+        "cpu_cores_effective": 16.0,
+        "driver_version": "595.71.05",
+        "reliability2": 0.9957256,
+        "gpu_max_power": 300.0,
+        "pcie_bw": 12.8,
+        "duration": 1296133.483711958,
+        "geolocation": "New Jersey, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 0.5333333333333333,
+        "storage_cost": 0.16666666666666666,
+        "storage_total_cost": 0.046296296296296294,
+        "dph_total": 0.5796296296296296,
+        "inet_down_cost": 0.00390625,
+        "inet_up_cost": 0.005208333333333333,
+        "internet_down_cost_per_tb": 4.0,
+        "internet_up_cost_per_tb": 5.333333333333333,
+        "disk_space": 929.1887583709608,
+        "disk_bw": 6344.130000000001,
+        "inet_down": 933.7,
+        "inet_up": 931.4,
+        "allocated_storage_gb": 200,
+        "query_index": 1,
+        "quoted_utc": "2026-10-29T06:09:45.910532+00:00"
+      }
+    ],
+    "RTX 5090": [
+      {
+        "id": 57629578,
+        "gpu_name": "RTX 5090",
+        "num_gpus": 1,
+        "gpu_frac": 0.5,
+        "gpu_ram": 32607,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD EPYC 7402P 24-Core Processor",
+        "cpu_ram": 257819,
+        "cpu_cores_effective": 24.0,
+        "driver_version": "610.57.04",
+        "reliability2": 0.993934,
+        "gpu_max_power": 500.0,
+        "pcie_bw": 26.6,
+        "duration": 785354.428691864,
+        "geolocation": "Washington, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 1.0,
+        "storage_cost": 0.19999999999999998,
+        "storage_total_cost": 0.05555555555555555,
+        "dph_total": 1.0555555555555556,
+        "inet_down_cost": 0.0390625,
+        "inet_up_cost": 0.0390625,
+        "internet_down_cost_per_tb": 40.0,
+        "internet_up_cost_per_tb": 40.0,
+        "disk_space": 1564.5,
+        "disk_bw": 405.60140377107734,
+        "inet_down": 840.0,
+        "inet_up": 844.3,
+        "allocated_storage_gb": 200,
+        "query_index": 2,
+        "quoted_utc": "2026-10-29T06:09:46.181035+00:00"
+      },
+      {
+        "id": 52003777,
+        "gpu_name": "RTX 5090",
+        "num_gpus": 1,
+        "gpu_frac": 1.0,
+        "gpu_ram": 32607,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD EPYC 9115 16-Core Processor",
+        "cpu_ram": 64302,
+        "cpu_cores_effective": 12.0,
+        "driver_version": "595.71.05",
+        "reliability2": 0.9971367,
+        "gpu_max_power": 600.0,
+        "pcie_bw": 54.3,
+        "duration": 1209023.829265356,
+        "geolocation": "Maryland, US",
+        "vms_enabled": false,
+        "is_vm_deverified": false,
+        "dph_base": 1.0666666666666667,
+        "storage_cost": 0.1333333333333333,
+        "storage_total_cost": 0.03703703703703703,
+        "dph_total": 1.1037037037037036,
+        "inet_down_cost": 0.0,
+        "inet_up_cost": 0.0,
+        "internet_down_cost_per_tb": 0.0,
+        "internet_up_cost_per_tb": 0.0,
+        "disk_space": 276.0,
+        "disk_bw": 829.0,
+        "inet_down": 541.1,
+        "inet_up": 649.5,
+        "allocated_storage_gb": 200,
+        "query_index": 2,
+        "quoted_utc": "2026-10-29T06:09:46.181035+00:00"
+      },
+      {
+        "id": 56787186,
+        "gpu_name": "RTX 5090",
+        "num_gpus": 1,
+        "gpu_frac": 0.25,
+        "gpu_ram": 32607,
+        "cpu_arch": "amd64",
+        "cpu_name": "AMD EPYC 9384X 32-Core Processor",
+        "cpu_ram": 193331,
+        "cpu_cores_effective": 16.0,
+        "driver_version": "615.78.08",
+        "reliability2": 0.9982264,
+        "gpu_max_power": 575.0,
+        "pcie_bw": 53.9,
+        "duration": 1335014.428691864,
+        "geolocation": "Ohio, US",
+        "vms_enabled": false,
+        "is_vm_deverified": true,
+        "dph_base": 1.2,
+        "storage_cost": 0.19999999999999998,
+        "storage_total_cost": 0.05555555555555555,
+        "dph_total": 1.2555555555555555,
+        "inet_down_cost": 0.013020833333333334,
+        "inet_up_cost": 0.013020833333333334,
+        "internet_down_cost_per_tb": 13.333333333333334,
+        "internet_up_cost_per_tb": 13.333333333333334,
+        "disk_space": 1830.373549067876,
+        "disk_bw": 8461.0,
+        "inet_down": 2194.2,
+        "inet_up": 1200.3,
+        "allocated_storage_gb": 200,
+        "query_index": 2,
+        "quoted_utc": "2026-10-29T06:09:46.181035+00:00"
+      }
+    ]
+  },
+  "source_mode": "live_public_search"
+}

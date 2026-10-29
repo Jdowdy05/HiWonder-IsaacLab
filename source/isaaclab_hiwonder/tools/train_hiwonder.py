@@ -76,6 +76,15 @@ def resolve_runner_config(args, profile, saved: dict | None) -> dict:
             if args.resume and owner[key] != requested:
                 raise ValueError(f"Resume {argument} differs from checkpoint; use --initialize-from for a fresh run")
             owner[key] = requested
+    previous_precision = config["algorithm"].get("use_mixed_precision", False)
+    requested_precision = getattr(args, "mixed_precision", None)
+    if requested_precision is not None and args.resume and requested_precision != previous_precision:
+        raise ValueError("Resume precision differs from checkpoint; use --initialize-from for a fresh run")
+    mixed_precision = previous_precision if requested_precision is None else requested_precision
+    if not isinstance(mixed_precision, bool):
+        raise ValueError("use_mixed_precision must be a bool")
+    config["algorithm"]["use_mixed_precision"] = mixed_precision
+    config["hiwonder"]["learner_precision"] = "bf16_autocast" if mixed_precision else "fp32"
     config["algorithm"]["gamma"] = profile.reward.shaping_discount
     return config
 
@@ -106,6 +115,12 @@ def _arguments():
     parser.add_argument("--rollout-steps", type=int)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--minibatches", type=int)
+    parser.add_argument(
+        "--mixed-precision",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="BF16 autocast for PPO updates; default FP32 on new runs, preserve saved precision on resume",
+    )
     parser.add_argument("--smoke", action="store_true", help="Two optimizer iterations, eight-step rollouts, one epoch")
     checkpoint_group = parser.add_mutually_exclusive_group()
     checkpoint_group.add_argument(
@@ -227,6 +242,8 @@ def main():
             ),
         )
     runner_config = resolve_runner_config(args, profile, saved)
+    args.mixed_precision = runner_config["algorithm"]["use_mixed_precision"]
+    args.learner_precision = runner_config["hiwonder"]["learner_precision"]
     bank_size = args.bank_size or (
         saved["hiwonder"]["environment"]["sampler"]["num_configs"] if checkpoint_path else 32768
     )
@@ -294,6 +311,7 @@ def main():
                     sampling=raw.cfg.hiwonder_sampling,
                     frame_stack=profile.frame_stack,
                     actor_mode=mode,
+                    learner_precision=args.learner_precision,
                     parameters_finite=finite,
                     completed_iterations=runner.current_learning_iteration,
                     optimizer_steps=max(

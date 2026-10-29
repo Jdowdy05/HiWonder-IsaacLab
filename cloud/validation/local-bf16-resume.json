@@ -1,0 +1,14 @@
+{
+  "mode": "train",
+  "run_kind": "exact_resume",
+  "sampling": "sgs",
+  "frame_stack": 1,
+  "actor_mode": "rgb",
+  "learner_precision": "bf16_autocast",
+  "parameters_finite": true,
+  "completed_iterations": 4,
+  "optimizer_steps": 8,
+  "sgs_entropy": 4.140611242972213,
+  "sgs_covered_fraction": 0.03125,
+  "checkpoint": "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\cloud-training-2026-10-29\\local-bf16-resume-final\\final.pt"
+}

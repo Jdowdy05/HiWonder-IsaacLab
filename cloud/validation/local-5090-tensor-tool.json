@@ -1,0 +1,27 @@
+{
+  "label": "local-5090-Windows-validation",
+  "hardware": "GPU-d423f0b3-e8f8-9d22-6ea4-18964893e70d, NVIDIA GeForce RTX 5090, 610.88, 600.00 W",
+  "torch": "2.11.0+cu130",
+  "size": 1024,
+  "qualification": "cuBLAS GEMM timings; not peak issue rate, unlock verification or RL speedup",
+  "modes": {
+    "fp32": {
+      "median_ms": 0.0424639992415905,
+      "tflops": 50.571865258905966,
+      "relative_l2_error": 0.0,
+      "numeric_check_pass": true
+    },
+    "fp16": {
+      "median_ms": 0.015072000212967396,
+      "tflops": 142.48166253025818,
+      "relative_l2_error": 0.00020778022008016706,
+      "numeric_check_pass": true
+    },
+    "bf16": {
+      "median_ms": 0.015424000099301338,
+      "tflops": 139.2300074023777,
+      "relative_l2_error": 0.0016602197429165244,
+      "numeric_check_pass": true
+    }
+  }
+}

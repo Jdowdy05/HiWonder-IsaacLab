@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 import torch
+
 from isaaclab_hiwonder.config import HiWonderEnvConfig
 from isaaclab_hiwonder.rl.config import PPOTrainingConfig
 
@@ -38,6 +39,18 @@ def test_resume_preserves_uniform_sampling_and_rejects_an_unrecorded_policy_chan
     # Prior checkpoints have the mode in run metadata, before it was added to env state.
     del saved["hiwonder"]["environment"]["sampling"]
     assert module.resolve_sampling("train", None, saved) == "uniform"
+
+
+@pytest.mark.parametrize(
+    "flags, expected", [([], None), (["--mixed-precision"], True), (["--no-mixed-precision"], False)]
+)
+def test_cli_precision_is_an_optional_explicit_boolean(monkeypatch, flags, expected):
+    module = _load_cli()
+    launcher = types.ModuleType("isaaclab.app")
+    launcher.add_launcher_args = lambda parser: None
+    monkeypatch.setitem(sys.modules, "isaaclab.app", launcher)
+    monkeypatch.setattr(sys, "argv", ["train_hiwonder.py", "train", *flags])
+    assert getattr(module._arguments(), "mixed_precision", "missing") is expected
 
 
 @pytest.fixture
@@ -86,11 +99,15 @@ def cli_configuration(monkeypatch, tmp_path):
         captured["physics_definition"] = definition
         return object()
 
+    def provenance(env, destination, runner_config, arguments):
+        captured["arguments"] = dict(arguments)
+        return {}
+
     install("isaaclab.app", launch_simulation=launch)
     install("isaaclab.sim", SimulationCfg=lambda **kwargs: types.SimpleNamespace(**kwargs))
     install("isaaclab_hiwonder.tasks.native_backend", physics_config=physics_config)
     install("isaaclab_hiwonder.rl.runner", HiWonderRunner=Runner)
-    install("isaaclab_hiwonder.rl.provenance", write_run_provenance=lambda *args, **kwargs: {})
+    install("isaaclab_hiwonder.rl.provenance", write_run_provenance=provenance)
     install("isaaclab_rl.rsl_rl", RslRlVecEnvWrapper=lambda env, **kwargs: env)
     install(
         "isaaclab_hiwonder.sim.env",
@@ -166,6 +183,53 @@ def test_fresh_initialization_applies_explicit_learner_counts_and_new_seed(cli_c
     assert config["algorithm"]["num_learning_epochs"] == 3
     assert config["algorithm"]["num_mini_batches"] == 4
     assert config["seed"] == result["profile"].seed == 123
+
+
+@pytest.mark.parametrize("saved_precision", [False, True])
+def test_exact_resume_preserves_unspecified_precision_and_records_the_resolved_value(
+    cli_configuration, saved_precision
+):
+    invoke, _, checkpoint = cli_configuration
+    saved = torch.load(checkpoint, weights_only=False)
+    saved["hiwonder"]["runner_config"]["algorithm"]["use_mixed_precision"] = saved_precision
+    torch.save(saved, checkpoint)
+    result = invoke()
+    assert result["runner_config"]["algorithm"]["use_mixed_precision"] is saved_precision
+    expected = "bf16_autocast" if saved_precision else "fp32"
+    assert result["runner_config"]["hiwonder"].get("learner_precision") == expected
+    assert result["arguments"]["mixed_precision"] is saved_precision
+    assert result["arguments"]["learner_precision"] == expected
+
+
+@pytest.mark.parametrize("saved_precision", [False, True])
+def test_exact_resume_rejects_precision_changes_but_accepts_the_recorded_choice(cli_configuration, saved_precision):
+    invoke, _, checkpoint = cli_configuration
+    saved = torch.load(checkpoint, weights_only=False)
+    saved["hiwonder"]["runner_config"]["algorithm"]["use_mixed_precision"] = saved_precision
+    torch.save(saved, checkpoint)
+    with pytest.raises(ValueError, match="Resume.*precision.*initialize-from"):
+        invoke(mixed_precision=not saved_precision)
+    assert (
+        invoke(mixed_precision=saved_precision)["runner_config"]["algorithm"]["use_mixed_precision"] is saved_precision
+    )
+
+
+@pytest.mark.parametrize("requested", [False, True])
+def test_fresh_optimizer_initialization_accepts_an_explicit_precision_choice(cli_configuration, requested):
+    invoke, _, checkpoint = cli_configuration
+    result = invoke(resume=None, initialize_from=checkpoint, mixed_precision=requested)
+    assert result["runner_config"]["algorithm"]["use_mixed_precision"] is requested
+    assert result["profile"].camera.width == 320 and result["profile"].camera.height == 240
+
+
+def test_legacy_resume_without_precision_uses_fp32(cli_configuration):
+    invoke, _, checkpoint = cli_configuration
+    saved = torch.load(checkpoint, weights_only=False)
+    del saved["hiwonder"]["runner_config"]["algorithm"]["use_mixed_precision"]
+    torch.save(saved, checkpoint)
+    assert invoke()["runner_config"]["algorithm"].get("use_mixed_precision") is False
+    with pytest.raises(ValueError, match="Resume.*precision"):
+        invoke(mixed_precision=True)
 
 
 def test_fresh_task_initialization_resolves_the_new_tasks_backend(cli_configuration):

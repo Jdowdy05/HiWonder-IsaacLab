@@ -90,13 +90,14 @@ class _ControlSystem(VecEnv):
         self.episode_length_buf = state["episode_length_buf"].clone()
 
 
-def _runner(env):
+def _runner(env, use_mixed_precision=False):
     config = PPOTrainingConfig(
         num_steps_per_env=4,
         num_learning_epochs=1,
         num_mini_batches=2,
         hidden_dims=(32, 16),
         frame_stack=env.frame_stack,
+        use_mixed_precision=use_mixed_precision,
     )
     return HiWonderRunner(env, config.to_runner_config(), device="cpu")
 
@@ -164,25 +165,57 @@ def test_real_ppo_update_and_checkpoint_restore_sampler_optimizer_and_rng(tmp_pa
             assert torch.equal(value, target.state_dict()[name])
 
 
-def test_nine_action_learner_updates_and_policy_restore_rejects_stock_model(tmp_path):
+@pytest.mark.parametrize("use_mixed_precision", [False, True])
+def test_nine_action_learner_updates_and_policy_restore_rejects_stock_model(tmp_path, use_mixed_precision):
     from types import SimpleNamespace
 
     env = _ControlSystem(num_actions=9)
     env.profile = SimpleNamespace(robot_model="eka_v6")
-    runner = _runner(env)
+    runner = _runner(env, use_mixed_precision=use_mixed_precision)
     runner.metadata = {"profile": {"robot_model": "eka_v6"}}
     before = {key: value.clone() for key, value in runner.alg.actor.state_dict().items()}
     runner.learn(1)
     assert any(not torch.equal(value, before[key]) for key, value in runner.alg.actor.state_dict().items())
+    assert all(torch.isfinite(value).all() for value in runner.alg.actor.state_dict().values())
+    assert all(value.dtype == torch.float32 for value in runner.alg.actor.parameters())
+    assert all(value.dtype == torch.float32 for value in runner.alg.critic.parameters())
+    assert env.position.dtype == torch.float32
+    assert env.get_observations()["policy_image"].dtype == torch.float32
+    assert runner.alg.use_mixed_precision is use_mixed_precision
     checkpoint = tmp_path / "eka.pt"
     runner.save(str(checkpoint))
+    saved = torch.load(checkpoint, weights_only=False)
+    assert saved["hiwonder"]["runner_config"]["algorithm"]["use_mixed_precision"] is use_mixed_precision
+    expected = "bf16_autocast" if use_mixed_precision else "fp32"
+    assert saved["hiwonder"]["runner_config"]["hiwonder"]["learner_precision"] == expected
     restored_env = _ControlSystem(num_actions=9)
     restored_env.profile = SimpleNamespace(robot_model="eka_v6")
-    restored = _runner(restored_env)
-    restored.load_policy(str(checkpoint))
+    restored = _runner(restored_env, use_mixed_precision=use_mixed_precision)
+    restored.load(str(checkpoint))
+    assert restored.current_learning_iteration == 1
+    assert max(int(value["step"]) for value in restored.alg.optimizer.state.values()) > 0
     assert restored.get_inference_policy()(restored_env.get_observations()).shape == (2, 9)
     with pytest.raises(ValueError, match="robot model"):
         _runner(_ControlSystem()).load_policy(str(checkpoint))
+
+
+def test_ppo_precision_defaults_to_fp32_and_opt_in_keeps_native_camera_configuration():
+    from isaaclab_hiwonder.config import HiWonderEnvConfig
+
+    default = PPOTrainingConfig().to_runner_config()
+    assert default["algorithm"]["use_mixed_precision"] is False
+    assert default["hiwonder"].get("learner_precision") == "fp32"
+    mixed = PPOTrainingConfig(use_mixed_precision=True).to_runner_config()
+    assert mixed["algorithm"]["use_mixed_precision"] is True
+    assert mixed["hiwonder"]["learner_precision"] == "bf16_autocast"
+    assert mixed["hiwonder"]["image_resize"] is None
+    assert (HiWonderEnvConfig().camera.width, HiWonderEnvConfig().camera.height) == (640, 480)
+
+
+@pytest.mark.parametrize("invalid", [None, "bf16", 1])
+def test_ppo_precision_requires_a_boolean(invalid):
+    with pytest.raises(ValueError, match="use_mixed_precision.*bool"):
+        PPOTrainingConfig(use_mixed_precision=invalid)
 
 
 def test_uniform_held_out_evaluation_uses_terminal_outcomes_and_captured_reset_ids():

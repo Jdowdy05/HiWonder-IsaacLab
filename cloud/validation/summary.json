@@ -1,0 +1,24 @@
+{
+  "cpu_tests_passed": 499,
+  "cpu_tests_skipped": 3,
+  "subtests_passed": 19,
+  "linux_fixture_tests_passed": 102,
+  "linux_catalog_test_deselected": 1,
+  "local_gpu": "RTX5090 Windows",
+  "native_camera_shape": [
+    480,
+    640,
+    3
+  ],
+  "configured_camera_hz": 30,
+  "robot_model": "eka_v6",
+  "action_count": 9,
+  "bf16_smoke_finite": true,
+  "bf16_exact_resume_finite": true,
+  "physics_precision_changed": false,
+  "paid_instance_started": false,
+  "gpu_unlock_applied": false,
+  "linux_cloud_gpu_validated": false,
+  "installer_payload_hashes_verified": 169,
+  "independent_review_open_findings": 0
+}

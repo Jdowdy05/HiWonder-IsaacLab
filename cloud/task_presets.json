@@ -1,0 +1,8 @@
+[
+  "peg_insert", "cube_stack", "nut_pick_place", "washer_ring", "connector_insert",
+  "shape_sort", "gear_assembly", "circuit_restore", "catch_ball", "roll_ball", "roll_ball:table",
+  "knob", "switch", "latch", "bottle_cap", "bottle_cap:close", "key_lock", "barrel_jack",
+  "rope_thread:thread", "rope_thread:overhand", "rope_thread:figure_eight", "cable_untangle",
+  "cloth_fold:towel", "cloth_fold:handtowel", "cloth_fold:shirt", "cloth_fold:rag",
+  "cloth_fold:shorts", "cloth_fold:underwear", "cloth_fold:sock", "paper_airplane"
+]

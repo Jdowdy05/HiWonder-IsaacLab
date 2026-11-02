@@ -1,0 +1,638 @@
+{
+  "id": "jmrog/so100_sweet_pick",
+  "revision": "54141acb0bd6bcb868e34b4eb328f26481d333b2",
+  "camera": "observation.images.laptop",
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3745,
+      "sha256": "8cd7aef5d9b9dda67c6aa10f3452fa08854afe779bfdbc2f82e2f586b90ce722",
+      "remote_sha256": null
+    },
+    {
+      "path": "data/chunk-000/episode_000000.parquet",
+      "bytes": 24465,
+      "sha256": "d5b2c07971e600ce2b660b3577e06d4ebc4eabd698f4cd71f860c25b8469953b",
+      "remote_sha256": "d5b2c07971e600ce2b660b3577e06d4ebc4eabd698f4cd71f860c25b8469953b"
+    },
+    {
+      "path": "data/chunk-000/episode_000001.parquet",
+      "bytes": 38302,
+      "sha256": "478fc54ca2bcede444c6a6fcb7af33c568052e2956e466baf9fb2fd5252954ec",
+      "remote_sha256": "478fc54ca2bcede444c6a6fcb7af33c568052e2956e466baf9fb2fd5252954ec"
+    },
+    {
+      "path": "data/chunk-000/episode_000002.parquet",
+      "bytes": 25538,
+      "sha256": "21b180714ac373b02c7138c89f9cea8c5075dab79ae3657604885d3deb3ae907",
+      "remote_sha256": "21b180714ac373b02c7138c89f9cea8c5075dab79ae3657604885d3deb3ae907"
+    },
+    {
+      "path": "data/chunk-000/episode_000003.parquet",
+      "bytes": 38958,
+      "sha256": "d6a99edc7597976a0220e4893e6346051675c29d8fad8c853a90b14d902cd63d",
+      "remote_sha256": "d6a99edc7597976a0220e4893e6346051675c29d8fad8c853a90b14d902cd63d"
+    },
+    {
+      "path": "data/chunk-000/episode_000004.parquet",
+      "bytes": 40149,
+      "sha256": "63134fcd6bd392a5deaf76ce4eec28ed037eec96f5ab686392a4fe7c0b5a861c",
+      "remote_sha256": "63134fcd6bd392a5deaf76ce4eec28ed037eec96f5ab686392a4fe7c0b5a861c"
+    },
+    {
+      "path": "data/chunk-000/episode_000005.parquet",
+      "bytes": 31606,
+      "sha256": "cefb4dedb50e4ed0c185829d5fe6fbd9e0d24927deee3fb5938eefb63a1cfd1f",
+      "remote_sha256": "cefb4dedb50e4ed0c185829d5fe6fbd9e0d24927deee3fb5938eefb63a1cfd1f"
+    },
+    {
+      "path": "data/chunk-000/episode_000006.parquet",
+      "bytes": 28194,
+      "sha256": "09dcf728d1b3ac2cdd348c8dfbf779b7ee706a1937435bf4d01f587b97bd41d7",
+      "remote_sha256": "09dcf728d1b3ac2cdd348c8dfbf779b7ee706a1937435bf4d01f587b97bd41d7"
+    },
+    {
+      "path": "data/chunk-000/episode_000007.parquet",
+      "bytes": 32940,
+      "sha256": "72e05c847a3878b323c1359eab08677ec450ee526f6955cfc9c2bcc7214b6273",
+      "remote_sha256": "72e05c847a3878b323c1359eab08677ec450ee526f6955cfc9c2bcc7214b6273"
+    },
+    {
+      "path": "data/chunk-000/episode_000008.parquet",
+      "bytes": 30242,
+      "sha256": "7645c363b575166530686d82a6ab9334db42321203f542be1abe51759700dad2",
+      "remote_sha256": "7645c363b575166530686d82a6ab9334db42321203f542be1abe51759700dad2"
+    },
+    {
+      "path": "data/chunk-000/episode_000009.parquet",
+      "bytes": 28106,
+      "sha256": "d8ebe3aad520fae7d515b0e64926c4c4f6e509e900364b86d8538a2e566de586",
+      "remote_sha256": "d8ebe3aad520fae7d515b0e64926c4c4f6e509e900364b86d8538a2e566de586"
+    },
+    {
+      "path": "data/chunk-000/episode_000010.parquet",
+      "bytes": 25142,
+      "sha256": "f7c171d6e90664b6aaeadf14a6f753a64694cbd38977f6e8eb78b53ce637d056",
+      "remote_sha256": "f7c171d6e90664b6aaeadf14a6f753a64694cbd38977f6e8eb78b53ce637d056"
+    },
+    {
+      "path": "data/chunk-000/episode_000011.parquet",
+      "bytes": 28802,
+      "sha256": "5968cbc215569a3d91f9958e6b682f7be27d637213a69a2894f6ee57e62d055b",
+      "remote_sha256": "5968cbc215569a3d91f9958e6b682f7be27d637213a69a2894f6ee57e62d055b"
+    },
+    {
+      "path": "data/chunk-000/episode_000012.parquet",
+      "bytes": 22047,
+      "sha256": "e40eab265edd640b08ea20560ab7a06c8301869eaa2d06830379f1eae32270df",
+      "remote_sha256": "e40eab265edd640b08ea20560ab7a06c8301869eaa2d06830379f1eae32270df"
+    },
+    {
+      "path": "data/chunk-000/episode_000013.parquet",
+      "bytes": 23544,
+      "sha256": "029ce18adf0e4ce0b098e7ab6e2e7a793ce40b457f8d03e2d006eb99f19a56cd",
+      "remote_sha256": "029ce18adf0e4ce0b098e7ab6e2e7a793ce40b457f8d03e2d006eb99f19a56cd"
+    },
+    {
+      "path": "data/chunk-000/episode_000014.parquet",
+      "bytes": 27988,
+      "sha256": "dce5bbb5fe92c5b8c2f74b17f8427b1c47236beceade5e82b0947916a11bc1f1",
+      "remote_sha256": "dce5bbb5fe92c5b8c2f74b17f8427b1c47236beceade5e82b0947916a11bc1f1"
+    },
+    {
+      "path": "data/chunk-000/episode_000015.parquet",
+      "bytes": 26328,
+      "sha256": "45e1d9a608158769273920070c498145c78b02aa90c5492ef8311ae24bce867b",
+      "remote_sha256": "45e1d9a608158769273920070c498145c78b02aa90c5492ef8311ae24bce867b"
+    },
+    {
+      "path": "data/chunk-000/episode_000016.parquet",
+      "bytes": 31799,
+      "sha256": "aaafcb71d3107978c8a658ef7558512211b049a8c6100a5e4e3d2ee1565cdc73",
+      "remote_sha256": "aaafcb71d3107978c8a658ef7558512211b049a8c6100a5e4e3d2ee1565cdc73"
+    },
+    {
+      "path": "data/chunk-000/episode_000017.parquet",
+      "bytes": 27436,
+      "sha256": "1a1a5d78ba40ef1e9be45bf5982d28d6754d805b5eee4e7cdf550c325a577285",
+      "remote_sha256": "1a1a5d78ba40ef1e9be45bf5982d28d6754d805b5eee4e7cdf550c325a577285"
+    },
+    {
+      "path": "data/chunk-000/episode_000018.parquet",
+      "bytes": 32340,
+      "sha256": "8060bcaf618080dd36f8f59f8969ad3abd55260f2ada9f6af89f08981faac041",
+      "remote_sha256": "8060bcaf618080dd36f8f59f8969ad3abd55260f2ada9f6af89f08981faac041"
+    },
+    {
+      "path": "data/chunk-000/episode_000019.parquet",
+      "bytes": 29361,
+      "sha256": "ba1796e7cfe46ae99166aac4f3e7c8e34443f3af23cd44e844bbad9d72b28b73",
+      "remote_sha256": "ba1796e7cfe46ae99166aac4f3e7c8e34443f3af23cd44e844bbad9d72b28b73"
+    },
+    {
+      "path": "data/chunk-000/episode_000020.parquet",
+      "bytes": 29599,
+      "sha256": "d33ed44c53c9e9f1ef4d063e0b11c4994930519eccfa6f7d32f30d523e04e9da",
+      "remote_sha256": "d33ed44c53c9e9f1ef4d063e0b11c4994930519eccfa6f7d32f30d523e04e9da"
+    },
+    {
+      "path": "data/chunk-000/episode_000021.parquet",
+      "bytes": 36601,
+      "sha256": "8200a3c6042f91522af20d7a6f8e98fa3646035909cf36bc532fcb11e07bc3da",
+      "remote_sha256": "8200a3c6042f91522af20d7a6f8e98fa3646035909cf36bc532fcb11e07bc3da"
+    },
+    {
+      "path": "data/chunk-000/episode_000022.parquet",
+      "bytes": 41932,
+      "sha256": "e7f57a9316aac11faad2b88b7ba5598b4110b215f7b9dd9a6a5014eba7fce8c9",
+      "remote_sha256": "e7f57a9316aac11faad2b88b7ba5598b4110b215f7b9dd9a6a5014eba7fce8c9"
+    },
+    {
+      "path": "data/chunk-000/episode_000023.parquet",
+      "bytes": 24571,
+      "sha256": "444110f0ff6681eb2c2d901f166b893f19702f9865ff2c906ed97402acc3cd2f",
+      "remote_sha256": "444110f0ff6681eb2c2d901f166b893f19702f9865ff2c906ed97402acc3cd2f"
+    },
+    {
+      "path": "data/chunk-000/episode_000024.parquet",
+      "bytes": 33449,
+      "sha256": "0c5174add9e5774a7f6578f49fac928848d09f64ef3ce0a293903a56f9de8e0b",
+      "remote_sha256": "0c5174add9e5774a7f6578f49fac928848d09f64ef3ce0a293903a56f9de8e0b"
+    },
+    {
+      "path": "data/chunk-000/episode_000025.parquet",
+      "bytes": 39405,
+      "sha256": "53905ddd4cca9c1e6fcaec2df17993fe613eac5c8e160890850664e9f9fbae2e",
+      "remote_sha256": "53905ddd4cca9c1e6fcaec2df17993fe613eac5c8e160890850664e9f9fbae2e"
+    },
+    {
+      "path": "data/chunk-000/episode_000026.parquet",
+      "bytes": 35666,
+      "sha256": "6a4df323f56fcc5bbbbaea7ce8eaa7f0ec0bef7a4a0cb46fca9a874fed6ced49",
+      "remote_sha256": "6a4df323f56fcc5bbbbaea7ce8eaa7f0ec0bef7a4a0cb46fca9a874fed6ced49"
+    },
+    {
+      "path": "data/chunk-000/episode_000027.parquet",
+      "bytes": 43279,
+      "sha256": "b0ff8abd43ebf1a83b6c9a5be802ce6f98cc113f73a3573bc82c52a5ef574eb1",
+      "remote_sha256": "b0ff8abd43ebf1a83b6c9a5be802ce6f98cc113f73a3573bc82c52a5ef574eb1"
+    },
+    {
+      "path": "data/chunk-000/episode_000028.parquet",
+      "bytes": 42464,
+      "sha256": "abf78ad3c03321f660f359e3d15efac87fae4f7cfd8d96e5c2d32d23fffd9b07",
+      "remote_sha256": "abf78ad3c03321f660f359e3d15efac87fae4f7cfd8d96e5c2d32d23fffd9b07"
+    },
+    {
+      "path": "data/chunk-000/episode_000029.parquet",
+      "bytes": 34890,
+      "sha256": "4188aaef3e7df5aeb51422b73d58c735dd0b3db017073c63f35bc899531b7cc2",
+      "remote_sha256": "4188aaef3e7df5aeb51422b73d58c735dd0b3db017073c63f35bc899531b7cc2"
+    },
+    {
+      "path": "data/chunk-000/episode_000030.parquet",
+      "bytes": 38424,
+      "sha256": "a2fcbe0f7d0421771c5b90173b203f929199b63b60659620299fd43b2c0183ff",
+      "remote_sha256": "a2fcbe0f7d0421771c5b90173b203f929199b63b60659620299fd43b2c0183ff"
+    },
+    {
+      "path": "data/chunk-000/episode_000031.parquet",
+      "bytes": 51322,
+      "sha256": "88c1e2211aa593f0bd5df319e3f0992df6158334edb732da0a4991308164744f",
+      "remote_sha256": "88c1e2211aa593f0bd5df319e3f0992df6158334edb732da0a4991308164744f"
+    },
+    {
+      "path": "data/chunk-000/episode_000032.parquet",
+      "bytes": 25819,
+      "sha256": "bdfa19ecadf7c2951c61b6465bd9472ae476dde6788ede1aeaa3b58bc5556656",
+      "remote_sha256": "bdfa19ecadf7c2951c61b6465bd9472ae476dde6788ede1aeaa3b58bc5556656"
+    },
+    {
+      "path": "data/chunk-000/episode_000033.parquet",
+      "bytes": 26938,
+      "sha256": "278921c3183122398391761dcf92aba1c2a818775cc0dc5207ca2845c6c39f23",
+      "remote_sha256": "278921c3183122398391761dcf92aba1c2a818775cc0dc5207ca2845c6c39f23"
+    },
+    {
+      "path": "data/chunk-000/episode_000034.parquet",
+      "bytes": 28227,
+      "sha256": "4589b28bd26efa5196db9b33ba28d67eea538b191b021603aea357740657dbb9",
+      "remote_sha256": "4589b28bd26efa5196db9b33ba28d67eea538b191b021603aea357740657dbb9"
+    },
+    {
+      "path": "data/chunk-000/episode_000035.parquet",
+      "bytes": 31699,
+      "sha256": "a41f1a240a4d7daf41823b34ff8936b9ab803bab89e094b49680e12a5e692daf",
+      "remote_sha256": "a41f1a240a4d7daf41823b34ff8936b9ab803bab89e094b49680e12a5e692daf"
+    },
+    {
+      "path": "data/chunk-000/episode_000036.parquet",
+      "bytes": 24221,
+      "sha256": "a3c300206fabe710857b1c5b1e667ebacaad37d2c8cd7748a49561d07e0625b3",
+      "remote_sha256": "a3c300206fabe710857b1c5b1e667ebacaad37d2c8cd7748a49561d07e0625b3"
+    },
+    {
+      "path": "data/chunk-000/episode_000037.parquet",
+      "bytes": 26025,
+      "sha256": "a176672546f46dc5532d2ad6ba9b0aa063aea941839116c2acc8aa9f4a83e1b3",
+      "remote_sha256": "a176672546f46dc5532d2ad6ba9b0aa063aea941839116c2acc8aa9f4a83e1b3"
+    },
+    {
+      "path": "data/chunk-000/episode_000038.parquet",
+      "bytes": 41778,
+      "sha256": "925afcee7f97c8317c76dcbe74b9c5436b219c74e1411fab685d701bd73ba8df",
+      "remote_sha256": "925afcee7f97c8317c76dcbe74b9c5436b219c74e1411fab685d701bd73ba8df"
+    },
+    {
+      "path": "data/chunk-000/episode_000039.parquet",
+      "bytes": 32109,
+      "sha256": "84d0e99d5b02a1adc596f6855ea6cd71bac6962876bff7097203b1e905589d93",
+      "remote_sha256": "84d0e99d5b02a1adc596f6855ea6cd71bac6962876bff7097203b1e905589d93"
+    },
+    {
+      "path": "data/chunk-000/episode_000040.parquet",
+      "bytes": 29138,
+      "sha256": "d124f3213c94844f919118c71fd68ca36eebdada70fd3c160dfdc4966d88ef85",
+      "remote_sha256": "d124f3213c94844f919118c71fd68ca36eebdada70fd3c160dfdc4966d88ef85"
+    },
+    {
+      "path": "data/chunk-000/episode_000041.parquet",
+      "bytes": 32444,
+      "sha256": "b8a6e33eea3dadf13674cf22194855df9ea7bff02cf1c67bbc8654b0a247f746",
+      "remote_sha256": "b8a6e33eea3dadf13674cf22194855df9ea7bff02cf1c67bbc8654b0a247f746"
+    },
+    {
+      "path": "data/chunk-000/episode_000042.parquet",
+      "bytes": 26769,
+      "sha256": "57a67a259f7d3b37d4b0d1786ea94faca9b613016c6b52bc00d5196a9d1b0cfc",
+      "remote_sha256": "57a67a259f7d3b37d4b0d1786ea94faca9b613016c6b52bc00d5196a9d1b0cfc"
+    },
+    {
+      "path": "data/chunk-000/episode_000043.parquet",
+      "bytes": 21185,
+      "sha256": "61f0908279dbe6df2d04b9041eac11b6c7bc38915aff442a26956df445168e6e",
+      "remote_sha256": "61f0908279dbe6df2d04b9041eac11b6c7bc38915aff442a26956df445168e6e"
+    },
+    {
+      "path": "data/chunk-000/episode_000044.parquet",
+      "bytes": 25066,
+      "sha256": "56d85f934dc23ff25e23b9c3e64ca63a7c568034dae4dcba86c5f03a6704dd58",
+      "remote_sha256": "56d85f934dc23ff25e23b9c3e64ca63a7c568034dae4dcba86c5f03a6704dd58"
+    },
+    {
+      "path": "data/chunk-000/episode_000045.parquet",
+      "bytes": 39673,
+      "sha256": "6523bc93afd038b3a810638049af59aff6def3ed214d0bd3a1b9da63e957ca33",
+      "remote_sha256": "6523bc93afd038b3a810638049af59aff6def3ed214d0bd3a1b9da63e957ca33"
+    },
+    {
+      "path": "data/chunk-000/episode_000046.parquet",
+      "bytes": 23866,
+      "sha256": "6d15581d2ab4613adcbf9cef29c02ce3377e0dab94da5fc66576b80f8d02fcdd",
+      "remote_sha256": "6d15581d2ab4613adcbf9cef29c02ce3377e0dab94da5fc66576b80f8d02fcdd"
+    },
+    {
+      "path": "data/chunk-000/episode_000047.parquet",
+      "bytes": 26074,
+      "sha256": "8e3eec136758d1a78b3d4b1ecf086f1c59d69942cb36c7db2473cb6314560f64",
+      "remote_sha256": "8e3eec136758d1a78b3d4b1ecf086f1c59d69942cb36c7db2473cb6314560f64"
+    },
+    {
+      "path": "data/chunk-000/episode_000048.parquet",
+      "bytes": 30490,
+      "sha256": "e953696469658fa55311d60e37591939c7e0cae97227d587b9cc7fefe24056e6",
+      "remote_sha256": "e953696469658fa55311d60e37591939c7e0cae97227d587b9cc7fefe24056e6"
+    },
+    {
+      "path": "data/chunk-000/episode_000049.parquet",
+      "bytes": 31950,
+      "sha256": "e640231b51c8e36e393a656f4814c7826fc00d414b9e6c58f67166fb904d2993",
+      "remote_sha256": "e640231b51c8e36e393a656f4814c7826fc00d414b9e6c58f67166fb904d2993"
+    },
+    {
+      "path": "meta/episodes.jsonl",
+      "bytes": 3291,
+      "sha256": "5e0ddbf8055555455172f7e0815c2f0f7a1cbb606604ec1412173ce7d2919b28",
+      "remote_sha256": null
+    },
+    {
+      "path": "meta/info.json",
+      "bytes": 3233,
+      "sha256": "7b590db935f781e4809b4cac9ddc3bc5ad6c06cef20627ac700969160939e5ab",
+      "remote_sha256": null
+    },
+    {
+      "path": "meta/stats.json",
+      "bytes": 5441,
+      "sha256": "42d5b66e06a1f0fffd17657affce9287ba0fc080bdffde09653a0940a9cf2e74",
+      "remote_sha256": null
+    },
+    {
+      "path": "meta/tasks.jsonl",
+      "bytes": 44,
+      "sha256": "daf013e3dc76014d33d1e5a7b3128880f014d348f11e39be7fba084e49cfbdd8",
+      "remote_sha256": null
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000000.mp4",
+      "bytes": 7143274,
+      "sha256": "927baa14017edfb0e4f05d59b8f6010c366af1f2a380993aa47854dc55877f67",
+      "remote_sha256": "927baa14017edfb0e4f05d59b8f6010c366af1f2a380993aa47854dc55877f67"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000001.mp4",
+      "bytes": 11993596,
+      "sha256": "9b45b4520501e2a04ed16b5866953680629415defd814a2137955a02aa85182b",
+      "remote_sha256": "9b45b4520501e2a04ed16b5866953680629415defd814a2137955a02aa85182b"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000002.mp4",
+      "bytes": 7452618,
+      "sha256": "b19183f7a37fa19c921439b94d25e3e2ed07e83f8f17fd48fa17eb154b230b6e",
+      "remote_sha256": "b19183f7a37fa19c921439b94d25e3e2ed07e83f8f17fd48fa17eb154b230b6e"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000003.mp4",
+      "bytes": 13641336,
+      "sha256": "c714e2f692d5fa5079370554c0763bb1d3200c482cb63d5fc99181fac45be296",
+      "remote_sha256": "c714e2f692d5fa5079370554c0763bb1d3200c482cb63d5fc99181fac45be296"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000004.mp4",
+      "bytes": 12694410,
+      "sha256": "44d8b31195182157c9f409ba9b677396c46444307873ca0f2cdd33492fff887f",
+      "remote_sha256": "44d8b31195182157c9f409ba9b677396c46444307873ca0f2cdd33492fff887f"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000005.mp4",
+      "bytes": 9740945,
+      "sha256": "142c272f652802f9794741e6c80d6d094900bf4a460803957746be57f315cb22",
+      "remote_sha256": "142c272f652802f9794741e6c80d6d094900bf4a460803957746be57f315cb22"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000006.mp4",
+      "bytes": 7992984,
+      "sha256": "aa7f6cf4948a059341f78d44ff2d6a6ca76cfd621457ce7166051b75daec4e07",
+      "remote_sha256": "aa7f6cf4948a059341f78d44ff2d6a6ca76cfd621457ce7166051b75daec4e07"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000007.mp4",
+      "bytes": 10060626,
+      "sha256": "d11d90a78d957c98c2c60af378da712896f261d468ca557d7ee67dca37d87252",
+      "remote_sha256": "d11d90a78d957c98c2c60af378da712896f261d468ca557d7ee67dca37d87252"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000008.mp4",
+      "bytes": 8847325,
+      "sha256": "6dbb06bf6dc834a390f0ab78f05dded0dfa063ee12910fe5b1ba5ba6a91d9648",
+      "remote_sha256": "6dbb06bf6dc834a390f0ab78f05dded0dfa063ee12910fe5b1ba5ba6a91d9648"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000009.mp4",
+      "bytes": 8352884,
+      "sha256": "e78db3956b309b3dd31f46cd0f8069dc770cbc9842e86e09e056cbcc5a6c7cc4",
+      "remote_sha256": "e78db3956b309b3dd31f46cd0f8069dc770cbc9842e86e09e056cbcc5a6c7cc4"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000010.mp4",
+      "bytes": 7439044,
+      "sha256": "ecb479390fbc757d43b003e5879632c3b39fe351f161c1dd11e34905a4c522ad",
+      "remote_sha256": "ecb479390fbc757d43b003e5879632c3b39fe351f161c1dd11e34905a4c522ad"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000011.mp4",
+      "bytes": 8689376,
+      "sha256": "a887307aabace37eb2aa6ffe9b58190fdcf0ad1f5e5504fe3f736d62cc821fd6",
+      "remote_sha256": "a887307aabace37eb2aa6ffe9b58190fdcf0ad1f5e5504fe3f736d62cc821fd6"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000012.mp4",
+      "bytes": 6655107,
+      "sha256": "9036eba801e4ea492e329d67a6cbe9fa4bc13c0a829c381dd82782fafdfd4eff",
+      "remote_sha256": "9036eba801e4ea492e329d67a6cbe9fa4bc13c0a829c381dd82782fafdfd4eff"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000013.mp4",
+      "bytes": 6846755,
+      "sha256": "94874b6bf7546761e5fd5957157699e3596cd10d2f362065413f65e546bccf73",
+      "remote_sha256": "94874b6bf7546761e5fd5957157699e3596cd10d2f362065413f65e546bccf73"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000014.mp4",
+      "bytes": 8118889,
+      "sha256": "f73a4778e9faa2cf6ee49462041b4d89d2f2d2ba89a1fb6aa26d4f0929d39d24",
+      "remote_sha256": "f73a4778e9faa2cf6ee49462041b4d89d2f2d2ba89a1fb6aa26d4f0929d39d24"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000015.mp4",
+      "bytes": 8189062,
+      "sha256": "abf1be4ff8fe75c71b73e42aefe1306a50890b11e7d272b37a6d743b0d732db4",
+      "remote_sha256": "abf1be4ff8fe75c71b73e42aefe1306a50890b11e7d272b37a6d743b0d732db4"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000016.mp4",
+      "bytes": 11777771,
+      "sha256": "95351672343fb988fda5daa6fdb07e26877a29cc59f14d797de7620aecedfb50",
+      "remote_sha256": "95351672343fb988fda5daa6fdb07e26877a29cc59f14d797de7620aecedfb50"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000017.mp4",
+      "bytes": 9815035,
+      "sha256": "81801d3f36c49fb16b457575828241666a69f7e48ba0874c02ae5305b18f0e73",
+      "remote_sha256": "81801d3f36c49fb16b457575828241666a69f7e48ba0874c02ae5305b18f0e73"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000018.mp4",
+      "bytes": 11870856,
+      "sha256": "735673a0d638e7cdbf3a36f95e4e61d63748da0294a6fa80c01147e2c940960e",
+      "remote_sha256": "735673a0d638e7cdbf3a36f95e4e61d63748da0294a6fa80c01147e2c940960e"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000019.mp4",
+      "bytes": 10383268,
+      "sha256": "0a7503b362171cd2d1bb457d70a74de277bd93cd657db6cc80426893879347e0",
+      "remote_sha256": "0a7503b362171cd2d1bb457d70a74de277bd93cd657db6cc80426893879347e0"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000020.mp4",
+      "bytes": 10683858,
+      "sha256": "3fbde9dfbad392248e5b09304147cd7276a176065264cd52f7d8622ceeaebfb0",
+      "remote_sha256": "3fbde9dfbad392248e5b09304147cd7276a176065264cd52f7d8622ceeaebfb0"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000021.mp4",
+      "bytes": 12540229,
+      "sha256": "1597f6152e47b120eccfb2a6fcd496a37798d4ccc27178965323e2df875e9185",
+      "remote_sha256": "1597f6152e47b120eccfb2a6fcd496a37798d4ccc27178965323e2df875e9185"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000022.mp4",
+      "bytes": 14263524,
+      "sha256": "1c2bdf7f503e49517b02eb6ceebda128e268051dd108493b8377c8863e9bdb71",
+      "remote_sha256": "1c2bdf7f503e49517b02eb6ceebda128e268051dd108493b8377c8863e9bdb71"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000023.mp4",
+      "bytes": 7935468,
+      "sha256": "4c4a66c0813d2c061b807018d1e0edb0d4bfe0e1d46bd0c557061b5e1b765244",
+      "remote_sha256": "4c4a66c0813d2c061b807018d1e0edb0d4bfe0e1d46bd0c557061b5e1b765244"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000024.mp4",
+      "bytes": 10927013,
+      "sha256": "b5e7f3696724d13d77437e4ca2667f2a95dc0c0133f9c0aae517cd0157c6eb35",
+      "remote_sha256": "b5e7f3696724d13d77437e4ca2667f2a95dc0c0133f9c0aae517cd0157c6eb35"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000025.mp4",
+      "bytes": 13348765,
+      "sha256": "e3cc9d3dd7d7a2b56cf4c173fe229a1613c5dbffd49a9723490bf5488a5ae942",
+      "remote_sha256": "e3cc9d3dd7d7a2b56cf4c173fe229a1613c5dbffd49a9723490bf5488a5ae942"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000026.mp4",
+      "bytes": 11569222,
+      "sha256": "61e15a97fb99bc49a813e93f1317f83653608c1fc8332539d6588f1c0b4ee07f",
+      "remote_sha256": "61e15a97fb99bc49a813e93f1317f83653608c1fc8332539d6588f1c0b4ee07f"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000027.mp4",
+      "bytes": 16129536,
+      "sha256": "e82c70e587284a01977f7afc0ebc9db372474360339e9a80c0d1b0e5030d8d0f",
+      "remote_sha256": "e82c70e587284a01977f7afc0ebc9db372474360339e9a80c0d1b0e5030d8d0f"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000028.mp4",
+      "bytes": 15319809,
+      "sha256": "f4063c7d3f62a73a3fde295117c900f0ca27aea0207405e8fadb164a0544e7b4",
+      "remote_sha256": "f4063c7d3f62a73a3fde295117c900f0ca27aea0207405e8fadb164a0544e7b4"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000029.mp4",
+      "bytes": 13204795,
+      "sha256": "ca27b57b3a1b19ba4d70ca99f8c9e8f9cf34fa91be487ad740147bee7063f0c6",
+      "remote_sha256": "ca27b57b3a1b19ba4d70ca99f8c9e8f9cf34fa91be487ad740147bee7063f0c6"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000030.mp4",
+      "bytes": 14882957,
+      "sha256": "fe82ded2ec67a129e409d5384521639fabe453150af2ecc7db38da1ec30ac391",
+      "remote_sha256": "fe82ded2ec67a129e409d5384521639fabe453150af2ecc7db38da1ec30ac391"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000031.mp4",
+      "bytes": 20762469,
+      "sha256": "6f9dd02551be47c9986691d870dee0b528866db7e30c2704d7aef278ff7d2484",
+      "remote_sha256": "6f9dd02551be47c9986691d870dee0b528866db7e30c2704d7aef278ff7d2484"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000032.mp4",
+      "bytes": 8952097,
+      "sha256": "e40af89a85349bafb61cc79a598892570e2229ed5b719e75d4046f4583fccd7e",
+      "remote_sha256": "e40af89a85349bafb61cc79a598892570e2229ed5b719e75d4046f4583fccd7e"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000033.mp4",
+      "bytes": 11096186,
+      "sha256": "a89399831ccc0f6f57a369c3b8818b5e0a3ae5cdee7c6fc086d07c308232f9ba",
+      "remote_sha256": "a89399831ccc0f6f57a369c3b8818b5e0a3ae5cdee7c6fc086d07c308232f9ba"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000034.mp4",
+      "bytes": 10254803,
+      "sha256": "ff0491af09cb651d55fd6166f0c8fbd981ce2b8476a853749317595ef0d19383",
+      "remote_sha256": "ff0491af09cb651d55fd6166f0c8fbd981ce2b8476a853749317595ef0d19383"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000035.mp4",
+      "bytes": 11025314,
+      "sha256": "c8c20cf35b683b62b15abb9b6911959ff2180cb0f4c4bc11502d053fe3d36c7f",
+      "remote_sha256": "c8c20cf35b683b62b15abb9b6911959ff2180cb0f4c4bc11502d053fe3d36c7f"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000036.mp4",
+      "bytes": 8679705,
+      "sha256": "7d85bc27ebdcef74b4cb5fd76276538d452aa91ea0012712ec99f60d1d736639",
+      "remote_sha256": "7d85bc27ebdcef74b4cb5fd76276538d452aa91ea0012712ec99f60d1d736639"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000037.mp4",
+      "bytes": 8358136,
+      "sha256": "ab846c31a5c914f83964b66bfa402b70f50f6a23f69ffa470b3d3088792c973e",
+      "remote_sha256": "ab846c31a5c914f83964b66bfa402b70f50f6a23f69ffa470b3d3088792c973e"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000038.mp4",
+      "bytes": 15458189,
+      "sha256": "2520edcee799fa5c42e9e93fadd3e05376c4a88338d2067aebd1cfbb9f86570d",
+      "remote_sha256": "2520edcee799fa5c42e9e93fadd3e05376c4a88338d2067aebd1cfbb9f86570d"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000039.mp4",
+      "bytes": 11363620,
+      "sha256": "47ad7114295f3d88416555eb565bece702ad07b93ffdf2f141608c09d66880a3",
+      "remote_sha256": "47ad7114295f3d88416555eb565bece702ad07b93ffdf2f141608c09d66880a3"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000040.mp4",
+      "bytes": 10454196,
+      "sha256": "ae7f8472216d9ce0fb5211b7d3b9cf1c7cae94ab3dfd957d0d9e5bca986d1d0a",
+      "remote_sha256": "ae7f8472216d9ce0fb5211b7d3b9cf1c7cae94ab3dfd957d0d9e5bca986d1d0a"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000041.mp4",
+      "bytes": 14182931,
+      "sha256": "8d1f91ec1a4a73316f4ba8d5f078c91cc2f129619d3964aa7d73a0725c6c442f",
+      "remote_sha256": "8d1f91ec1a4a73316f4ba8d5f078c91cc2f129619d3964aa7d73a0725c6c442f"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000042.mp4",
+      "bytes": 10927985,
+      "sha256": "7bb8be05c5da53d47134194a0f329fbc73a4837fd92edc44dc7088e409f7a527",
+      "remote_sha256": "7bb8be05c5da53d47134194a0f329fbc73a4837fd92edc44dc7088e409f7a527"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000043.mp4",
+      "bytes": 7780894,
+      "sha256": "15ec663c247e20f476195b7f5c5359da35c788ba1383c52ac892e96dc6a92298",
+      "remote_sha256": "15ec663c247e20f476195b7f5c5359da35c788ba1383c52ac892e96dc6a92298"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000044.mp4",
+      "bytes": 11296242,
+      "sha256": "0206bd058031c7c1f15d6a08dd4f122855dd2d674734bbe8224450c64c5bf068",
+      "remote_sha256": "0206bd058031c7c1f15d6a08dd4f122855dd2d674734bbe8224450c64c5bf068"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000045.mp4",
+      "bytes": 17147244,
+      "sha256": "db50310f2a250d1552d07de5a250f95ffa55f982f4e88dd115ecf17711b2c827",
+      "remote_sha256": "db50310f2a250d1552d07de5a250f95ffa55f982f4e88dd115ecf17711b2c827"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000046.mp4",
+      "bytes": 11306128,
+      "sha256": "7d1e1bec34449da13175ffadadb827028782d5089be06d3cfbecf392160ff4ff",
+      "remote_sha256": "7d1e1bec34449da13175ffadadb827028782d5089be06d3cfbecf392160ff4ff"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000047.mp4",
+      "bytes": 11794507,
+      "sha256": "b2425a134ffe09aba235c644662e2d4aabcc8bfed769bbc9dfc74a1376e1fa9a",
+      "remote_sha256": "b2425a134ffe09aba235c644662e2d4aabcc8bfed769bbc9dfc74a1376e1fa9a"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000048.mp4",
+      "bytes": 14053276,
+      "sha256": "d219bc2b7434cdfdbd7d70d1477f5f9941722697051affa939dcd57446003786",
+      "remote_sha256": "d219bc2b7434cdfdbd7d70d1477f5f9941722697051affa939dcd57446003786"
+    },
+    {
+      "path": "videos/chunk-000/observation.images.laptop/episode_000049.mp4",
+      "bytes": 15601006,
+      "sha256": "08b47b950bff85fd5a78f716fa3efe305e7349968c268c3ca3205c9e6f624533",
+      "remote_sha256": "08b47b950bff85fd5a78f716fa3efe305e7349968c268c3ca3205c9e6f624533"
+    }
+  ]
+}

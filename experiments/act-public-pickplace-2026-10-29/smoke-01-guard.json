@@ -1,0 +1,29 @@
+{
+  "status": "finished",
+  "command": [
+    ".work\\act-public-pickplace-2026-10-29\\.venv\\Scripts\\python.exe",
+    "-u",
+    "output\\act-public-pickplace-2026-10-29\\train_act.py",
+    "--cache",
+    ".work\\act-public-pickplace-2026-10-29\\cache",
+    "--out",
+    "output\\act-public-pickplace-2026-10-29\\smoke-01",
+    "--steps",
+    "3",
+    "--batch",
+    "2",
+    "--eval-every",
+    "3",
+    "--smoke"
+  ],
+  "owned_pids": [
+    52268,
+    53808,
+    54976
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_s": 14.406999999999243,
+  "peak_rss_gib": 2.4227371215820312,
+  "min_free_ram_gib": 9.658271789550781
+}

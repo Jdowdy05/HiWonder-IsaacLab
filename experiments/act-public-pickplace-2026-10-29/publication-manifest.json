@@ -1,0 +1,17 @@
+{
+  "published_from": "2026-10-29 offline ACT experiment",
+  "source_code_sha256": {
+    "evaluate_and_report.py": "ea70509e06c01940a388219a04e7ed9e55a01d83a775900131fba8cf989e4985",
+    "experiment_data.py": "7a06f1301c01681a51311f6aed82c8519be86f6a4611195e967e661dbb3d7b09",
+    "guard_trial.py": "47bc67b88d7ddc13c5112c419970fd628d8830b61f666d02d42c41d54d5eb174",
+    "model_io.py": "6eac683c52e5674af8b6a16fcc3717748cecc556e906352204d29161bf7b1a21",
+    "test_experiment.py": "be39ca0b56b9ae6fab5cbc5293da8202d2ad694a87d19b19accc25f5ece681cc",
+    "train_act.py": "a09f1fb9c0d47f957a9a4301624608cfe56da3cdd2b45b58ccad82ebb4d743f7"
+  },
+  "checkpoint_sha256": "1cd16e2645e244322d32651d7fb1ca9ce91727cfd887f358e408b58e92f63053",
+  "release_archive_sha256": "794c2c3f1ccf6a6d2e8ede957359ae59f89f585a5c9b11c8cd0eff8f72229d78",
+  "release_archive_bytes": 194842381,
+  "source_datasets_in_git": false,
+  "weights_in_git": false,
+  "publication_cpu_verification": "14 passed on 2026-11-02; CUDA disabled; sandbox-compatible workspace temp directory"
+}

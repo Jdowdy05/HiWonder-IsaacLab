@@ -1,0 +1,22 @@
+{
+  "cache": ".work\\act-public-pickplace-2026-10-29\\cache",
+  "out": "output\\act-public-pickplace-2026-10-29\\smoke-01",
+  "steps": 3,
+  "batch": 2,
+  "eval_every": 3,
+  "seed": 20261029,
+  "chunk": 30,
+  "smoke": true,
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "torch": "2.11.0+cu130",
+  "precision": "BF16 autocast; FP32 parameters and optimizer",
+  "parameters": 51567497,
+  "dataset_manifest_sha256": "6256bfadb456dedf8c5b3c7d2b5ff09f84ebc39e10eb7b79f93faba851e09365",
+  "source_balanced_sampling": true,
+  "train_episodes": 160,
+  "validation_episodes": 40,
+  "total_frames": 81290,
+  "image_augmentation": "none; real source diversity only",
+  "training_job_pid": 54976
+}

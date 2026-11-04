@@ -7,7 +7,7 @@
   "disk_gb": 250,
   "public_ports": [],
   "private": true,
-  "extra_filters": "verified=true rentable=true num_gpus=1 gpu_ram>=23 cpu_ram>=64 cpu_cores_effective>=8 cuda_max_good>=13.0 driver_version>=595.58.03 reliability>=0.99 cpu_arch=amd64",
+  "extra_filters": "verified=true rentable=true num_gpus=1 gpu_ram>=23552 cpu_ram>=65536 cpu_cores_effective>=8 cuda_max_good>=13 reliability2>=0.99 cpu_arch=amd64",
   "environment": {
     "NVIDIA_DRIVER_CAPABILITIES": "all",
     "PYTHONUNBUFFERED": "1",

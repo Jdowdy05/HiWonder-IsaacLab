@@ -29,13 +29,13 @@ WORKSPACE=/workspace
 OMNI_KIT_ACCEPT_EULA=NO
 ```
 
-`NVIDIA_DRIVER_CAPABILITIES=all` must be present at container creation for the wrist-camera renderer's driver libraries. Extra Filters use the Vast **CLI** units (GB for RAM), not the API's raw MB:
+`NVIDIA_DRIVER_CAPABILITIES=all` must be present at container creation for the wrist-camera renderer's driver libraries. Although labeled CLI Format, the web template editor currently stores RAM thresholds in **MiB**: 23552 gives 23 GB on its GPU-memory control, and 65536 gives 64 GB on its system-memory control. Use the web editor's `reliability2` field for its reliability control:
 
 ```text
-verified=true rentable=true num_gpus=1 gpu_ram>=23 cpu_ram>=64 cpu_cores_effective>=8 cuda_max_good>=13.0 driver_version>=595.58.03 reliability>=0.99 cpu_arch=amd64
+verified=true rentable=true num_gpus=1 gpu_ram>=23552 cpu_ram>=65536 cpu_cores_effective>=8 cuda_max_good>=13 reliability2>=0.99 cpu_arch=amd64
 ```
 
-The console may normalize the displayed driver filter to `595.58` when saving. The host preflight still enforces the full `595.58.03` minimum before installation or training.
+Do not put a `driver_version` predicate in the web template's Extra Filters. The editor truncates its dotted version and can produce an invalid `driver_vers >= None` offer query. Check the host driver before renting; the startup preflight still enforces the full `595.58.03` minimum before installation or training. The CLI and the web template editor have different filter parsing, so their RAM/driver expressions are not interchangeable.
 
 Select an **RTX 4090, RTX 5090 or supported recent Ada/Blackwell RTX Pro with 24 GB+ VRAM**. Prefer 64 GB+ RAM, or 128 GB if similarly priced. A100/H100 compute cards do not satisfy this project's RTX rendering preflight. The preflight also verifies actual cgroup capacity, at least 60 GiB usable RAM, eight effective CPUs, driver, storage and Vulkan.
 

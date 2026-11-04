@@ -124,6 +124,18 @@ def test_template_startup_pins_source_and_verifies_download():
     with pytest.raises(ValueError):render(';unexpected shell','a'*64)
 
 
+def test_template_filters_match_web_editor_resource_units():
+    import re
+    from render_template import render
+    values=render('1'*40,'a'*64)
+    fields={name:(op,value) for name,op,value in re.findall(r'(\w+)(>=|=)(\S+)',values['extra_filters'])}
+    # The web editor stores RAM in MiB and cannot round-trip the dotted driver predicate.
+    assert 'driver_version' not in fields and 'driver_vers' not in fields
+    assert float(fields['gpu_ram'][1])/1024 == 23
+    assert float(fields['cpu_ram'][1])/1024 == 64
+    assert fields['reliability2'] == ('>=','0.99')
+
+
 @pytest.mark.parametrize('accept_license,completed,failed_fetch', [(False,False,False),(True,False,False),(False,True,False),(True,True,False),(False,False,True)])
 def test_dual_provision_stages_workspaces_and_gates_only_rl(tmp_path, accept_license, completed, failed_fetch):
     script=Path(__file__).with_name('provision.sh').resolve()

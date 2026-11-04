@@ -1,5 +1,5 @@
 {
-  "name": "HiWonder - Isaac Lab RL + ACT",
+  "name": "HiWonder - Isaac Lab RL + ACT (v2)",
   "description": "Separate Isaac Lab PPO/SGS and ACT environments, with the archived ACT checkpoint and prepared dataset. CUDA 13 / Python 3.12 / SSH. SDK install follows license acceptance.",
   "image": "vastai/base-image:cuda-13.0.2-cudnn-devel-ubuntu24.04-py312",
   "launch_mode": "ssh",

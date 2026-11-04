@@ -8,7 +8,7 @@ One Vast CUDA image supports both workloads, with separate Python environments. 
 
 | Field | Value |
 |---|---|
-| Name | HiWonder - Isaac Lab RL + ACT |
+| Name | HiWonder - Isaac Lab RL + ACT (v2) |
 | Image Path:Tag | `vastai/base-image:cuda-13.0.2-cudnn-devel-ubuntu24.04-py312` |
 | Version tag | Keep that exact tag; avoid Automatic |
 | Launch mode | Interactive shell server, SSH |
@@ -54,6 +54,8 @@ Paste that output into **On-start Script**. The command pins the selected Git co
 Image tag verification on 2026-11-04 found registry digest `sha256:4fd686b5ab149cbfb1e6e5ec20f8903f1da061d81027846c105d7757d710fe8f`, with Linux AMD64 image digest `sha256:7c7b2be62c5497a3aea08f87cf8a8796eb9c55c7badb890709af10dc2bbd50cd`.
 
 Save with **Create**, which stores the template without renting. **Create & Use** also opens offer selection. Review the current offer and total hourly/storage price before renting.
+
+The console can keep earlier edits as separate template versions. Select **v2**, whose saved filters have been checked by opening the offer search, rather than an older card with the original name.
 
 ## First boot
 

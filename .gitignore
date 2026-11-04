@@ -26,3 +26,6 @@ events.out.tfevents.*
 *.bak
 .DS_Store
 Thumbs.db
+
+# Local ACT runtime and downloaded datasets
+.work/

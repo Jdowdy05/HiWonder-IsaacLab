@@ -1,0 +1,20 @@
+{
+  "python": "3.12.15 (main, Oct 14 2026, 01:08:45) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\VR2\\Documents\\LeRobot-HiWonder-Jetson_ws\\.work\\act-public-pickplace-2026-10-29\\.venv\\Scripts\\python.exe",
+  "packages": {
+    "torch": "2.11.0+cu130",
+    "torchvision": "0.26.0+cu130",
+    "lerobot": "source checkout v0.6.1",
+    "numpy": "2.2.6",
+    "Pillow": "12.3.0",
+    "pyarrow": "26.0.0",
+    "av": "15.1.0",
+    "draccus": "0.11.6",
+    "huggingface-hub": "1.33.0",
+    "safetensors": "0.8.0",
+    "psutil": "5.9.8",
+    "einops": "0.8.2",
+    "gymnasium": "1.4.0"
+  },
+  "isolation": "Private venv with read-only paths to existing IsaacLab-30 packages and pinned LeRobot source; shared environment not modified."
+}

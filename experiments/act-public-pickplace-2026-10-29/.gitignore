@@ -1,0 +1,8 @@
+*.safetensors
+*.pt
+*.pth
+*.zip
+__pycache__/
+.pytest_cache/
+trial-20*/
+trial-20*-guard.json

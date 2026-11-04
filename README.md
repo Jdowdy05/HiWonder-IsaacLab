@@ -4,6 +4,10 @@ Custom HiWonder SO-ARM101 follower environments, robot assets, task configuratio
 
 The actor uses wrist RGB and proprioception; a privileged state critic supports PPO training. The package includes 30 task presets, Success Guided Sampling (SGS), lighting/image/actuator randomization, camera calibration tools, checks and historical validation records. These tools simulate the arm and do not drive physical motors.
 
+## Experimental ACT public-data trial
+
+The separate [public SO-100 ACT experiment](experiments/act-public-pickplace-2026-10-29/README.md) includes training/evaluation code, pinned dataset provenance, configs, held-out comparisons and a virtual four-joint Eka gripper remap. Its [private prerelease](https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/tag/act-public-pickplace-2026-10-29) contains the trained checkpoint bundle. Results are mixed and remain offline; the model has no validated grasp success or physical/wrist-camera transfer. It is separate from the PPO/SGS learner described below.
+
 ## Choose the robot
 
 | Profile selection | Robot | Actions / rigid bodies | Proprioception / critic capacity |

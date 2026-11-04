@@ -12,6 +12,7 @@ One Vast CUDA image supports both workloads, with separate Python environments. 
 | Image Path:Tag | `vastai/base-image:cuda-13.0.2-cudnn-devel-ubuntu24.04-py312` |
 | Version tag | Keep that exact tag; avoid Automatic |
 | Launch mode | Interactive shell server, SSH |
+| Direct SSH | Enabled, with Vast proxy SSH available as backup |
 | Extra application ports | None; Vast supplies SSH access |
 | Container disk | 250 GB, allowing room for both environments and caches |
 | Visibility | Private |
@@ -33,6 +34,8 @@ OMNI_KIT_ACCEPT_EULA=NO
 ```text
 verified=true rentable=true num_gpus=1 gpu_ram>=23 cpu_ram>=64 cpu_cores_effective>=8 cuda_max_good>=13.0 driver_version>=595.58.03 reliability>=0.99 cpu_arch=amd64
 ```
+
+The console may normalize the displayed driver filter to `595.58` when saving. The host preflight still enforces the full `595.58.03` minimum before installation or training.
 
 Select an **RTX 4090, RTX 5090 or supported recent Ada/Blackwell RTX Pro with 24 GB+ VRAM**. Prefer 64 GB+ RAM, or 128 GB if similarly priced. A100/H100 compute cards do not satisfy this project's RTX rendering preflight. The preflight also verifies actual cgroup capacity, at least 60 GiB usable RAM, eight effective CPUs, driver, storage and Vulkan.
 

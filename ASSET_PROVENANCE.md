@@ -1,6 +1,6 @@
 # Asset provenance and rights
 
-This is a private owner-authorized copy of the custom HiWonder Isaac Lab project. Its software and CAD-derived assets have distinct provenance.
+This is an owner-authorized copy of the custom HiWonder Isaac Lab project. Its software and CAD-derived assets have distinct provenance.
 
 The extension's existing Python source headers declare BSD-3-Clause and are preserved unchanged. `source/isaaclab_hiwonder/pyproject.toml` declares the same software license. Root `LICENSE` preserves the upstream notice/disclaimer for the Isaac Lab-derived software and integration manifest. The small repository setup helper and its tests are provided under BSD-3-Clause as well. Dependencies such as Isaac Sim, PyTorch, Newton, RSL-RL and optional tools retain their own licenses and acceptance requirements.
 
@@ -14,7 +14,7 @@ The derived printed geometry uses exact NURBS reparameterization for 13 parts. T
 
 Reference hardware/case meshes come from the earlier native V6 assembly. That reference source does not supply the changed printed parts, which come from the new STEP. Mounting uses measured corresponding four-hole patterns on a 14 mm pitch circle, after `wrist_roll`. Screw/thread engagement, physical clearances, joint limits, masses, inertias and XL330 dynamic parameters remain unmeasured or estimated.
 
-CAD licensing and permission for public redistribution of the original model or its derivatives have **not** been established. A software BSD declaration does not grant rights to these CAD assets. Their inclusion here is for the owner's requested private repository; public release or redistribution requires separate rights confirmation.
+CAD licensing and permission for public redistribution of the original model or its derivatives have **not** been established. A software BSD declaration does not grant rights to these CAD assets. Public release or redistribution requires separate rights confirmation.
 
 `stable_peg_grasp.json` and `stable_peg_grasp.npz` are retained because SGS loads the qualified **stock-only** simulated reset state. They are small runtime assets, not trained policy weights. Any local evidence path inside their metadata records the historical experiment; the packaged loader uses the bundled files. Eka needs a new asset-specific grasp receipt; the stock seed cannot qualify its four independent finger joints.
 

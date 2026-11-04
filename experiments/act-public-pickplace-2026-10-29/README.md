@@ -8,7 +8,7 @@ This separate offline experiment trains the official LeRobot ACT architecture on
 - [Original experiment setup and data contract](ARCHIVE_README.md)
 - [Original runtime versions](runtime-versions.json)
 - [Publication hashes and verification](publication-manifest.json)
-- [Private checkpoint release](https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/tag/act-public-pickplace-2026-10-29)
+- [Checkpoint release](https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/tag/act-public-pickplace-2026-10-29)
 
 ![Held-out comparisons](training-and-validation.png)
 

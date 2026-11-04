@@ -15,6 +15,7 @@ Setup, operation and reference guides for the HiWonder SO-ARM101 environments in
 | [Installation](installation.md) | Requirements, pinned versions, Windows/Linux setup and custom paths |
 | [Robot and camera](robot-and-camera.md) | Stock/Eka profiles, action dimensions, checkpoint compatibility and camera calibration |
 | [Usage](usage.md) | Desktop/browser inspection, lighting controls, PPO training, resume, evaluation and playback |
+| [Vast.ai](vast.md) | One template with separate Isaac Lab RL and ACT environments, checkpoint restoration and SSH viewing |
 | [Tasks and randomization](tasks-and-randomization.md) | Task presets, profiles, ten randomization groups and SGS resets |
 | [Validation](validation.md) | Check commands, recorded results and the scope of simulation evidence |
 | [Assets and licensing](assets.md) | Runtime assets, source CAD, repairs and provenance |

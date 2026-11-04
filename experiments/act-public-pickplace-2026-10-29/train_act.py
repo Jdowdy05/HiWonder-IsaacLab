@@ -16,7 +16,7 @@ import psutil
 from PIL import Image
 import torch
 
-from experiment_data import action_chunk, json_write, sha256, validate_initialization
+from experiment_data import action_chunk, json_write, sha256, validate_initialization, portable_cache_path
 
 
 class PublicEpisodes:
@@ -27,7 +27,7 @@ class PublicEpisodes:
         self.episodes, self.connections = [], {}
         for source in self.manifest["sources"]:
             for row in source["episode_records"]:
-                with np.load(self.root / row["npz"]) as arrays:
+                with np.load(portable_cache_path(self.root, row["npz"])) as arrays:
                     self.episodes.append(dict(**row, state=arrays["state"], action=arrays["action"], image_indices=arrays["image_indices"]))
         self.train_sources = [[i for i, e in enumerate(self.episodes) if e["split"] == "train" and e["source"] == s]
                               for s in range(len(self.manifest["sources"]))]

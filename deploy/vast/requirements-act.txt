@@ -1,0 +1,13 @@
+# PyTorch CUDA wheels are installed separately from the official cu130 index.
+lerobot @ git+https://github.com/huggingface/lerobot.git@7e241bd630a3719a56157a497ce5d08f244784f1
+numpy==2.2.6
+Pillow==12.3.0
+pyarrow==26.0.0
+av==15.1.0
+draccus==0.11.6
+huggingface-hub==1.33.0
+safetensors==0.8.0
+psutil==5.9.8
+einops==0.8.2
+gymnasium==1.4.0
+matplotlib>=3.9,<4

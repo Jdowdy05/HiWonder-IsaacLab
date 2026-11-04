@@ -9,7 +9,7 @@ import json
 import sqlite3
 import time
 import urllib.request
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import numpy as np
 
@@ -19,6 +19,16 @@ SOURCES = [
     dict(id="nbaron99/so100_pick_and_place4", revision="093be9af5954011b77e77bcd5f15b07ebdfcd980", camera="observation.images.laptop", open_is_high=True),
 ]
 JOINTS = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "left_finger_root", "left_finger_tip", "right_finger_root", "right_finger_tip"]
+
+
+def portable_cache_path(root, relative):
+    """Resolve saved Windows or POSIX cache names without changing the data contract."""
+    if not isinstance(relative, str) or not relative:
+        raise ValueError('Missing relative cache path')
+    path = PurePosixPath(relative.replace('\\', '/'))
+    if path.is_absolute() or '..' in path.parts or any(':' in part for part in path.parts) or not path.parts:
+        raise ValueError('Cache path must stay inside its root')
+    return root.joinpath(*path.parts)
 
 
 def canonical_six(raw, names):

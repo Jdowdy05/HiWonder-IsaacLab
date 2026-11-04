@@ -1,0 +1,16 @@
+{
+  "contract_sha256": "6256bfadb456dedf8c5b3c7d2b5ff09f84ebc39e10eb7b79f93faba851e09365",
+  "model_sha256": "1cd16e2645e244322d32651d7fb1ca9ce91727cfd887f358e408b58e92f63053",
+  "cache": {
+    "filename": "ACT-PickPlace-Prepared-Cache.tar.gz",
+    "url": "https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/download/act-public-pickplace-2026-10-29/ACT-PickPlace-Prepared-Cache.tar.gz",
+    "sha256": "6c3342b566013ea436c6dad9dbaa8385b22bf002ab546b164f32e15f3cd3afc1",
+    "bytes": 651269185
+  },
+  "model": {
+    "filename": "ACT-PickPlace-Eka-Experimental.zip",
+    "url": "https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/download/act-public-pickplace-2026-10-29/ACT-PickPlace-Eka-Experimental.zip",
+    "sha256": "794c2c3f1ccf6a6d2e8ede957359ae59f89f585a5c9b11c8cd0eff8f72229d78",
+    "bytes": 194842381
+  }
+}

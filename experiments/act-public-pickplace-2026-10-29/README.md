@@ -8,6 +8,7 @@ This separate offline experiment trains the official LeRobot ACT architecture on
 - [Original experiment setup and data contract](ARCHIVE_README.md)
 - [Original runtime versions](runtime-versions.json)
 - [Publication hashes and verification](publication-manifest.json)
+- [Vast.ai setup](../../docs/vast.md): restore the prepared cache and continue the archived weights in a separate cloud environment.
 - [Checkpoint release](https://github.com/Jdowdy05/HiWonder-IsaacLab/releases/tag/act-public-pickplace-2026-10-29)
 
 ![Held-out comparisons](training-and-validation.png)
@@ -59,6 +60,8 @@ $env:CUDA_VISIBLE_DEVICES = '-1'
 The PowerShell launcher selects CUDA device 0, starts a new output directory and applies the resource guard. The guard limits only its own process tree to 6 GiB RSS, preserves 4 GiB available RAM, and enforces a 30-minute maximum wall time. Actual main trials peaked around 2.5 GiB RSS. No GPU training is started by cloning this repository.
 
 Warm starts intentionally use a fresh optimizer/RNG and require exactly matching data/normalization contracts. Existing original-machine data-contract hashes contain absolute provenance paths; a fresh preparation in a new checkout will produce a different contract and may therefore reject `--initialize-from` with archived weights. Evaluate the archived checkpoint with its saved contract, or start a fresh training run. Do not weaken that check to imply exact replay.
+
+The Vast setup restores the original prepared cache instead of regenerating its manifest, preserving the checkpoint's exact contract. The dataset loader now normalizes Windows NPZ path separators when opening files on Linux; normalization, splits, frames and checkpoint validation are unchanged. Original reports and source-hash receipts describe the code used for the archived run.
 
 ## Verification boundary
 

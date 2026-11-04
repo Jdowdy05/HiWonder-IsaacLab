@@ -2,6 +2,23 @@ import numpy as np
 import pytest
 
 
+def test_cache_paths_from_windows_are_portable_to_linux():
+    from pathlib import PurePosixPath
+    from experiment_data import portable_cache_path
+
+    assert portable_cache_path(PurePosixPath('/cache'), r'0\episode-000000.npz') == PurePosixPath('/cache/0/episode-000000.npz')
+    assert portable_cache_path(PurePosixPath('/cache'), '0/episode-000000.npz') == PurePosixPath('/cache/0/episode-000000.npz')
+
+
+@pytest.mark.parametrize('name', ['', '../outside.npz', '/outside.npz', r'C:\outside.npz', r'\\server\share\outside.npz'])
+def test_cache_paths_cannot_escape_cache_directory(name):
+    from pathlib import PurePosixPath
+    from experiment_data import portable_cache_path
+
+    with pytest.raises(ValueError):
+        portable_cache_path(PurePosixPath('/cache'), name)
+
+
 def test_only_requested_camera_is_downloaded():
     from experiment_data import selected_paths
 

@@ -1,0 +1,18 @@
+{
+  "name": "HiWonder - Isaac Lab RL + ACT",
+  "description": "Separate Isaac Lab PPO/SGS and ACT environments, with the archived ACT checkpoint and prepared dataset. CUDA 13 / Python 3.12 / SSH. SDK install follows license acceptance.",
+  "image": "vastai/base-image:cuda-13.0.2-cudnn-devel-ubuntu24.04-py312",
+  "launch_mode": "ssh",
+  "direct_ssh": false,
+  "disk_gb": 250,
+  "public_ports": [],
+  "private": true,
+  "extra_filters": "verified=true rentable=true num_gpus=1 gpu_ram>=23 cpu_ram>=64 cpu_cores_effective>=8 cuda_max_good>=13.0 driver_version>=595.58.03 reliability>=0.99 cpu_arch=amd64",
+  "environment": {
+    "NVIDIA_DRIVER_CAPABILITIES": "all",
+    "PYTHONUNBUFFERED": "1",
+    "HF_HUB_DISABLE_IMPLICIT_TOKEN": "1",
+    "WORKSPACE": "/workspace",
+    "OMNI_KIT_ACCEPT_EULA": "NO"
+  }
+}

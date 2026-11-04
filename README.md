@@ -25,6 +25,7 @@ The installer creates the sibling `IsaacLab-HiWonder` checkout. Continue with [c
 | [Installation](docs/installation.md) | Pinned versions, Windows/Linux setup and custom paths |
 | [Robot and camera](docs/robot-and-camera.md) | Stock/Eka selection, joint dimensions and camera calibration |
 | [Usage](docs/usage.md) | Inspect, train, resume, evaluate and play |
+| [Vast.ai](docs/vast.md) | Cloud template with separate RL and ACT environments |
 | [Tasks and randomization](docs/tasks-and-randomization.md) | Task presets, profiles, lighting and SGS resets |
 | [Validation](docs/validation.md) | Check commands, recorded results and evidence limits |
 | [Assets and licensing](docs/assets.md) | Robot assets, source CAD, repairs and provenance |
